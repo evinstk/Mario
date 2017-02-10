@@ -76,7 +76,7 @@ static int MarioMain() {
 					running = false;
 				}
 			}
-			stepWorld(worldState, timePerFrame);
+			stepWorld(worldState, timePerFrame, SDL_GetKeyboardState(NULL));
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

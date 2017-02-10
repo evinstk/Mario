@@ -5,8 +5,15 @@
 #include <EASTL/iterator.h>
 #include <glm/gtx/transform.hpp>
 #include <algorithm>
+#include <SDL.h>
 
 namespace te {
+
+static void stepVelocities(entitymap_t<glm::vec3>& velocities, entity_t playerEntity, const Uint8 *keyboard) {
+	static constexpr float SPEED = 32.0f;
+	glm::vec3 playerVelocity((keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED, 0, 0);
+	velocities[playerEntity] = playerVelocity;
+}
 
 static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
 					  float dt,
@@ -23,7 +30,8 @@ static void stepView(const glm::vec3& playerTranslation,
 									0));
 }
 
-void stepWorld(worldstate_t& state, float dt) {
+void stepWorld(worldstate_t& state, float dt, const Uint8 *keyboardState) {
+	stepVelocities(state.velocities, state.playerEntity, keyboardState);
 	stepTranslations(state.velocities, dt, state.translations);
 	stepView(state.translations[state.playerEntity], state.view);
 }
