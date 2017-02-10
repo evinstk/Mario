@@ -6,7 +6,7 @@
 
 namespace te {
 
-void stepTranslations(const entitymap_t<glm::vec3>& velocities,
+static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
 					  float dt,
 					  entitymap_t<glm::vec3>& translations) {
 	for (const auto& velocityRow : velocities) {
@@ -18,12 +18,12 @@ void stepWorld(worldstate_t& state, float dt) {
 	stepTranslations(state.velocities, dt, state.translations);
 }
 
-void loadMap(map_t& map, const tmx_t& tmx) {
+static void loadMap(map_t& map, const tmx_t& tmx) {
 	map.size = glm::ivec2(tmx.width, tmx.height);
 	map.tileSize = glm::ivec2(tmx.tilewidth, tmx.tileheight);
 }
 
-void loadTilesets(vector_t<tileset_t>& tilesets, const tmx_t& tmx) {
+static void loadTilesets(vector_t<tileset_t>& tilesets, const tmx_t& tmx) {
 
 	tilesets.clear();
 	for (const auto& tmxtileset : tmx.tilesets) {
@@ -41,7 +41,7 @@ void loadTilesets(vector_t<tileset_t>& tilesets, const tmx_t& tmx) {
 	}
 }
 
-void loadLayers(vector_t<layer_t>& layers,
+static void loadLayers(vector_t<layer_t>& layers,
 				const std::vector<tmxlayer_t>& tmxlayers) {
 	layers.clear();
 	eastl::transform(tmxlayers.begin(), tmxlayers.end(), eastl::back_inserter(layers), [](const tmxlayer_t& tmxlayer) {
