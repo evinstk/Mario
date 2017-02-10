@@ -3,6 +3,7 @@
 #include <tegl/readtmx.hpp>
 #include <EASTL/algorithm.h>
 #include <EASTL/iterator.h>
+#include <algorithm>
 
 namespace te {
 
@@ -98,6 +99,18 @@ void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	loadTranslations(state.translations, tmx.objectgroups);
 	loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
 	loadVelocities(state.velocities);
+
+	state.playerEntity = entity_t(0);
+	for (const auto& group : tmx.objectgroups) {
+		auto playerIt = std::find_if(group.objects.begin(), group.objects.end(), [](const auto& object) {
+				return object.name == "player";
+			});
+		if (playerIt != group.objects.end()) {
+			state.playerEntity = entity_t(playerIt->id);
+			break;
+		}
+	}
+	assert(state.playerEntity != entity_t(0));
 }
 
 } // namespace te

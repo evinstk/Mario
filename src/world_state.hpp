@@ -67,6 +67,8 @@ struct worldstate_t {
 	map_t map;
 	vector_t<tileset_t> tilesets;
 	vector_t<layer_t> layers;
+
+	entity_t playerEntity;
 };
 
 } // namespace te
