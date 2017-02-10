@@ -11,8 +11,7 @@ namespace te {
 
 static void stepVelocities(entitymap_t<glm::vec3>& velocities, entity_t playerEntity, const Uint8 *keyboard) {
 	static constexpr float SPEED = 32.0f;
-	glm::vec3 playerVelocity((keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED, 0, 0);
-	velocities[playerEntity] = playerVelocity;
+	velocities[playerEntity].x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED;
 }
 
 static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
