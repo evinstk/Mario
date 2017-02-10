@@ -6,7 +6,6 @@ add_executable(mario
   main.cpp
   map.cpp
   reducer_world.cpp
-  buffered_world_state.cpp
   texture_manager.cpp
   sprite_renderer.cpp)
 

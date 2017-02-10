@@ -1,6 +1,7 @@
-#include "buffered_world_state.hpp"
+#include "world_state.hpp"
 #include "action.hpp"
 #include "sprite_renderer.hpp"
+#include "reducer_world.hpp"
 #include <tegl/readtmx.hpp>
 #include <GL/glew.h>
 #include <SDL.h>
@@ -47,7 +48,7 @@ static void MarioMain() {
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	BufferedWorldState worldState;
+	worldstate_t worldState;
 
 	tmx_t tmx("tiled/1-1.tmx");
 	action_t loadAction = {
@@ -56,7 +57,7 @@ static void MarioMain() {
 			.tmx = &tmx
 		}
 	};
-	worldState.step(loadAction);
+	reduceWorld(worldState, loadAction, worldState);
 
 	SpriteRenderer spriteRenderer;
 	
@@ -83,11 +84,11 @@ static void MarioMain() {
 					.dt = timePerFrame
 				}
 			};
-			worldState.step(action);
+			reduceWorld(worldState, action, worldState);
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		spriteRenderer.draw(worldState.state());
+		spriteRenderer.draw(worldState);
 		SDL_GL_SwapWindow(upWindow.get());
 	}
 }
