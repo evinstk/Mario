@@ -59,6 +59,7 @@ struct worldstate_t {
 
 	entitymap_t<glm::vec3> velocities;
 	entitymap_t<glm::vec3> translations;
+	entitymap_t<int> tilesetSprites;
 
 	map_t map;
 	vector_t<tileset_t> tilesets;

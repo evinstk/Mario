@@ -102,6 +102,21 @@ void SpriteRenderer::draw(const worldstate_t& state) {
 			markedGIDs.clear();
 		}
 
+		for (const auto& spriteRow : state.tilesetSprites) {
+			entity_t entityID = spriteRow.first;
+			int sprite = spriteRow.second;
+
+			if (sprite >= tileset.firstgid
+				&& sprite < tileset.firstgid + tileset.tilecount) {
+
+				auto translationIt = state.translations.find(entityID);
+				assert(translationIt != state.translations.end());
+
+				translations.push_back(translationIt->second);
+				ids.push_back(sprite - tileset.firstgid);
+			}
+		}
+
 		int batchSize = translations.size();
 		assert(batchSize == ids.size());
 

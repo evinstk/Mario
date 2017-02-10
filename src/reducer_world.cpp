@@ -63,10 +63,36 @@ static void loadLayers(vector_t<layer_t>& layers,
 		});
 }
 
+static void loadTranslations(entitymap_t<glm::vec3>& translations,
+							 const decltype(tmx_t::objectgroups)& objectgroups) {
+	translations.clear();
+	for (const auto& group : objectgroups) {
+		for (const auto& object : group.objects) {
+			entity_t entityID(object.id);
+			glm::ivec3 translation(object.x, object.y - object.height, group.layerIndex);
+			translations.insert({ entityID, translation });
+		}
+	}
+}
+
+static void loadTilesetSprites(entitymap_t<int>& sprites,
+							   const decltype(tmx_t::objectgroups)& objectgroups) {
+	sprites.clear();
+	for (const auto& group : objectgroups) {
+		for (const auto& object : group.objects) {
+			if (object.gid > 0) {
+				sprites.insert({ entity_t(object.id), object.gid });
+			}
+		}
+	}
+}
+
 void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	loadMap(state.map, tmx);
 	loadTilesets(state.tilesets, tmx);
 	loadLayers(state.layers, tmx.layers);
+	loadTranslations(state.translations, tmx.objectgroups);
+	loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
 }
 
 } // namespace te
