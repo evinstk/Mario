@@ -1,5 +1,4 @@
 #include "world_state.hpp"
-#include "action.hpp"
 #include "texture_manager.hpp"
 #include <tegl/readtmx.hpp>
 #include <EASTL/algorithm.h>

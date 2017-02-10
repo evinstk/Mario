@@ -1,5 +1,4 @@
 #include "world_state.hpp"
-#include "action.hpp"
 #include "sprite_renderer.hpp"
 #include "reducer_world.hpp"
 #include <tegl/readtmx.hpp>
