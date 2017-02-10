@@ -8,7 +8,6 @@ add_executable(mario
   reducer_world.cpp
   buffered_world_state.cpp
   texture_manager.cpp
-  draw_world_state.cpp
   sprite_renderer.cpp)
 
 set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_MOVE_SEMANTICS_ENABLED")
