@@ -3,6 +3,7 @@
 #include <tegl/readtmx.hpp>
 #include <EASTL/algorithm.h>
 #include <EASTL/iterator.h>
+#include <glm/gtx/transform.hpp>
 #include <algorithm>
 
 namespace te {
@@ -15,8 +16,16 @@ static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
 	}
 }
 
+static void stepView(const glm::vec3& playerTranslation,
+					 glm::mat4& view) {
+	view = glm::translate(glm::vec3(-playerTranslation.x,
+									-playerTranslation.y,
+									0));
+}
+
 void stepWorld(worldstate_t& state, float dt) {
 	stepTranslations(state.velocities, dt, state.translations);
+	stepView(state.translations[state.playerEntity], state.view);
 }
 
 static void loadMap(map_t& map, const tmx_t& tmx) {
