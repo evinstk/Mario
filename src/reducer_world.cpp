@@ -7,76 +7,34 @@
 
 namespace te {
 
-inline void reduceVelocities(const decltype(worldstate_t::velocities)& in,
-							 const action_t& action,
-							 decltype(worldstate_t::velocities)& out) {
-	out.clear();
-	eastl::copy(in.begin(), in.end(), eastl::back_inserter(out));
-}
-
-void reduceTranslations(const decltype(worldstate_t::velocities)& velocities,
-						const decltype(worldstate_t::translations)& translations,
-						float dt,
-						decltype(worldstate_t::translations)& outTranslations) {
-	outTranslations.clear();
-	eastl::copy(translations.begin(), translations.end(), eastl::back_inserter(outTranslations));
-
-	for (const auto& row : velocities) {
-		const auto entityID = row.first;
-		const auto velocity = row.second;
-		const auto currTranslation = translations.find(entityID);
-		outTranslations[entityID] = currTranslation->second * velocity;
+void stepTranslations(const entitymap_t<glm::vec3>& velocities,
+					  float dt,
+					  entitymap_t<glm::vec3>& translations) {
+	for (const auto& velocityRow : velocities) {
+		translations[velocityRow.first] += velocityRow.second * dt;
 	}
 }
 
-void reduceTranslations(const decltype(worldstate_t::velocities)& velocities,
-						const decltype(worldstate_t::translations)& translations,
-						const action_t& action,
-						decltype(worldstate_t::translations)& outTranslations) {
-	switch (action.type) {
-	case actiontype_t::STEP:
-		reduceTranslations(velocities, translations, action.payload.dt, outTranslations);
-		return;
-	default:
-		outTranslations.clear();
-		eastl::copy(translations.begin(), translations.end(), eastl::back_inserter(outTranslations));
-		return;
-	}
+void stepWorld(worldstate_t& state, float dt) {
+	stepTranslations(state.velocities, dt, state.translations);
 }
 
-void reduceTilesets(const decltype(worldstate_t::tilesets)& in,
-					const tmx_t& tmx,
-					decltype(worldstate_t::tilesets)& out) {
+void loadTilesets(vector_t<tileset_t>& tilesets, const tmx_t& tmx) {
 
-	out.clear();
+	tilesets.clear();
 	for (const auto& tmxtileset : tmx.tilesets) {
 		GLuint textureID = gTextureManager->load(std::string("tiled/" + tmxtileset.images[0].source).c_str());
 		tileset_t tileset = {
 			.texture = textureID
 		};
-		out.push_back(tileset);
+		tilesets.push_back(tileset);
 	}
 }
 
-void reduceTilesets(const decltype(worldstate_t::tilesets)& in,
-					const action_t& action,
-					decltype(worldstate_t::tilesets)& out) {
-	switch (action.type) {
-	case actiontype_t::LOAD_LEVEL:
-		reduceTilesets(in, *action.payload.tmx, out);
-		return;
-	default:
-		out.clear();
-		eastl::copy(in.begin(), in.end(), eastl::back_inserter(out));
-		return;
-	}
-}
-
-void reduceLayers(const decltype(worldstate_t::layers)& in,
-				  const std::vector<tmxlayer_t>& layers,
-				  decltype(worldstate_t::layers)& out) {
-	out.clear();
-	eastl::transform(layers.begin(), layers.end(), eastl::back_inserter(out), [](const tmxlayer_t& tmxlayer) {
+void loadLayers(vector_t<layer_t>& layers,
+				const std::vector<tmxlayer_t>& tmxlayers) {
+	layers.clear();
+	eastl::transform(tmxlayers.begin(), tmxlayers.end(), eastl::back_inserter(layers), [](const tmxlayer_t& tmxlayer) {
 
 			layer_t layer = {
 				.gids = {},
@@ -94,28 +52,9 @@ void reduceLayers(const decltype(worldstate_t::layers)& in,
 		});
 }
 
-void reduceLayers(const decltype(worldstate_t::layers)& in,
-				  const action_t& action,
-				  decltype(worldstate_t::layers)& out) {
-	switch (action.type) {
-	case actiontype_t::LOAD_LEVEL:
-		reduceLayers(in, action.payload.tmx->layers, out);
-		return;
-	default:
-		out.clear();
-		eastl::copy(in.begin(), in.end(), eastl::back_inserter(out));
-		return;
-	}
+void loadWorld(worldstate_t& state, const tmx_t& tmx) {
+	loadTilesets(state.tilesets, tmx);
+	loadLayers(state.layers, tmx.layers);
 }
 
-void reduceWorld(const worldstate_t& in,
-				 const action_t& action,
-				 worldstate_t& out) {
-
-	reduceVelocities(in.velocities, action, out.velocities);
-	reduceTranslations(in.velocities, in.translations, action, out.translations);
-	reduceTilesets(in.tilesets, action, out.tilesets);
-	reduceLayers(in.layers, action, out.layers);
-}
-
-}
+} // namespace te

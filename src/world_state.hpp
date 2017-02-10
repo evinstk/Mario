@@ -32,12 +32,18 @@ struct layer_t {
 	int layerIndex;
 };
 
-struct worldstate_t {
-	eastl::vector_map<entity_t, glm::vec3> velocities;
-	eastl::vector_map<entity_t, glm::vec3> translations;
+template <typename T>
+using entitymap_t = eastl::vector_map<entity_t, T>;
 
-	eastl::vector<tileset_t> tilesets;
-	eastl::vector<layer_t> layers;
+template <typename T>
+using vector_t = eastl::vector<T>;
+
+struct worldstate_t {
+	entitymap_t<glm::vec3> velocities;
+	entitymap_t<glm::vec3> translations;
+
+	vector_t<tileset_t> tilesets;
+	vector_t<layer_t> layers;
 };
 
 } // namespace te

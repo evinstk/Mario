@@ -51,13 +51,7 @@ static void MarioMain() {
 	worldstate_t worldState;
 
 	tmx_t tmx("tiled/1-1.tmx");
-	action_t loadAction = {
-		.type = actiontype_t::LOAD_LEVEL,
-		.payload = {
-			.tmx = &tmx
-		}
-	};
-	reduceWorld(worldState, loadAction, worldState);
+	loadWorld(worldState, tmx);
 
 	SpriteRenderer spriteRenderer;
 	
@@ -78,13 +72,7 @@ static void MarioMain() {
 					running = false;
 				}
 			}
-			action_t action = {
-				.type = actiontype_t::STEP,
-				.payload = {
-					.dt = timePerFrame
-				}
-			};
-			reduceWorld(worldState, action, worldState);
+			stepWorld(worldState, timePerFrame);
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
