@@ -1,16 +1,29 @@
 #pragma once
 
 #include <tegl/types.hpp>
-#include <memory>
 
 namespace te {
 
+struct worldstate_t;
+
 class SpriteRenderer {
 public:
-	static SpriteRenderer *get();
+	SpriteRenderer();
+
+	void draw(const worldstate_t& state);
 private:
-	ShaderProgram m_program;
-	static std::unique_ptr<SpriteRenderer> m_instance;
+	ShaderProgram m_shader;
+
+	GLuint m_projectionLoc;
+	GLuint m_viewLoc;
+	GLuint m_tileSizeLoc;
+	GLuint m_spacingLoc;
+	GLuint m_marginLoc;
+	GLuint m_columnsLoc;
+
+	VertexArray m_vertexArray;
+	Buffer m_translationBuf;
+	Buffer m_idBuf;
 };
 
 } // namespace te

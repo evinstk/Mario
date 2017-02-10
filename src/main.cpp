@@ -1,6 +1,6 @@
 #include "buffered_world_state.hpp"
 #include "action.hpp"
-#include "draw_world_state.hpp"
+#include "sprite_renderer.hpp"
 #include <tegl/readtmx.hpp>
 #include <GL/glew.h>
 #include <SDL.h>
@@ -44,6 +44,9 @@ static void MarioMain() {
 		std::cerr << "Could not initialize GL context: " << SDL_GetError() << std::endl;
 	}
 
+	glewExperimental = GL_TRUE;
+	assert(glewInit() == GLEW_OK);
+
 	BufferedWorldState worldState;
 
 	tmx_t tmx("tiled/1-1.tmx");
@@ -54,6 +57,8 @@ static void MarioMain() {
 		}
 	};
 	worldState.step(loadAction);
+
+	SpriteRenderer spriteRenderer;
 	
 	constexpr float timePerFrame = 1.0f / 60.0f;
 	float timeSinceLastUpdate = 0.0f;
@@ -82,7 +87,7 @@ static void MarioMain() {
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		DrawWorldState(worldState.state());
+		spriteRenderer.draw(worldState.state());
 		SDL_GL_SwapWindow(upWindow.get());
 	}
 }
