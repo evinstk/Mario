@@ -20,6 +20,9 @@ struct id_t {
 	bool operator==( const id_t& rhs ) const noexcept {
 		return id == rhs.id;
 	}
+	bool operator!=( const id_t& rhs ) const noexcept {
+		return !( id == rhs.id );
+	}
 };
 
 using entity_t = id_t<id_type_t::ENTITY>;
