@@ -87,12 +87,17 @@ static void loadTilesetSprites(entitymap_t<int>& sprites,
 	}
 }
 
+static inline void loadVelocities(entitymap_t<glm::vec3> velocities) {
+	velocities.clear();
+}
+
 void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	loadMap(state.map, tmx);
 	loadTilesets(state.tilesets, tmx);
 	loadLayers(state.layers, tmx.layers);
 	loadTranslations(state.translations, tmx.objectgroups);
 	loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
+	loadVelocities(state.velocities);
 }
 
 } // namespace te
