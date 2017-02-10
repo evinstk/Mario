@@ -24,6 +24,8 @@ private:
 	VertexArray m_vertexArray;
 	Buffer m_translationBuf;
 	Buffer m_idBuf;
+
+	int m_buffersCount;
 };
 
 } // namespace te

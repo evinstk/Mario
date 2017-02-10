@@ -28,21 +28,26 @@ struct Libs {
 	~Libs() { SDL_Quit(); }
 };
 
-static void MarioMain() {
+static int MarioMain() {
 	Libs libs;
 	std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> upWindow(
 		SDL_CreateWindow("Super Mario Bros.",
 						 SDL_WINDOWPOS_CENTERED,
 						 SDL_WINDOWPOS_CENTERED,
-						 1024,
-						 768,
+						 1280,
+						 720,
 						 SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL),
 		SDL_DestroyWindow);
 
 	SDL_GLContext context = SDL_GL_CreateContext(upWindow.get());
 	if (!context) {
 		std::cerr << "Could not initialize GL context: " << SDL_GetError() << std::endl;
+		return -1;
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
 
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
@@ -78,11 +83,12 @@ static void MarioMain() {
 		spriteRenderer.draw(worldState);
 		SDL_GL_SwapWindow(upWindow.get());
 	}
+
+	return 0;
 }
 
 } // namespace te
 
 int main(int, char **) {
-	te::MarioMain();
-	return 0;
+	return te::MarioMain();
 }

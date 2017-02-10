@@ -2,11 +2,14 @@
 #include "world_state.hpp"
 #include <tegl/types.hpp>
 #include <tegl/util.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <cassert>
 
 namespace te {
 
-SpriteRenderer::SpriteRenderer() {
+SpriteRenderer::SpriteRenderer()
+	: m_buffersCount(0)
+{
 	Shader vertexShader( GL_VERTEX_SHADER );
 	auto vertexShaderSrc = LoadFile( "shaders/tileset.glvs" );
 	CompileShader( vertexShader, vertexShaderSrc.c_str() );
@@ -51,6 +54,82 @@ SpriteRenderer::SpriteRenderer() {
 void SpriteRenderer::draw(const worldstate_t& state) {
 	glUseProgram(m_shader);
 
+	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(state.projection));
+	glUniformMatrix4fv(m_viewLoc, 1, GL_FALSE, glm::value_ptr(state.view));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray( m_vertexArray );
+
+	eastl::vector<glm::ivec3> translations;
+	eastl::vector<GLint> ids;
+	eastl::vector<int> markedGIDs;
+
+	// iterate tilesets in outer loop to minimize texture bindings
+	for (const auto& tileset : state.tilesets) {
+		glBindTexture(GL_TEXTURE_2D, tileset.texture);
+
+		glUniform2iv( m_tileSizeLoc, 1, glm::value_ptr( tileset.tileSize ) );
+		glUniform1i( m_spacingLoc, tileset.spacing );
+		glUniform1i( m_marginLoc, tileset.margin );
+		glUniform1i( m_columnsLoc, tileset.columns );
+
+		for (const auto& layer : state.layers) {
+
+			for (int i = 0, layerSize = layer.gids.size(); i < layerSize; ++i) {
+				int gid = layer.gids[i];
+				GLint localID = gid - tileset.firstgid;
+
+				// if unmarked tile is in currently bound tileset,
+				// find all tiles in layer, draw, and mark tile
+				if (gid >= tileset.firstgid
+					&& gid < tileset.firstgid + tileset.tilecount
+					&& eastl::find(markedGIDs.begin(), markedGIDs.end(), gid) == markedGIDs.end()) {
+
+					for (int j = i; j < layerSize; ++j) {
+						if (layer.gids[j] == gid) {
+
+							translations.push_back(glm::ivec3( ( j % layer.size.x ) * state.map.tileSize.x,
+															   ( j / layer.size.x ) * state.map.tileSize.y,
+															   layer.layerIndex ));
+							ids.push_back(localID);
+						}
+					}
+
+					markedGIDs.push_back(gid);
+				}
+			}
+
+			markedGIDs.clear();
+		}
+
+		int batchSize = translations.size();
+		assert(batchSize == ids.size());
+
+		if (batchSize > m_buffersCount) {
+			glBindBuffer( GL_ARRAY_BUFFER, m_translationBuf );
+			glBufferData( GL_ARRAY_BUFFER, sizeof( glm::ivec3 ) * batchSize, NULL, GL_DYNAMIC_DRAW );
+			glBindBuffer( GL_ARRAY_BUFFER, m_idBuf );
+			glBufferData( GL_ARRAY_BUFFER, sizeof( GLint ) * batchSize, NULL, GL_DYNAMIC_DRAW );
+			m_buffersCount = batchSize;
+		}
+
+		glBindBuffer( GL_ARRAY_BUFFER, m_translationBuf );
+		glBufferSubData( GL_ARRAY_BUFFER,
+						 0,
+						 sizeof( glm::ivec3 ) * batchSize,
+						 translations.data() );
+		glBindBuffer( GL_ARRAY_BUFFER, m_idBuf );
+		glBufferSubData( GL_ARRAY_BUFFER,
+						 0,
+						 sizeof( GLint ) * batchSize,
+						 ids.data() );
+
+		glDrawArraysInstanced( GL_TRIANGLE_STRIP, 0, 4, batchSize );
+	}
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }
 

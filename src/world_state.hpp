@@ -23,13 +23,25 @@ struct id_t {
 
 using entity_t = id_t<id_type_t::ENTITY>;
 
+struct map_t {
+	glm::ivec2 size;
+	glm::ivec2 tileSize;
+};
+
 struct tileset_t {
 	GLuint texture;
+	glm::ivec2 tileSize;
+	int spacing;
+	int margin;
+	int columns;
+	int firstgid;
+	int tilecount;
 };
 
 struct layer_t {
 	eastl::vector<int> gids;
 	int layerIndex;
+	glm::ivec2 size;
 };
 
 template <typename T>
@@ -39,9 +51,15 @@ template <typename T>
 using vector_t = eastl::vector<T>;
 
 struct worldstate_t {
+	worldstate_t();
+
+	glm::mat4 projection;
+	glm::mat4 view;
+
 	entitymap_t<glm::vec3> velocities;
 	entitymap_t<glm::vec3> translations;
 
+	map_t map;
 	vector_t<tileset_t> tilesets;
 	vector_t<layer_t> layers;
 };

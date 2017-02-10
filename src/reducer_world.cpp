@@ -18,13 +18,24 @@ void stepWorld(worldstate_t& state, float dt) {
 	stepTranslations(state.velocities, dt, state.translations);
 }
 
+void loadMap(map_t& map, const tmx_t& tmx) {
+	map.size = glm::ivec2(tmx.width, tmx.height);
+	map.tileSize = glm::ivec2(tmx.tilewidth, tmx.tileheight);
+}
+
 void loadTilesets(vector_t<tileset_t>& tilesets, const tmx_t& tmx) {
 
 	tilesets.clear();
 	for (const auto& tmxtileset : tmx.tilesets) {
 		GLuint textureID = gTextureManager->load(std::string("tiled/" + tmxtileset.images[0].source).c_str());
 		tileset_t tileset = {
-			.texture = textureID
+			.texture = textureID,
+			.tileSize = glm::ivec2(tmxtileset.tilewidth, tmxtileset.tileheight),
+			.spacing = tmxtileset.spacing,
+			.margin = tmxtileset.margin,
+			.columns = tmxtileset.columns,
+			.firstgid = tmxtileset.firstgid,
+			.tilecount = tmxtileset.tilecount
 		};
 		tilesets.push_back(tileset);
 	}
@@ -37,7 +48,8 @@ void loadLayers(vector_t<layer_t>& layers,
 
 			layer_t layer = {
 				.gids = {},
-				.layerIndex = tmxlayer.layerIndex
+				.layerIndex = tmxlayer.layerIndex,
+				.size = glm::ivec2(tmxlayer.width, tmxlayer.height)
 			};
 
 			eastl::transform(tmxlayer.data.tiles.begin(),
@@ -52,6 +64,7 @@ void loadLayers(vector_t<layer_t>& layers,
 }
 
 void loadWorld(worldstate_t& state, const tmx_t& tmx) {
+	loadMap(state.map, tmx);
 	loadTilesets(state.tilesets, tmx);
 	loadLayers(state.layers, tmx.layers);
 }
