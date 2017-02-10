@@ -1,0 +1,39 @@
+#version 330
+
+struct tileset {
+	sampler2D	tex;
+	ivec2		tilesize;
+	int			spacing;
+	int			margin;
+	int			firstgid;
+	int			tilecount;
+	int			columns;
+};
+
+flat in int  gid;
+in      vec2 texOffset;
+
+out vec4 color;
+
+#define SIZE 16
+uniform tileset tilesets[SIZE];
+
+int getTilesetIndex( int gid ) {
+	for ( int i = 0; i < SIZE; ++i ) {
+		if ( ( gid >= tilesets[ i ].firstgid ) && ( gid < ( tilesets[ i ].firstgid + tilesets[ i ].tilecount ) ) ) {
+			return i;
+		}
+	}
+}
+
+void main() {
+	if ( gid == 0 )
+		color = vec4( 0, 0, 0, 0 );
+	else {
+		int i = getTilesetIndex( gid );
+		int id = gid - tilesets[ i ].firstgid;
+		ivec2 tileCoords = ivec2( ( id % tilesets[ i ].columns ) * ( tilesets[ i ].tilesize.x + tilesets[ i ].spacing ) + tilesets[ i ].margin,
+								  ( id / tilesets[ i ].columns ) * ( tilesets[ i ].tilesize.y + tilesets[ i ].spacing ) + tilesets[ i ].margin );
+		color = texelFetch( tilesets[ i ].tex, ivec2( texOffset ) + tileCoords, 0 );
+	}
+}

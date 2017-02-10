@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.6)
+project(Mario)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/assets)
+add_subdirectory(src)

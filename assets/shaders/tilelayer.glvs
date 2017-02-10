@@ -1,0 +1,25 @@
+#version 330
+
+layout (location = 0) in int inGID;
+
+flat out int  gid;
+out      vec2 texOffset;
+
+uniform ivec2 tileSize;
+uniform ivec2 layerSize;
+uniform int   layerIndex;
+uniform mat4  view;
+uniform mat4  projection;
+
+void main() {
+	ivec2 tileCoords = ivec2( ( gl_InstanceID % layerSize.x ) * tileSize.x,
+							  ( gl_InstanceID / layerSize.x ) * tileSize.y );
+
+	ivec2 vertexOffset = ivec2( ( gl_VertexID % 2 ) * tileSize.x,
+								( gl_VertexID / 2 ) * tileSize.y );
+	ivec2 vertexCoords = tileCoords + vertexOffset;
+
+	gl_Position = projection * view * vec4( vertexCoords, layerIndex, 1.0f );
+	gid = inGID;
+	texOffset = vec2( vertexOffset );
+}

@@ -1,0 +1,23 @@
+#version 330
+
+layout (location = 0) in ivec3 inTranslation;
+layout (location = 1) in int   inID;
+
+flat out int  id;
+out      vec2 texOffset;
+
+uniform mat4  projection;
+uniform mat4  view;
+uniform ivec2 tileSize;
+
+void main() {
+	ivec3 vertexOffset = ivec3( ( gl_VertexID % 2 ) * tileSize.x,
+								( gl_VertexID / 2 ) * tileSize.y,
+								0 );
+
+	ivec3 vertexTranslation = inTranslation + vertexOffset;
+
+	gl_Position = projection * view * vec4( vertexTranslation, 1.0f );
+	id = inID;
+	texOffset = vec2( vertexOffset.x, vertexOffset.y );
+}

@@ -1,0 +1,19 @@
+#version 330
+
+flat in int  id;
+in      vec2 texOffset;
+
+out vec4 color;
+
+uniform sampler2D tex;
+uniform ivec2     tileSize;
+uniform int       spacing;
+uniform int       margin;
+uniform int       columns;
+
+void main() {
+	ivec2 tileCoords = ivec2( ( id % columns ) * ( tileSize.x + spacing ) + margin,
+							  ( id / columns ) * ( tileSize.y + spacing ) + margin );
+
+	color = texelFetch( tex, ivec2( texOffset ) + tileCoords, 0 );
+}
