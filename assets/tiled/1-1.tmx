@@ -4847,6 +4847,6 @@
   <object id="34" type="brick" gid="2" x="1488" y="112" width="16" height="16"/>
   <object id="35" type="prize" gid="25" x="1504" y="112" width="16" height="16"/>
   <object id="36" type="brick" gid="2" x="1504" y="176" width="16" height="16"/>
-  <object id="37" name="player" type="mario" x="80" y="208" width="16" height="16"/>
+  <object id="37" name="player" type="mario" x="64" y="208" width="16" height="16"/>
  </objectgroup>
 </map>
