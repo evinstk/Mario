@@ -70,7 +70,7 @@ static void loadTranslations(entitymap_t<glm::vec3>& translations,
 	for (const auto& group : objectgroups) {
 		for (const auto& object : group.objects) {
 			entity_t entityID(object.id);
-			glm::ivec3 translation(object.x, object.y - object.height, group.layerIndex);
+			glm::ivec3 translation(object.x, object.y, group.layerIndex);
 			translations.insert({ entityID, translation });
 		}
 	}
