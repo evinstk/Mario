@@ -79,6 +79,7 @@ void reduceLayers(const decltype(worldstate_t::layers)& in,
 	eastl::transform(layers.begin(), layers.end(), eastl::back_inserter(out), [](const tmxlayer_t& tmxlayer) {
 
 			layer_t layer = {
+				.gids = {},
 				.layerIndex = tmxlayer.layerIndex
 			};
 
