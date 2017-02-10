@@ -120,6 +120,8 @@ void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 		}
 	}
 	assert(state.playerEntity != entity_t(0));
+
+	stepView(state.translations[state.playerEntity], state.view);
 }
 
 } // namespace te
