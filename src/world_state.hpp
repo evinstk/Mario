@@ -13,6 +13,7 @@ enum class id_type_t {
 template <id_type_t I, typename T = int>
 struct id_t {
 	T id;
+	id_t() : id( 0 ) {}
 	explicit id_t( T _id ) : id( _id ) {}
 	bool operator<( const id_t& rhs ) const noexcept {
 		return id < rhs.id;
