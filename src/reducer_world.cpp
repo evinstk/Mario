@@ -1,6 +1,8 @@
 #include "world_state.hpp"
 #include "texture_manager.hpp"
 #include <tegl/readtmx.hpp>
+#include <EASTL/hash_map.h>
+#include <EASTL/string.h>
 #include <EASTL/algorithm.h>
 #include <EASTL/iterator.h>
 #include <glm/gtx/transform.hpp>
@@ -108,13 +110,94 @@ static inline void loadVelocities(entitymap_t<glm::vec3> velocities) {
 	velocities.clear();
 }
 
+static void loadAnimations(animmap_t<animation_t>& animations,
+								  const decltype(tmx_t::tilesets)& tilesets) {
+	animations.clear();
+	for (const auto& tileset : tilesets) {
+		for (const auto& tile : tileset.tiles) {
+			if (tile.animation.frames.size() > 0) {
+				animation_t animation;
+				for (const auto& tmxframe : tile.animation.frames) {
+					frame_t frame = {
+						.gid = tileset.firstgid + tmxframe.tileid,
+						.duration = tmxframe.duration
+					};
+					animation.frames.push_back(frame);
+				}
+				animid_t animID(tileset.firstgid + tile.id);
+				animations.insert({ animID, eastl::move(animation) });
+			}
+		}
+	}
+}
+
+static void loadAnimationControllers(animctrlmap_t<animctrl_t>& controllers,
+											const decltype(tmx_t::tilesets)& tilesets,
+											eastl::hash_map<eastl::string, animctrlid_t>& ctrlIDMap) {
+	eastl::hash_map<eastl::string, animctrl_t> ctrlMap;
+
+	for (const auto& tileset : tilesets) {
+		for (const auto& tile : tileset.tiles) {
+			auto ctrlPropIt = tile.properties.find("animctrl");
+			if (ctrlPropIt != tile.properties.end()) {
+				auto ctrlStr = ctrlPropIt->second;
+				auto motionIt = tile.properties.find("motion");
+				assert(motionIt != tile.properties.end());
+				auto& ctrl = ctrlMap[ctrlStr.c_str()];
+				animid_t animID(tileset.firstgid + tile.id);
+				auto motionStr = motionIt->second;
+				if (motionStr == "walk-right") {
+					ctrl.walkRight = animID;
+				} else if (motionStr == "walk-left") {
+					ctrl.walkLeft = animID;
+				}
+			}
+		}
+	}
+
+	controllers.clear();
+	int nextCtrlID = 1;
+	for (const auto& ctrlRow : ctrlMap) {
+		animctrlid_t ctrlID(nextCtrlID++);
+		controllers.insert({ ctrlID, ctrlRow.second });
+		ctrlIDMap[ctrlRow.first] = ctrlID;
+	}
+}
+
+static void loadAnimators(entitymap_t<animator_t>& animators,
+						  const decltype(tmx_t::objectgroups)& objectgroups,
+						  const eastl::hash_map<eastl::string, animctrlid_t>& ctrlMap) {
+	animators.clear();
+	for (const auto& group : objectgroups) {
+		for (const auto& object : group.objects) {
+			auto ctrlPropIt = object.properties.find("animctrl");
+			if (ctrlPropIt != object.properties.end()) {
+				auto ctrlIDIt = ctrlMap.find_as(ctrlPropIt->second.c_str());
+				assert(ctrlIDIt != ctrlMap.end());
+				animctrlid_t ctrlID = ctrlIDIt->second;
+				animator_t animator = {
+					.controller = ctrlID
+				};
+				entity_t entityID(object.id);
+				animators.insert({ entityID, animator });
+			}
+		}
+	}
+}
+
 void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	loadMap(state.map, tmx);
 	loadTilesets(state.tilesets, tmx);
 	loadLayers(state.layers, tmx.layers);
+
+	loadAnimations(state.animations, tmx.tilesets);
+	eastl::hash_map<eastl::string, animctrlid_t> ctrlMap;
+	loadAnimationControllers(state.animationControllers, tmx.tilesets, ctrlMap);
+
 	loadTranslations(state.translations, tmx.objectgroups);
 	loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
 	loadVelocities(state.velocities);
+	loadAnimators(state.animators, tmx.objectgroups, ctrlMap);
 
 	state.playerEntity = entity_t(0);
 	for (const auto& group : tmx.objectgroups) {
