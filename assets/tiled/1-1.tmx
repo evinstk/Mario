@@ -11,6 +11,10 @@
  <tileset firstgid="925" name="sprites" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="4" columns="4">
   <image source="../images/sprites.png" width="72" height="18"/>
   <tile id="1">
+   <properties>
+    <property name="animctrl" value="mario"/>
+    <property name="motion" value="walk-right"/>
+   </properties>
    <animation>
     <frame tileid="1" duration="100"/>
     <frame tileid="2" duration="100"/>
@@ -4855,6 +4859,10 @@
   <object id="34" type="brick" gid="2" x="1488" y="112" width="16" height="16"/>
   <object id="35" type="prize" gid="25" x="1504" y="112" width="16" height="16"/>
   <object id="36" type="brick" gid="2" x="1504" y="176" width="16" height="16"/>
-  <object id="38" name="player" type="mario" gid="925" x="64" y="224" width="16" height="16"/>
+  <object id="38" name="player" type="mario" gid="925" x="64" y="224" width="16" height="16">
+   <properties>
+    <property name="animctrl" value="mario"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
