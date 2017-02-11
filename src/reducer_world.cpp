@@ -7,6 +7,7 @@
 #include <EASTL/iterator.h>
 #include <glm/gtx/transform.hpp>
 #include <algorithm>
+#include <numeric>
 #include <SDL.h>
 
 namespace te {
@@ -24,6 +25,53 @@ static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
 	}
 }
 
+static void stepAnimators(const animctrlmap_t<animctrl_t>& controllers,
+						  const entitymap_t<glm::vec3>& velocities,
+						  float dt,
+						  entitymap_t<animator_t>& animators) {
+
+	for (auto& animatorRow : animators) {
+		animator_t& animator = animatorRow.second;
+		animator.elapsed += dt;
+		entity_t entityID = animatorRow.first;
+		glm::vec3 velocity = velocities.find(entityID)->second;
+		const animctrl_t& controller = controllers.find(animator.controller)->second;
+		animid_t newAnim;
+		if (velocity.x > 0) {
+			newAnim = controller.walkRight;
+		} else if (velocity.x < 0) {
+			newAnim = controller.walkLeft;
+		}
+		if (newAnim != animator.animation && newAnim.id > 0) {
+			animator.animation = newAnim;
+			animator.elapsed = 0;
+		}
+	}
+}
+
+static void stepSprites(const entitymap_t<animator_t>& animators,
+						const animmap_t<animation_t>& animations,
+						entitymap_t<int>& sprites) {
+	for (const auto& animatorRow : animators) {
+		const auto& animator = animatorRow.second;
+		if (animator.animation.id == 0) {
+			continue;
+		}
+		const auto& animation = animations.find(animator.animation)->second;
+		int elapsedMS = animator.elapsed * 1000;
+		int clampedElapsed = elapsedMS % animation.totalDuration;
+		int acc = 0;
+		for (const auto& frame : animation.frames) {
+			acc += frame.duration;
+			if (clampedElapsed < acc) {
+				entity_t entityID = animatorRow.first;
+				sprites[entityID] = frame.gid;
+				break;
+			}
+		}
+	}
+}
+
 static void stepView(const glm::vec3& playerTranslation,
 					 glm::mat4& view) {
 	view = glm::translate(glm::vec3(-playerTranslation.x,
@@ -34,6 +82,8 @@ static void stepView(const glm::vec3& playerTranslation,
 void stepWorld(worldstate_t& state, float dt, const Uint8 *keyboardState) {
 	stepVelocities(state.velocities, state.playerEntity, keyboardState);
 	stepTranslations(state.velocities, dt, state.translations);
+	stepAnimators(state.animationControllers, state.velocities, dt, state.animators);
+	stepSprites(state.animators, state.animations, state.tilesetSprites);
 	stepView(state.translations[state.playerEntity], state.view);
 }
 
@@ -111,12 +161,18 @@ static inline void loadVelocities(entitymap_t<glm::vec3> velocities) {
 }
 
 static void loadAnimations(animmap_t<animation_t>& animations,
-								  const decltype(tmx_t::tilesets)& tilesets) {
+						   const decltype(tmx_t::tilesets)& tilesets) {
 	animations.clear();
 	for (const auto& tileset : tilesets) {
 		for (const auto& tile : tileset.tiles) {
 			if (tile.animation.frames.size() > 0) {
-				animation_t animation;
+				int totalDuration = std::accumulate(tile.animation.frames.begin(), tile.animation.frames.end(), 0, [](int total, auto frame) {
+						return total + frame.duration;
+					});
+				animation_t animation = {
+					.totalDuration = totalDuration,
+					.frames = {}
+				};
 				for (const auto& tmxframe : tile.animation.frames) {
 					frame_t frame = {
 						.gid = tileset.firstgid + tmxframe.tileid,
@@ -132,8 +188,8 @@ static void loadAnimations(animmap_t<animation_t>& animations,
 }
 
 static void loadAnimationControllers(animctrlmap_t<animctrl_t>& controllers,
-											const decltype(tmx_t::tilesets)& tilesets,
-											eastl::hash_map<eastl::string, animctrlid_t>& ctrlIDMap) {
+									 const decltype(tmx_t::tilesets)& tilesets,
+									 eastl::hash_map<eastl::string, animctrlid_t>& ctrlIDMap) {
 	eastl::hash_map<eastl::string, animctrl_t> ctrlMap;
 
 	for (const auto& tileset : tilesets) {
@@ -176,7 +232,9 @@ static void loadAnimators(entitymap_t<animator_t>& animators,
 				assert(ctrlIDIt != ctrlMap.end());
 				animctrlid_t ctrlID = ctrlIDIt->second;
 				animator_t animator = {
-					.controller = ctrlID
+					.controller = ctrlID,
+					.animation = {},
+					.elapsed = 0.0f
 				};
 				entity_t entityID(object.id);
 				animators.insert({ entityID, animator });

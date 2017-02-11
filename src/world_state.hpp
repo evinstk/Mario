@@ -59,6 +59,7 @@ struct frame_t {
 };
 
 struct animation_t {
+	int totalDuration;
 	eastl::vector<frame_t> frames;
 };
 
@@ -69,6 +70,8 @@ struct animctrl_t {
 
 struct animator_t {
 	animctrlid_t controller;
+	animid_t animation;
+	float elapsed;
 };
 
 template <typename T>
