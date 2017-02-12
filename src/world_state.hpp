@@ -1,5 +1,6 @@
 #pragma once
 #include "id.hpp"
+#include <tegl/types.hpp>
 #include <EASTL/vector_map.h>
 #include <EASTL/vector.h>
 #include <glm/glm.hpp>
@@ -59,6 +60,9 @@ template <typename T>
 using animctrlmap_t = eastl::vector_map<animctrlid_t, T>;
 
 template <typename T>
+using collidermap_t = eastl::vector_map<colliderid_t, T>;
+
+template <typename T>
 using vector_t = eastl::vector<T>;
 
 struct worldstate_t {
@@ -78,6 +82,7 @@ struct worldstate_t {
 
 	animmap_t<animation_t> animations;
 	animctrlmap_t<animctrl_t> animationControllers;
+	collidermap_t<aabb_t> colliders;
 
 	entity_t playerEntity;
 };

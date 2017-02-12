@@ -10,6 +10,14 @@
  </tileset>
  <tileset firstgid="925" name="sprites" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="4" columns="4">
   <image source="../images/sprites.png" width="72" height="18"/>
+  <tile id="0">
+   <properties>
+    <property name="collider" value="mario"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="4" x="1" y="0" width="13" height="16"/>
+   </objectgroup>
+  </tile>
   <tile id="1">
    <properties>
     <property name="animctrl" value="mario"/>
@@ -4862,6 +4870,7 @@
   <object id="38" name="player" type="mario" gid="925" x="64" y="224" width="16" height="16">
    <properties>
     <property name="animctrl" value="mario"/>
+    <property name="collider" value="mario"/>
    </properties>
   </object>
  </objectgroup>

@@ -5,7 +5,8 @@ namespace te {
 enum class id_type_t {
 	ENTITY,
 	ANIMATION,
-	ANIMATION_CONTROLLER
+	ANIMATION_CONTROLLER,
+	COLLIDER
 };
 
 template <id_type_t I, typename T = int>
@@ -24,8 +25,9 @@ struct id_t {
 	}
 };
 
-using entity_t = id_t<id_type_t::ENTITY>;
-using animid_t = id_t<id_type_t::ANIMATION>;
+using entity_t     = id_t<id_type_t::ENTITY>;
+using animid_t     = id_t<id_type_t::ANIMATION>;
 using animctrlid_t = id_t<id_type_t::ANIMATION_CONTROLLER>;
+using colliderid_t = id_t<id_type_t::COLLIDER>;
 
 } // namespace te

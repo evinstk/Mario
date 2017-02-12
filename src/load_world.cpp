@@ -141,6 +141,31 @@ static void loadAnimationControllers(animctrlmap_t<animctrl_t>& controllers,
 	}
 }
 
+static void loadColliders(collidermap_t<aabb_t>& colliders,
+						  const decltype(tmx_t::tilesets)& tilesets,
+						  eastl::hash_map<eastl::string, colliderid_t>& colliderIDMap) {
+
+	colliders.clear();
+	int nextID = 1;
+	for (const auto& tileset : tilesets) {
+		for (const auto& tile : tileset.tiles) {
+			auto colliderIt = tile.properties.find("collider");
+			if (colliderIt != tile.properties.end()) {
+				assert(tile.geometry.size() == 1);
+				const tmxshape_t& shape = tile.geometry[0];
+				colliderid_t colliderID(nextID++);
+				aabb_t collider = {
+					.pos  = { (int)shape.x,     (int)shape.y },
+					.size = { (int)shape.width, (int)shape.height }
+				};
+				colliders.insert({ colliderID, collider });
+				const auto& colliderName = colliderIt->second;
+				colliderIDMap.insert({ colliderName.c_str(), colliderID });
+			}
+		}
+	}
+}
+
 static void loadAnimators(entitymap_t<animator_t>& animators,
 						  const decltype(tmx_t::objectgroups)& objectgroups,
 						  const eastl::hash_map<eastl::string, animctrlid_t>& ctrlMap) {
@@ -179,6 +204,8 @@ void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	loadAnimations(state.animations, tmx.tilesets);
 	eastl::hash_map<eastl::string, animctrlid_t> ctrlMap;
 	loadAnimationControllers(state.animationControllers, tmx.tilesets, ctrlMap);
+	eastl::hash_map<eastl::string, colliderid_t> colliderMap;
+	loadColliders(state.colliders, tmx.tilesets, colliderMap);
 
 	loadTranslations(state.translations, tmx.objectgroups);
 	loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
