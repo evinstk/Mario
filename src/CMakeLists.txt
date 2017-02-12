@@ -4,7 +4,8 @@ link_directories(~/usr/local/lib)
 
 add_executable(mario
   main.cpp
-  reducer_world.cpp
+  step_world.cpp
+  load_world.cpp
   texture_manager.cpp
   sprite_renderer.cpp
   world_state.cpp
