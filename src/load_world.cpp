@@ -53,34 +53,6 @@ static void loadLayers(vector_t<layer_t>& layers,
 		});
 }
 
-static void loadTranslations(entitymap_t<glm::vec3>& translations,
-							 const decltype(tmx_t::objectgroups)& objectgroups) {
-	translations.clear();
-	for (const auto& group : objectgroups) {
-		for (const auto& object : group.objects) {
-			entity_t entityID(object.id);
-			glm::ivec3 translation(object.x, object.y - object.height, group.layerIndex);
-			translations.insert({ entityID, translation });
-		}
-	}
-}
-
-static void loadTilesetSprites(entitymap_t<int>& sprites,
-							   const decltype(tmx_t::objectgroups)& objectgroups) {
-	sprites.clear();
-	for (const auto& group : objectgroups) {
-		for (const auto& object : group.objects) {
-			if (object.gid > 0) {
-				sprites.insert({ entity_t(object.id), object.gid });
-			}
-		}
-	}
-}
-
-static inline void loadVelocities(entitymap_t<glm::vec3> velocities) {
-	velocities.clear();
-}
-
 static void loadAnimations(animmap_t<animation_t>& animations,
 						   const decltype(tmx_t::tilesets)& tilesets) {
 	animations.clear();
@@ -166,28 +138,14 @@ static void loadColliders(collidermap_t<aabb_t>& colliders,
 	}
 }
 
-static void loadAnimators(entitymap_t<animator_t>& animators,
-						  const decltype(tmx_t::objectgroups)& objectgroups,
-						  const eastl::hash_map<eastl::string, animctrlid_t>& ctrlMap) {
-	animators.clear();
-	for (const auto& group : objectgroups) {
-		for (const auto& object : group.objects) {
-			auto ctrlPropIt = object.properties.find("animctrl");
-			if (ctrlPropIt != object.properties.end()) {
-				auto ctrlIDIt = ctrlMap.find_as(ctrlPropIt->second.c_str());
-				assert(ctrlIDIt != ctrlMap.end());
-				animctrlid_t ctrlID = ctrlIDIt->second;
-				animator_t animator = {
-					.controller = ctrlID,
-					.animation = {},
-					.elapsed = 0.0f
-				};
-				entity_t entityID(object.id);
-				animators.insert({ entityID, animator });
-			}
-		}
-	}
-}
+//static void loadGrounded(entitymap_t<bool>& grounded,
+//						 const decltype(tmx_t::objectgroups)& objectgroups) {
+//	grounded.clear();
+//	for (const auto& group : objectgroups) {
+//		for (const auto& object : group.objects) {
+//		}
+//	}
+//}
 
 static void loadView(const glm::vec3& playerTranslation,
 					 glm::mat4& view) {
@@ -201,16 +159,17 @@ void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	loadTilesets(state.tilesets, tmx);
 	loadLayers(state.layers, tmx.layers);
 
+	mapstrdata_t mapStrData;
 	loadAnimations(state.animations, tmx.tilesets);
-	eastl::hash_map<eastl::string, animctrlid_t> ctrlMap;
-	loadAnimationControllers(state.animationControllers, tmx.tilesets, ctrlMap);
-	eastl::hash_map<eastl::string, colliderid_t> colliderMap;
-	loadColliders(state.colliders, tmx.tilesets, colliderMap);
+	loadAnimationControllers(state.animationControllers, tmx.tilesets, mapStrData.ctrlMap);
+	loadColliders(state.colliders, tmx.tilesets, mapStrData.colliderMap);
 
-	loadTranslations(state.translations, tmx.objectgroups);
-	loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
-	loadVelocities(state.velocities);
-	loadAnimators(state.animators, tmx.objectgroups, ctrlMap);
+	loadEntity(state.entity, tmx.objectgroups, mapStrData);
+	//loadTranslations(state.translations, tmx.objectgroups);
+	//loadTilesetSprites(state.tilesetSprites, tmx.objectgroups);
+	//loadVelocities(state.velocities);
+	//loadAnimators(state.animators, tmx.objectgroups, ctrlMap);
+	//loadGrounded(state.grounded, tmx.objectgroups);
 
 	state.playerEntity = entity_t(0);
 	for (const auto& group : tmx.objectgroups) {
@@ -224,7 +183,7 @@ void loadWorld(worldstate_t& state, const tmx_t& tmx) {
 	}
 	assert(state.playerEntity != entity_t(0));
 
-	loadView(state.translations[state.playerEntity], state.view);
+	loadView(state.entity.translations[state.playerEntity], state.view);
 }
 
 } // namespace te

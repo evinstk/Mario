@@ -9,7 +9,7 @@ void inputWorld(worldstate_t& state, const SDL_Event& evt) {
 
 	if (evt.type == SDL_KEYDOWN) {
 		if (evt.key.keysym.sym == SDLK_SPACE) {
-			state.velocities[state.playerEntity].y = JUMP_SPEED;
+			state.entity.velocities[state.playerEntity].y = JUMP_SPEED;
 		}
 	}
 }
