@@ -57,6 +57,21 @@ struct mapstrdata_t {
 	eastl::hash_map<eastl::string, colliderid_t> colliderMap;
 };
 
+struct frame2_t {
+	int tileid;
+	int duration;
+};
+
+struct animation2_t {
+	int totalDuration;
+	eastl::vector<frame2_t> frames;
+};
+
+struct animctrl2_t {
+	animid2_t walkLeft;
+	animid2_t walkRight;
+};
+
 template <typename T>
 using entitymap_t = eastl::vector_map<entity_t, T>;
 
@@ -71,5 +86,14 @@ using animctrlmap_t = eastl::vector_map<animctrlid_t, T>;
 
 template <typename T>
 using vector_t = eastl::vector<T>;
+
+template <typename T>
+using stringmap_t = eastl::hash_map<eastl::string, T>;
+
+template <typename T>
+using animmap2_t = eastl::vector_map<animid2_t, T>;
+
+template <typename T>
+using animctrlmap2_t = eastl::vector_map<animctrlid2_t, T>;
 
 } // namespace te
