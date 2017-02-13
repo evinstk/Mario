@@ -25,6 +25,11 @@ struct tileset_t {
 	int tilecount;
 };
 
+struct leveltileset_t {
+	tilesetid_t tileset;
+	int firstgid;
+};
+
 struct layer_t {
 	eastl::vector<int> gids;
 	int layerIndex;

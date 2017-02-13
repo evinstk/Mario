@@ -51,7 +51,7 @@ static void loadLayers(levelmap_t<vector_t<layer_t>>& state,
 		});
 }
 
-static void loadTilesets(levelmap_t<vector_t<tilesetid_t>>& state,
+static void loadTilesets(levelmap_t<vector_t<leveltileset_t>>& state,
 						 const decltype(tmx_t::externalTilesets)& externalTilesets,
 						 levelid_t levelID,
 						 const stringmap_t<tilesetid_t>& tilesetIDs) {
@@ -63,7 +63,11 @@ static void loadTilesets(levelmap_t<vector_t<tilesetid_t>>& state,
 		assert(tilesetIDIter != tilesetIDs.end());
 
 		tilesetid_t tilesetID = tilesetIDIter->second;
-		layerTilesets.push_back(tilesetID);
+		leveltileset_t levelTileset = {
+			.tileset = tilesetID,
+			.firstgid = tileset.firstgid
+		};
+		layerTilesets.push_back(levelTileset);
 	}
 }
 
