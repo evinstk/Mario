@@ -30,54 +30,54 @@ static void loadTileset(tilesetmap_t<tileset_t>& state, const tsxtileset_t& tsxt
 	state.insert({ id, tileset });
 }
 
-static void loadAnimation(animmap2_t<animation2_t>& state, const tsxtileset_t& tileset, tilesetid_t tilesetID) {
+static void loadAnimation(animmap_t<animation_t>& state, const tsxtileset_t& tileset, tilesetid_t tilesetID) {
 	for (const auto& tile : tileset.tiles) {
 		if (tile.animation.frames.size() > 0) {
 			int totalDuration = std::accumulate(tile.animation.frames.begin(), tile.animation.frames.end(), 0, [](int total, auto frame) {
 					return total + frame.duration;
 				});
-			animation2_t animation = {
+			animation_t animation = {
 				.totalDuration = totalDuration,
 				.frames = {}
 			};
 			for (const auto& tmxframe : tile.animation.frames) {
-				frame2_t frame = {
+				frame_t frame = {
 					.tileid = tmxframe.tileid,
 					.duration = tmxframe.duration
 				};
 				animation.frames.push_back(frame);
 			}
-			animid2_t animID({ tilesetID, tile.id });
+			animid_t animID({ tilesetID, tile.id });
 			state.insert({ animID, eastl::move(animation) });
 		}
 	}
 }
 
-static void loadControllerID(stringmap_t<animctrlid2_t>& state, int& nextID, const tsxtileset_t& tileset) {
+static void loadControllerID(stringmap_t<animctrlid_t>& state, int& nextID, const tsxtileset_t& tileset) {
 	for (const auto& tile : tileset.tiles) {
 		auto ctrlPropIt = tile.properties.find("animctrl");
 		if (ctrlPropIt != tile.properties.end()) {
 			auto existingIDIter = state.find_as(ctrlPropIt->second.c_str());
 			if (existingIDIter == state.end()) {
-				animctrlid2_t id(nextID++);
+				animctrlid_t id(nextID++);
 				state.insert({ eastl::string(ctrlPropIt->second.c_str()), id });
 			}
 		}
 	}
 }
 
-static void loadController(animctrlmap2_t<animctrl2_t>& state,
-						   const stringmap_t<animctrlid2_t>& ids,
+static void loadController(animctrlmap_t<animctrl_t>& state,
+						   const stringmap_t<animctrlid_t>& ids,
 						   const tsxtileset_t& tileset,
 						   tilesetid_t tilesetID) {
 	for (const auto& tile : tileset.tiles) {
 		auto ctrlPropIt = tile.properties.find("animctrl");
 		if (ctrlPropIt != tile.properties.end()) {
-			animctrlid2_t ctrlID = ids.find_as(ctrlPropIt->second.c_str())->second;
+			animctrlid_t ctrlID = ids.find_as(ctrlPropIt->second.c_str())->second;
 			auto motionIt = tile.properties.find("motion");
 			assert(motionIt != tile.properties.end());
-			animctrl2_t ctrl;
-			animid2_t animID({ tilesetID, tile.id });
+			animctrl_t ctrl;
+			animid_t animID({ tilesetID, tile.id });
 			auto motionStr = motionIt->second;
 			if (motionStr == "walk-right") {
 				ctrl.walkRight = animID;

@@ -18,18 +18,18 @@ static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
 	}
 }
 
-static void stepAnimators(const animctrlmap2_t<animctrl2_t>& controllers,
+static void stepAnimators(const animctrlmap_t<animctrl_t>& controllers,
 						  const entitymap_t<glm::vec3>& velocities,
 						  float dt,
-						  entitymap_t<animator2_t>& animators) {
+						  entitymap_t<animator_t>& animators) {
 
 	for (auto& animatorRow : animators) {
-		animator2_t& animator = animatorRow.second;
+		animator_t& animator = animatorRow.second;
 		animator.elapsed += dt;
 		entity_t entityID = animatorRow.first;
 		glm::vec3 velocity = velocities.find(entityID)->second;
-		const animctrl2_t& controller = controllers.find(animator.controller)->second;
-		animid2_t newAnim;
+		const animctrl_t& controller = controllers.find(animator.controller)->second;
+		animid_t newAnim;
 		if (velocity.x > 0) {
 			newAnim = controller.walkRight;
 		} else if (velocity.x < 0) {
@@ -42,8 +42,8 @@ static void stepAnimators(const animctrlmap2_t<animctrl2_t>& controllers,
 	}
 }
 
-static void stepSprites(const entitymap_t<animator2_t>& animators,
-						const animmap2_t<animation2_t>& animations,
+static void stepSprites(const entitymap_t<animator_t>& animators,
+						const animmap_t<animation_t>& animations,
 						entitymap_t<int>& sprites,
 						const vector_t<leveltileset_t>& levelTilesets) {
 	for (const auto& animatorRow : animators) {
@@ -51,7 +51,7 @@ static void stepSprites(const entitymap_t<animator2_t>& animators,
 		if (animator.animation.id.second == 0) {
 			continue;
 		}
-		animid2_t animationID = animator.animation;
+		animid_t animationID = animator.animation;
 		const auto& animation = animations.find(animationID)->second;
 		int elapsedMS = animator.elapsed * 1000;
 		int clampedElapsed = elapsedMS % animation.totalDuration;
@@ -76,8 +76,8 @@ static void stepSprites(const entitymap_t<animator2_t>& animators,
 // 				float dt,
 // 				const Uint8 *keyboardState,
 // 				entity_t playerEntity,
-// 				const animctrlmap2_t<animctrl2_t>& animationControllers,
-// 				const animmap2_t<animation2_t>& animations,
+// 				const animctrlmap_t<animctrl_t>& animationControllers,
+// 				const animmap_t<animation_t>& animations,
 // 				const vector_t<leveltileset_t>& levelTilesets) {
 void stepEntity(entitystate_t& state, float dt, const Uint8 *keyboardState, entity_t playerEntity, levelid_t levelID, const tilesetstate_t& tilesetState, const levelstate_t& levelState) {
 	stepVelocities(state.velocities, playerEntity, keyboardState);

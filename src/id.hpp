@@ -42,15 +42,11 @@ struct id_t {
 //}
 
 using entity_t        = id_t<id_type_t::ENTITY>;
-using animid_t        = id_t<id_type_t::ANIMATION>;
-using animctrlid_t    = id_t<id_type_t::ANIMATION_CONTROLLER>;
 using colliderid_t    = id_t<id_type_t::COLLIDER>;
 using tilesetid_t     = id_t<id_type_t::TILESET>;
 using levelid_t       = id_t<id_type_t::LEVEL>;
 using levelobjectid_t = id_t<id_type_t::LEVEL_OBJECT, eastl::pair<levelid_t, int>>;
-
-// TODO replace
-using animid2_t = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;
-using animctrlid2_t = id_t<id_type_t::ANIMATION_CONTROLLER>;
+using animid_t = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;
+using animctrlid_t = id_t<id_type_t::ANIMATION_CONTROLLER>;
 
 } // namespace te

@@ -58,12 +58,12 @@ void runTilesetSprites(entitymap_t<int>& state, Iter first, Iter last) {
 }
 
 template <typename Iter>
-void runAnimators(entitymap_t<animator2_t>& state, Iter first, Iter last) {
+void runAnimators(entitymap_t<animator_t>& state, Iter first, Iter last) {
 	for (auto it = first; it != last; ++it) {
-		animctrlid2_t ctrl = it->second.animationController;
+		animctrlid_t ctrl = it->second.animationController;
 		if (ctrl.id > 0) {
 			entity_t id(it->first.id.second);
-			animator2_t animator = {
+			animator_t animator = {
 				.controller = ctrl,
 				.animation = {},
 				.elapsed = 0

@@ -14,11 +14,11 @@ struct tilesetstate_t {
 	stringmap_t<tilesetid_t> source;
 
 	tilesetmap_t<tileset_t> tileset;
-	animmap2_t<animation2_t> animation;
+	animmap_t<animation_t> animation;
 
 	int nextControllerID;
-	stringmap_t<animctrlid2_t> controllerID;
-	animctrlmap2_t<animctrl2_t> controller;
+	stringmap_t<animctrlid_t> controllerID;
+	animctrlmap_t<animctrl_t> controller;
 };
 
 } // namespace te

@@ -75,7 +75,7 @@ static void loadTilesets(levelmap_t<vector_t<leveltileset_t>>& state,
 void loadObjects(levelobjectmap_t<levelobject_t>& state,
 				 const decltype(tmx_t::objectgroups)& groups,
 				 levelid_t levelID,
-				 stringmap_t<animctrlid2_t> controllers) {
+				 stringmap_t<animctrlid_t> controllers) {
 
 	for (const auto& group : groups) {
 		for (const auto& object : group.objects) {
