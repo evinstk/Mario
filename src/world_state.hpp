@@ -18,13 +18,8 @@ struct worldstate_t {
 
 	entitystate_t entity;
 
-	map_t map;
-	vector_t<tileset_t> tilesets;
+	levelid_t level;
 	vector_t<layer_t> layers;
-
-	animmap_t<animation_t> animations;
-	animctrlmap_t<animctrl_t> animationControllers;
-	collidermap_t<aabb_t> colliders;
 
 	entity_t playerEntity;
 };

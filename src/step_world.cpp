@@ -16,8 +16,8 @@ static void stepView(const glm::vec3& playerTranslation,
 									0));
 }
 
-void stepWorld(worldstate_t& state, float dt, const Uint8 *keyboardState) {
-	stepEntity(state.entity, dt, keyboardState, state.playerEntity, state.animationControllers, state.animations);
+void stepWorld(worldstate_t& state, float dt, const Uint8 *keyboardState, const tilesetstate_t& tilesetState, const levelstate_t& levelState) {
+	stepEntity(state.entity, dt, keyboardState, state.playerEntity, state.level, tilesetState, levelState);
 	stepView(state.entity.translations[state.playerEntity], state.view);
 }
 

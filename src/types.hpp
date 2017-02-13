@@ -21,7 +21,6 @@ struct tileset_t {
 	int spacing;
 	int margin;
 	int columns;
-	int firstgid;
 	int tilecount;
 };
 
@@ -75,6 +74,12 @@ struct animation2_t {
 struct animctrl2_t {
 	animid2_t walkLeft;
 	animid2_t walkRight;
+};
+
+struct animator2_t {
+	animctrlid2_t controller;
+	animid2_t animation;
+	float elapsed;
 };
 
 template <typename T>

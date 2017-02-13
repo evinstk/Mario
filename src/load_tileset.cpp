@@ -25,7 +25,6 @@ static void loadTileset(tilesetmap_t<tileset_t>& state, const tsxtileset_t& tsxt
 		.spacing = tsxtileset.spacing,
 		.margin = tsxtileset.margin,
 		.columns = tsxtileset.columns,
-		.firstgid = 0,
 		.tilecount = tsxtileset.tilecount
 	};
 	state.insert({ id, tileset });

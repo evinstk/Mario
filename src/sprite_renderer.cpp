@@ -1,5 +1,5 @@
 #include "sprite_renderer.hpp"
-#include "world_state.hpp"
+#include "game_state.hpp"
 #include <tegl/types.hpp>
 #include <tegl/util.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -51,21 +51,31 @@ SpriteRenderer::SpriteRenderer()
 	assert( glGetError() == GL_NO_ERROR );
 }
 
-void SpriteRenderer::draw(const worldstate_t& state) {
+void SpriteRenderer::draw(const gamestate_t& state) {
 	glUseProgram(m_shader);
 
-	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(state.projection));
-	glUniformMatrix4fv(m_viewLoc, 1, GL_FALSE, glm::value_ptr(state.view));
+	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(state.world.projection));
+	glUniformMatrix4fv(m_viewLoc, 1, GL_FALSE, glm::value_ptr(state.world.view));
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray( m_vertexArray );
+
+	auto mapIt = state.level.map.find(state.world.level);
+	assert(mapIt != state.level.map.end());
+	const auto& map = mapIt->second;
 
 	eastl::vector<glm::ivec3> translations;
 	eastl::vector<GLint> ids;
 	eastl::vector<int> markedGIDs;
 
 	// iterate tilesets in outer loop to minimize texture bindings
-	for (const auto& tileset : state.tilesets) {
+	auto tilesetsIt = state.level.tilesets.find(state.world.level);
+	assert(tilesetsIt != state.level.tilesets.end());
+	const auto& tilesets = tilesetsIt->second;
+	for (const auto& layerTileset : tilesets) {
+		auto tilesetIt = state.tileset.tileset.find(layerTileset.tileset);
+		assert(tilesetIt != state.tileset.tileset.end());
+		const auto& tileset = tilesetIt->second;
 		glBindTexture(GL_TEXTURE_2D, tileset.texture);
 
 		glUniform2iv( m_tileSizeLoc, 1, glm::value_ptr( tileset.tileSize ) );
@@ -73,23 +83,23 @@ void SpriteRenderer::draw(const worldstate_t& state) {
 		glUniform1i( m_marginLoc, tileset.margin );
 		glUniform1i( m_columnsLoc, tileset.columns );
 
-		for (const auto& layer : state.layers) {
+		for (const auto& layer : state.world.layers) {
 
 			for (int i = 0, layerSize = layer.gids.size(); i < layerSize; ++i) {
 				int gid = layer.gids[i];
-				GLint localID = gid - tileset.firstgid;
+				GLint localID = gid - layerTileset.firstgid;
 
 				// if unmarked tile is in currently bound tileset,
 				// find all tiles in layer, draw, and mark tile
-				if (gid >= tileset.firstgid
-					&& gid < tileset.firstgid + tileset.tilecount
+				if (gid >= layerTileset.firstgid
+					&& gid < layerTileset.firstgid + tileset.tilecount
 					&& eastl::find(markedGIDs.begin(), markedGIDs.end(), gid) == markedGIDs.end()) {
 
 					for (int j = i; j < layerSize; ++j) {
 						if (layer.gids[j] == gid) {
 
-							translations.push_back(glm::ivec3( ( j % layer.size.x ) * state.map.tileSize.x,
-															   ( j / layer.size.x ) * state.map.tileSize.y,
+							translations.push_back(glm::ivec3( ( j % layer.size.x ) * map.tileSize.x,
+															   ( j / layer.size.x ) * map.tileSize.y,
 															   layer.layerIndex ));
 							ids.push_back(localID);
 						}
@@ -102,18 +112,18 @@ void SpriteRenderer::draw(const worldstate_t& state) {
 			markedGIDs.clear();
 		}
 
-		for (const auto& spriteRow : state.entity.tilesetSprites) {
+		for (const auto& spriteRow : state.world.entity.tilesetSprites) {
 			entity_t entityID = spriteRow.first;
 			int sprite = spriteRow.second;
 
-			if (sprite >= tileset.firstgid
-				&& sprite < tileset.firstgid + tileset.tilecount) {
+			if (sprite >= layerTileset.firstgid
+				&& sprite < layerTileset.firstgid + tileset.tilecount) {
 
-				auto translationIt = state.entity.translations.find(entityID);
-				assert(translationIt != state.entity.translations.end());
+				auto translationIt = state.world.entity.translations.find(entityID);
+				assert(translationIt != state.world.entity.translations.end());
 
 				translations.push_back(translationIt->second);
-				ids.push_back(sprite - tileset.firstgid);
+				ids.push_back(sprite - layerTileset.firstgid);
 			}
 		}
 

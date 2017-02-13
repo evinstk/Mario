@@ -1,4 +1,4 @@
-#include "world_state.hpp"
+#include "game_state.hpp"
 #include "sprite_renderer.hpp"
 #include "reducer_world.hpp"
 #include <tegl/readtmx.hpp>
@@ -52,10 +52,20 @@ static int MarioMain() {
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	worldstate_t worldState;
+	gamestate_t gameState;
 
-	tmx_t tmx("tiled/1-1.tmx");
-	loadWorld(worldState, tmx);
+	const char *tmxPathname = "tiled/1-1.tmx";
+	tmx_t tmx(tmxPathname);
+	assert(tmx.tilesets.size() == 0);
+	for (const auto& externalTileset : tmx.externalTilesets) {
+		std::string tilesetPathname = "tiled/" + externalTileset.source;
+		tsxtileset_t tileset(tilesetPathname.c_str());
+		loadGame(gameState, tileset, tilesetPathname.c_str());
+	}
+	loadGame(gameState, tmx, tmxPathname);
+
+	levelid_t levelID = gameState.level.source.find(tmxPathname)->second;
+	runGame(gameState, levelID);
 
 	SpriteRenderer spriteRenderer;
 	
@@ -75,13 +85,13 @@ static int MarioMain() {
 				if (evt.type == SDL_QUIT) {
 					running = false;
 				}
-				inputWorld(worldState, evt);
+				//inputWorld(worldState, evt);
 			}
-			stepWorld(worldState, timePerFrame, SDL_GetKeyboardState(NULL));
+			stepGame(gameState, timePerFrame, SDL_GetKeyboardState(NULL));
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		spriteRenderer.draw(worldState);
+		spriteRenderer.draw(gameState);
 		SDL_GL_SwapWindow(upWindow.get());
 	}
 

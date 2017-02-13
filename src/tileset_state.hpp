@@ -1,5 +1,6 @@
 #pragma once
 #include "id.hpp"
+#include "types.hpp"
 #include <EASTL/hash_map.h>
 #include <EASTL/vector_map.h>
 #include <EASTL/string.h>
