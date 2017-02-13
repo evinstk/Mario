@@ -59,7 +59,7 @@ static void loadTilesets(levelmap_t<vector_t<leveltileset_t>>& state,
 	auto& layerTilesets = state[levelID];
 	layerTilesets.clear();
 	for (const auto& tileset : externalTilesets) {
-		auto tilesetIDIter = tilesetIDs.find_as(tileset.source.c_str());
+		auto tilesetIDIter = tilesetIDs.find_as(("tiled/" + tileset.source).c_str());
 		assert(tilesetIDIter != tilesetIDs.end());
 
 		tilesetid_t tilesetID = tilesetIDIter->second;

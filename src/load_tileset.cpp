@@ -7,7 +7,7 @@ namespace te {
 
 static bool loadSource(stringmap_t<tilesetid_t>& source, int& nextID, const char *pathname) {
 	auto existingIt = source.find_as(pathname);
-	if (existingIt == source.end()) {
+	if (existingIt != source.end()) {
 		return false;
 	}
 
