@@ -1,5 +1,6 @@
 #include "reducer_world.hpp"
 #include "tileset_state.hpp"
+#include "texture_manager.hpp"
 #include <numeric>
 
 namespace te {
@@ -13,6 +14,21 @@ static bool loadSource(stringmap_t<tilesetid_t>& source, int& nextID, const char
 	tilesetid_t id(nextID++);
 	source.insert({ eastl::string(pathname), id });
 	return true;
+}
+
+static void loadTileset(tilesetmap_t<tileset_t>& state, const tsxtileset_t& tsxtileset, tilesetid_t id) {
+	// TODO: remove side effect
+	GLuint textureID = gTextureManager->load(std::string("tilesets/" + tsxtileset.images[0].source).c_str());
+	tileset_t tileset = {
+		.texture = textureID,
+		.tileSize = glm::ivec2(tsxtileset.tilewidth, tsxtileset.tileheight),
+		.spacing = tsxtileset.spacing,
+		.margin = tsxtileset.margin,
+		.columns = tsxtileset.columns,
+		.firstgid = 0,
+		.tilecount = tsxtileset.tilecount
+	};
+	state.insert({ id, tileset });
 }
 
 static void loadAnimation(animmap2_t<animation2_t>& state, const tsxtileset_t& tileset, tilesetid_t tilesetID) {
@@ -82,6 +98,7 @@ void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char 
 	}
 
 	tilesetid_t id = state.source.find_as(pathname)->second;
+	loadTileset(state.tileset, tileset, id);
 	loadAnimation(state.animation, tileset, id);
 	loadControllerID(state.controllerID, state.nextControllerID, tileset);
 	loadController(state.controller, state.controllerID, tileset, id);

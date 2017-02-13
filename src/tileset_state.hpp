@@ -8,8 +8,11 @@ namespace te {
 
 struct tilesetstate_t {
 	tilesetstate_t() : nextID(1), nextControllerID(1) {}
+
 	int nextID;
 	stringmap_t<tilesetid_t> source;
+
+	tilesetmap_t<tileset_t> tileset;
 	animmap2_t<animation2_t> animation;
 
 	int nextControllerID;

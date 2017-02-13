@@ -91,6 +91,9 @@ template <typename T>
 using stringmap_t = eastl::hash_map<eastl::string, T>;
 
 template <typename T>
+using tilesetmap_t = eastl::vector_map<tilesetid_t, T>;
+
+template <typename T>
 using animmap2_t = eastl::vector_map<animid2_t, T>;
 
 template <typename T>
