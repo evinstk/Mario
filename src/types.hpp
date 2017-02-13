@@ -35,6 +35,12 @@ struct layer_t {
 	glm::ivec2 size;
 };
 
+struct levelobject_t {
+	glm::vec3 translation;
+	int gid;
+	animctrlid2_t animationController;
+};
+
 struct frame_t {
 	int gid;
 	int duration;
@@ -111,5 +117,8 @@ using animctrlmap2_t = eastl::vector_map<animctrlid2_t, T>;
 
 template <typename T>
 using levelmap_t = eastl::vector_map<levelid_t, T>;
+
+template <typename T>
+using levelobjectmap_t = eastl::vector_map<levelobjectid_t, T>;
 
 } // namespace te

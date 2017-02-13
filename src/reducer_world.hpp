@@ -17,11 +17,12 @@ void stepEntity(entitystate_t& state, float dt, const Uint8 *keyboardState, enti
 void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
 void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
-void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const stringmap_t<tilesetid_t>& tilesetIDs);
+void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState);
 //void loadWorld(worldstate_t& state, const tmx_t& tmx);
 //void loadEntity(entitystate_t& state, const decltype(tmx_t::objectgroups)& tmx, const mapstrdata_t& mapData);
 void runGame(gamestate_t& state, levelid_t levelID);
-void runWorld(worldstate_t& world, levelid_t levelID, const levelstate_t& levelState);
+void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState);
+void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState);
 void inputWorld(worldstate_t& state, const SDL_Event& evt);
 
 } // namespace te

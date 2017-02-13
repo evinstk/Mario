@@ -12,6 +12,7 @@ add_executable(mario
   load_level.cpp
   run_game.cpp
   run_world.cpp
+  run_entity.cpp
   texture_manager.cpp
   sprite_renderer.cpp
   world_state.cpp

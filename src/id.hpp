@@ -9,7 +9,8 @@ enum class id_type_t {
 	ANIMATION_CONTROLLER,
 	COLLIDER,
 	TILESET,
-	LEVEL
+	LEVEL,
+	LEVEL_OBJECT
 };
 
 template <id_type_t I, typename T = int>
@@ -26,14 +27,27 @@ struct id_t {
 	bool operator!=( const id_t& rhs ) const noexcept {
 		return !( id == rhs.id );
 	}
+	id_t next() const noexcept {
+		return id_t(id + 1);
+	}
+	//template <typename F>
+	//bool operator<( const F& rhs ) const noexcept {
+	//	return id.first < rhs;
+	//}
 };
 
-using entity_t     = id_t<id_type_t::ENTITY>;
-using animid_t     = id_t<id_type_t::ANIMATION>;
-using animctrlid_t = id_t<id_type_t::ANIMATION_CONTROLLER>;
-using colliderid_t = id_t<id_type_t::COLLIDER>;
-using tilesetid_t  = id_t<id_type_t::TILESET>;
-using levelid_t    = id_t<id_type_t::LEVEL>;
+//template <id_type_t I, typename F, typename S>
+//bool operator<( const F& lhs, id_t<I, eastl::pair<F,S>> id ) noexcept {
+//	return lhs < id.first;
+//}
+
+using entity_t        = id_t<id_type_t::ENTITY>;
+using animid_t        = id_t<id_type_t::ANIMATION>;
+using animctrlid_t    = id_t<id_type_t::ANIMATION_CONTROLLER>;
+using colliderid_t    = id_t<id_type_t::COLLIDER>;
+using tilesetid_t     = id_t<id_type_t::TILESET>;
+using levelid_t       = id_t<id_type_t::LEVEL>;
+using levelobjectid_t = id_t<id_type_t::LEVEL_OBJECT, eastl::pair<levelid_t, int>>;
 
 // TODO replace
 using animid2_t = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;
