@@ -96,4 +96,7 @@ using animmap2_t = eastl::vector_map<animid2_t, T>;
 template <typename T>
 using animctrlmap2_t = eastl::vector_map<animctrlid2_t, T>;
 
+template <typename T>
+using levelmap_t = eastl::vector_map<levelid_t, T>;
+
 } // namespace te

@@ -8,7 +8,8 @@ enum class id_type_t {
 	ANIMATION,
 	ANIMATION_CONTROLLER,
 	COLLIDER,
-	TILESET
+	TILESET,
+	LEVEL
 };
 
 template <id_type_t I, typename T = int>
@@ -32,6 +33,7 @@ using animid_t     = id_t<id_type_t::ANIMATION>;
 using animctrlid_t = id_t<id_type_t::ANIMATION_CONTROLLER>;
 using colliderid_t = id_t<id_type_t::COLLIDER>;
 using tilesetid_t  = id_t<id_type_t::TILESET>;
+using levelid_t    = id_t<id_type_t::LEVEL>;
 
 // TODO replace
 using animid2_t = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;

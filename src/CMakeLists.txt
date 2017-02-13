@@ -6,7 +6,9 @@ add_executable(mario
   main.cpp
   step_world.cpp
   step_entity.cpp
+  load_game.cpp
   load_tileset.cpp
+  load_level.cpp
   load_world.cpp
   load_entity.cpp
   texture_manager.cpp
