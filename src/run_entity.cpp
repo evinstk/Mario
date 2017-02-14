@@ -97,7 +97,7 @@ void runAnimators(entitymap_t<animator_t>& state, Iter first, Iter last) {
 
 void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState) {
 	auto lowerBound = levelState.objects.lower_bound(levelobjectid_t({ levelID, 0 }));
-	auto upperBound = levelState.objects.upper_bound(levelobjectid_t({ levelID.next(), 0 }));
+	auto upperBound = levelState.objects.lower_bound(levelobjectid_t({ levelID.next(), 0 }));
 
 	runColliders(state.colliders, lowerBound, upperBound);
 	runVelocities(state.velocities, lowerBound, upperBound);
