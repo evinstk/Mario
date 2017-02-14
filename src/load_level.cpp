@@ -92,14 +92,24 @@ static void loadTilesets(levelmap_t<vector_t<leveltileset_t>>& state,
 
 void loadObjects(levelobjectmap_t<levelobject_t>& state,
 				 const decltype(tmx_t::objectgroups)& groups,
+				 const vector_t<leveltileset_t>& tilesets,
 				 levelid_t levelID,
-				 stringmap_t<animctrlid_t> controllers) {
+				 const stringmap_t<animctrlid_t>& controllers,
+				 const stringmap_t<colliderid_t>& colliders) {
 
 	for (const auto& group : groups) {
 		for (const auto& object : group.objects) {
+
+			const leveltileset_t *pTileset;
+			for (int i = 0, size = tilesets.size(); i < size; ++i) {
+				if (object.gid >= tilesets[i].firstgid) {
+					pTileset = &tilesets[i];
+				}
+			}
+
 			levelobject_t levelObject = {
 				.translation = { object.x, object.y - object.height, group.layerIndex },
-				.gid = object.gid
+				.tile = tileid_t({ pTileset->tileset, object.gid - pTileset->firstgid })
 			};
 
 			auto animCtrlPropIt = object.properties.find("animctrl");
@@ -135,8 +145,9 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	levelid_t levelID = state.source.find_as(pathname)->second;
 	loadMap(state.map, tmx, levelID);
 	loadTilesets(state.tilesets, tmx.externalTilesets, levelID, tilesetState.source);
-	loadLayers(state.layers, tmx.layers, levelID);
-	loadObjects(state.objects, tmx.objectgroups, levelID, tilesetState.controllerID);
+	loadLayers(state.layers, state.tilesets.find(levelID)->second, tilesetState.tileset, tmx.layers, levelID);
+
+	loadObjects(state.objects, tmx.objectgroups, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID, tilesetState.colliderID);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 }
 

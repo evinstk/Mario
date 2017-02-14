@@ -115,16 +115,15 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 
 		for (const auto& spriteRow : state.world.entity.tilesetSprites) {
 			entity_t entityID = spriteRow.first;
-			int sprite = spriteRow.second;
+			tileid_t sprite = spriteRow.second;
 
-			if (sprite >= layerTileset.firstgid
-				&& sprite < layerTileset.firstgid + tileset.tilecount) {
+			if (sprite.id.first == layerTileset.tileset) {
 
 				auto translationIt = state.world.entity.translations.find(entityID);
 				assert(translationIt != state.world.entity.translations.end());
 
 				translations.push_back(translationIt->second);
-				ids.push_back(sprite - layerTileset.firstgid);
+				ids.push_back(sprite.id.second);
 			}
 		}
 

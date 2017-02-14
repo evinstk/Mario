@@ -47,12 +47,12 @@ void runTranslations(entitymap_t<glm::vec3>& state, Iter first, Iter last) {
 }
 
 template <typename Iter>
-void runTilesetSprites(entitymap_t<int>& state, Iter first, Iter last) {
+void runTilesetSprites(entitymap_t<tileid_t>& state, Iter first, Iter last) {
 	for (auto it = first; it != last; ++it) {
-		int gid = it->second.gid;
-		if (gid > 0) {
+		tileid_t tile = it->second.tile;
+		if (tile.id.first.id > 0) {
 			entity_t id(it->first.id.second);
-			state.insert({ id, gid });
+			state.insert({ id, tile });
 		}
 	}
 }

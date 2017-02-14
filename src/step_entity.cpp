@@ -11,8 +11,8 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, entity_t playerEn
 }
 
 static void stepTranslations(const entitymap_t<glm::vec3>& velocities,
-					  float dt,
-					  entitymap_t<glm::vec3>& translations) {
+							 float dt,
+							 entitymap_t<glm::vec3>& translations) {
 	for (const auto& velocityRow : velocities) {
 		translations[velocityRow.first] += velocityRow.second * dt;
 	}
@@ -44,7 +44,7 @@ static void stepAnimators(const animctrlmap_t<animctrl_t>& controllers,
 
 static void stepSprites(const entitymap_t<animator_t>& animators,
 						const animmap_t<animation_t>& animations,
-						entitymap_t<int>& sprites,
+						entitymap_t<tileid_t>& sprites,
 						const vector_t<leveltileset_t>& levelTilesets) {
 	for (const auto& animatorRow : animators) {
 		const auto& animator = animatorRow.second;
@@ -65,7 +65,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 						return ltileset.tileset == tilesetID;
 					});
 				assert(tilesetIt != levelTilesets.end());
-				sprites[entityID] = tilesetIt->firstgid + frame.tileid;
+				sprites[entityID] = tileid_t({ tilesetIt->tileset, frame.tileid });
 				break;
 			}
 		}

@@ -37,7 +37,7 @@ struct layer_t {
 
 struct levelobject_t {
 	glm::vec3 translation;
-	int gid;
+	tileid_t tile;
 	animctrlid_t animationController;
 };
 
