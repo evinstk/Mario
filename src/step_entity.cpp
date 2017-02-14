@@ -76,7 +76,7 @@ static void stepColliders(entitymap_t<int>& grounded,
 }
 
 static void stepVelocities(entitymap_t<glm::vec3>& velocities, const Uint8 *keyboard, const gamestate_t& game) {
-	static constexpr float SPEED = 32.0f;
+	static constexpr float SPEED = 3 * 32.0f;
 	velocities[game.world.playerEntity].x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED;
 
 	for (const auto& groundedRow : game.world.entity.grounded) {
