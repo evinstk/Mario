@@ -7,13 +7,71 @@
 
 namespace te {
 
-static int senseSolid(int x,
-					  int yStart,
-					  int yEnd,
-					  int xSize,
-					  int ySize,
-					  const layer_t& platformLayer,
-					  const eastl::vector_set<tileid_t>& solids) {
+static int senseOnWall(int y,
+					   int xStart,
+					   int xEnd,
+					   int xSize,
+					   int ySize,
+					   const layer_t& platformLayer,
+					   const eastl::vector_set<tileid_t>& solids) {
+
+	int yTile = y / ySize;
+
+	for (int xTile = xStart / xSize, end = xEnd / xSize; xTile <= end; ++xTile) {
+
+		int tileIndex = yTile * platformLayer.size.x + xTile;
+		if (tileIndex >= platformLayer.tiles.size()) {
+			continue;
+		}
+
+		tileid_t tile = platformLayer.tiles[tileIndex];
+		if (solids.find(tile) != solids.end()) {
+			return xTile * xSize;
+		}
+	}
+
+	return -1;
+}
+
+static void stepWallOffsets(entitymap_t<float>& state, const gamestate_t& game) {
+	state.clear();
+
+	const layer_t& platformLayer = getPlatformLayer(game);
+	glm::vec2 tileSize = getMap(game).tileSize;
+
+	for (const auto& colliderRow : game.world.entity.colliders) {
+		entity_t entityID = colliderRow.first;
+		colliderid_t colliderID = colliderRow.second;
+		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
+		glm::vec3 translation = game.world.entity.translations.find(entityID)->second;
+
+		int y      = translation.y + collider.pos.y + ((collider.size.y * 3) / 4);
+		int xStart = translation.x + collider.pos.x;
+		int xEnd   = xStart + collider.size.x;
+
+		int xWallPos = senseOnWall(y, xStart, xEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+
+		if (xWallPos >= 0) {
+			if (translation.x > xWallPos) {
+				float offset = xWallPos + tileSize.x - translation.x - collider.pos.x;
+				state.insert({ entityID, offset });
+			} else {
+				float offset = xWallPos - translation.x - collider.pos.x - collider.size.x;
+				state.insert({ entityID, offset });
+			}
+		} else {
+			state.insert({ entityID, 0 });
+		}
+	}
+}
+
+static int senseGround(int x,
+					   int yStart,
+					   int yEnd,
+					   int xSize,
+					   int ySize,
+					   const layer_t& platformLayer,
+					   const eastl::vector_set<tileid_t>& solids) {
 
 	int xTile = x / xSize;
 
@@ -39,9 +97,8 @@ static void stepColliders(entitymap_t<int>& grounded,
 	grounded.clear();
 	falling.clear();
 
-	glm::ivec2 tileSize = game.level.map.find(game.world.level)->second.tileSize;
-	int platformIndex = game.level.platformIndex.find(game.world.level)->second;
-	const layer_t& platformLayer = game.world.layers[platformIndex];
+	glm::ivec2 tileSize = getMap(game).tileSize;
+	const layer_t& platformLayer = getPlatformLayer(game);
 
 	for (const auto& entityColliderRow : game.world.entity.colliders) {
 		entity_t entityID = entityColliderRow.first;
@@ -55,6 +112,7 @@ static void stepColliders(entitymap_t<int>& grounded,
 
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
 		glm::vec3 translation = game.world.entity.translations.find(entityID)->second;
+		translation.x += game.world.entity.wallOffsets.find(entityID)->second;
 
 		int halfColliderSizeY = collider.size.y / 2;
 		int yStart = translation.y + collider.pos.y + halfColliderSizeY;
@@ -62,8 +120,8 @@ static void stepColliders(entitymap_t<int>& grounded,
 		int x1     = translation.x + collider.pos.x + 1;
 		int x2     = translation.x + collider.pos.x + collider.size.x - 1;
 
-		int solidTile1 = senseSolid(x1, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
-		int solidTile2 = senseSolid(x2, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int solidTile1 = senseGround(x1, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int solidTile2 = senseGround(x2, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
 
 		if (solidTile1 >= 0) {
 			grounded.insert({ entityID, solidTile1 });
@@ -79,9 +137,14 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const Uint8 *keyb
 	static constexpr float SPEED = 3 * 32.0f;
 	velocities[game.world.playerEntity].x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED;
 
+	for (const auto& wallRow : game.world.entity.wallOffsets) {
+		if (wallRow.second != 0) {
+			velocities.find(wallRow.first)->second.x = 0;
+		}
+	}
+
 	for (const auto& groundedRow : game.world.entity.grounded) {
-		entity_t entityID = groundedRow.first;
-		velocities.find(entityID)->second.y = 0;
+		velocities.find(groundedRow.first)->second.y = 0;
 	}
 
 	for (const entity_t& fallingEntity : game.world.entity.falling) {
@@ -92,6 +155,10 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const Uint8 *keyb
 static void stepTranslations(entitymap_t<glm::vec3>& translations, float dt, const gamestate_t& game) {
 	for (const auto& velocityRow : game.world.entity.velocities) {
 		translations[velocityRow.first] += velocityRow.second * dt;
+	}
+
+	for (const auto& wallRow : game.world.entity.wallOffsets) {
+		translations.find(wallRow.first)->second.x += wallRow.second;
 	}
 
 	for (const auto& groundedRow : game.world.entity.grounded) {
@@ -159,6 +226,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 }
 
 void stepEntity(entitystate_t& state, float dt, const Uint8 *keyboardState, const gamestate_t& game) {
+	stepWallOffsets(state.wallOffsets, game);
 	stepColliders(state.grounded, state.falling, game);
 	stepVelocities(state.velocities, keyboardState, game);
 	stepTranslations(state.translations, dt, game);

@@ -7,6 +7,7 @@ namespace te {
 
 struct entitystate_t {
 	entitymap_t<colliderid_t> colliders;
+	entitymap_t<float> wallOffsets;
 	entitymap_t<int> grounded;
 	entityset_t falling;
 
