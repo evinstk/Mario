@@ -29,23 +29,41 @@ static void loadMap(levelmap_t<map_t>& state,
 }
 
 static void loadLayers(levelmap_t<vector_t<layer_t>>& state,
+					   const vector_t<leveltileset_t>& levelTilesets,
+					   const tilesetmap_t<tileset_t>& tilesets,
 					   const decltype(tmx_t::layers)& tmxLayers,
 					   levelid_t levelID) {
 
 	auto& layers = state[levelID];
-	eastl::transform(tmxLayers.begin(), tmxLayers.end(), eastl::back_inserter(layers), [](const tmxlayer_t& tmxlayer) {
+	eastl::transform(tmxLayers.begin(), tmxLayers.end(), eastl::back_inserter(layers), [&](const tmxlayer_t& tmxlayer) {
 
 			layer_t layer = {
-				.gids = {},
+				.tiles = {},
 				.layerIndex = tmxlayer.layerIndex,
 				.size = glm::ivec2(tmxlayer.width, tmxlayer.height)
 			};
 
 			eastl::transform(tmxlayer.data.tiles.begin(),
 							 tmxlayer.data.tiles.end(),
-							 eastl::back_inserter(layer.gids),
-							 [](tmxtile_t tile) {
-								 return tile.gid;
+							 eastl::back_inserter(layer.tiles),
+							 [&](tmxtile_t tile) {
+
+								 if (tile.gid == 0) {
+									 return tileid_t();
+								 }
+
+								 int tilesetIndex = -1, i = 0;
+								 for (const auto& levelTileset : levelTilesets) {
+									 const auto& tileset = tilesets.find(levelTileset.tileset)->second;
+									 if ((tile.gid >= levelTileset.firstgid) && (tile.gid < (levelTileset.firstgid + tileset.tilecount))) {
+										 tilesetIndex = i;
+										 break;
+									 }
+									 ++i;
+								 }
+								 assert(tilesetIndex != -1);
+								 tileid_t tileID({ levelTilesets[tilesetIndex].tileset, tile.gid - levelTilesets[tilesetIndex].firstgid });
+								 return tileid_t(tileID);
 							 });
 
 			return layer;

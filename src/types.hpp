@@ -30,7 +30,7 @@ struct leveltileset_t {
 };
 
 struct layer_t {
-	eastl::vector<int> gids;
+	eastl::vector<tileid_t> tiles;
 	int layerIndex;
 	glm::ivec2 size;
 };

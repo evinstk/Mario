@@ -66,7 +66,7 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 
 	eastl::vector<glm::ivec3> translations;
 	eastl::vector<GLint> ids;
-	eastl::vector<int> markedGIDs;
+	eastl::vector<tileid_t> markedTiles;
 
 	// iterate tilesets in outer loop to minimize texture bindings
 	auto tilesetsIt = state.level.tilesets.find(state.world.level);
@@ -85,18 +85,19 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 
 		for (const auto& layer : state.world.layers) {
 
-			for (int i = 0, layerSize = layer.gids.size(); i < layerSize; ++i) {
-				int gid = layer.gids[i];
-				GLint localID = gid - layerTileset.firstgid;
+			for (int i = 0, layerSize = layer.tiles.size(); i < layerSize; ++i) {
+
+				tileid_t tile = layer.tiles[i];
+				tilesetid_t tileset = tile.id.first;
+				GLint localID = tile.id.second;
 
 				// if unmarked tile is in currently bound tileset,
 				// find all tiles in layer, draw, and mark tile
-				if (gid >= layerTileset.firstgid
-					&& gid < layerTileset.firstgid + tileset.tilecount
-					&& eastl::find(markedGIDs.begin(), markedGIDs.end(), gid) == markedGIDs.end()) {
+				if (tileset == layerTileset.tileset
+					&& eastl::find(markedTiles.begin(), markedTiles.end(), tile) == markedTiles.end()) {
 
 					for (int j = i; j < layerSize; ++j) {
-						if (layer.gids[j] == gid) {
+						if (layer.tiles[j] == tile) {
 
 							translations.push_back(glm::ivec3( ( j % layer.size.x ) * map.tileSize.x,
 															   ( j / layer.size.x ) * map.tileSize.y,
@@ -105,11 +106,11 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 						}
 					}
 
-					markedGIDs.push_back(gid);
+					markedTiles.push_back(tile);
 				}
 			}
 
-			markedGIDs.clear();
+			markedTiles.clear();
 		}
 
 		for (const auto& spriteRow : state.world.entity.tilesetSprites) {

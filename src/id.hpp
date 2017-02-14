@@ -10,7 +10,8 @@ enum class id_type_t {
 	COLLIDER,
 	TILESET,
 	LEVEL,
-	LEVEL_OBJECT
+	LEVEL_OBJECT,
+	TILE
 };
 
 template <id_type_t I, typename T = int>
@@ -46,7 +47,8 @@ using colliderid_t    = id_t<id_type_t::COLLIDER>;
 using tilesetid_t     = id_t<id_type_t::TILESET>;
 using levelid_t       = id_t<id_type_t::LEVEL>;
 using levelobjectid_t = id_t<id_type_t::LEVEL_OBJECT, eastl::pair<levelid_t, int>>;
-using animid_t = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;
-using animctrlid_t = id_t<id_type_t::ANIMATION_CONTROLLER>;
+using animid_t        = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;
+using animctrlid_t    = id_t<id_type_t::ANIMATION_CONTROLLER>;
+using tileid_t        = id_t<id_type_t::TILE, eastl::pair<tilesetid_t, int>>;
 
 } // namespace te
