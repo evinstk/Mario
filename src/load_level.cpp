@@ -89,12 +89,26 @@ static void loadTilesets(levelmap_t<vector_t<leveltileset_t>>& state,
 	}
 }
 
+static void loadPlatformIndex(levelmap_t<int>& state,
+							  const decltype(tmx_t::layers)& tmxLayers,
+							  levelid_t levelID) {
+	int i = 0;
+	for (const auto& layer : tmxLayers) {
+		if (layer.name == "platform") {
+			state[levelID] = i;
+			break;
+		}
+		++i;
+	}
+}
+
 void loadObjects(levelobjectmap_t<levelobject_t>& state,
 				 const decltype(tmx_t::objectgroups)& groups,
 				 const decltype(tmx_t::externalTilesets)& tmxTilesets,
 				 const vector_t<leveltileset_t>& tilesets,
 				 levelid_t levelID,
-				 const stringmap_t<animctrlid_t>& controllers) {
+				 const stringmap_t<animctrlid_t>& controllers,
+				 const stringmap_t<colliderid_t>& colliders) {
 
 	assert(tmxTilesets.size() == tilesets.size());
 
@@ -120,6 +134,13 @@ void loadObjects(levelobjectmap_t<levelobject_t>& state,
 				auto controllerIt = controllers.find_as(animCtrlPropIt->second.c_str());
 				assert(controllerIt != controllers.end());
 				levelObject.animationController = controllerIt->second;
+			}
+
+			auto colliderPropIt = object.properties.find("collider");
+			if (colliderPropIt != object.properties.end()) {
+				auto colliderIt = colliders.find_as(colliderPropIt->second.c_str());
+				assert(colliderIt != colliders.end());
+				levelObject.collider = colliderIt->second;
 			}
 
 			levelobjectid_t id({ levelID, object.id });
@@ -149,8 +170,9 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadMap(state.map, tmx, levelID);
 	loadTilesets(state.tilesets, tmx.externalTilesets, levelID, tilesetState.source);
 	loadLayers(state.layers, state.tilesets.find(levelID)->second, tilesetState.tileset, tmx.layers, tmx.externalTilesets, levelID);
+	loadPlatformIndex(state.platformIndex, tmx.layers, levelID);
 
-	loadObjects(state.objects, tmx.objectgroups, tmx.externalTilesets, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID);
+	loadObjects(state.objects, tmx.objectgroups, tmx.externalTilesets, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID, tilesetState.colliderID);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 }
 

@@ -33,6 +33,17 @@ struct ObjectComp {
 } // anon namespace
 
 template <typename Iter>
+void runColliders(entitymap_t<colliderid_t>& state, Iter first, Iter last) {
+	for (auto it = first; it != last; ++it) {
+		colliderid_t colliderID = it->second.collider;
+		if (colliderID.id > 0) {
+			entity_t entityID(it->first.id.second);
+			state.insert({ entityID, colliderID });
+		}
+	}
+}
+
+template <typename Iter>
 void runTranslations(entitymap_t<glm::vec3>& state, Iter first, Iter last) {
 	for (auto it = first; it != last; ++it) {
 		entity_t id(it->first.id.second);
@@ -76,6 +87,8 @@ void runAnimators(entitymap_t<animator_t>& state, Iter first, Iter last) {
 void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState) {
 	auto lowerBound = levelState.objects.lower_bound(levelobjectid_t({ levelID, 0 }));
 	auto upperBound = levelState.objects.upper_bound(levelobjectid_t({ levelID.next(), 0 }));
+
+	runColliders(state.colliders, lowerBound, upperBound);
 	runTranslations(state.translations, lowerBound, upperBound);
 	runTilesetSprites(state.tilesetSprites, lowerBound, upperBound);
 	runAnimators(state.animators, lowerBound, upperBound);

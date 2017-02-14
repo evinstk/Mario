@@ -89,6 +89,38 @@ static void loadController(animctrlmap_t<animctrl_t>& state,
 	}
 }
 
+static void loadCollider(stringmap_t<colliderid_t>& ids,
+						 int& nextID,
+						 collidermap_t<aabb_t>& colliders,
+						 const tsxtileset_t& tileset) {
+	for (const auto& tile : tileset.tiles) {
+		auto colliderPropIt = tile.properties.find("collider");
+		if (colliderPropIt != tile.properties.end()) {
+			assert(tile.geometry.size() == 1);
+			aabb_t boxCollider = {
+				.pos = { tile.geometry[0].x, tile.geometry[0].y },
+				.size = { tile.geometry[0].width, tile.geometry[0].height }
+			};
+			colliderid_t id(nextID++);
+			ids.insert({ eastl::string(colliderPropIt->second.c_str()), id });
+			colliders.insert({ id, boxCollider });
+		}
+	}
+}
+
+static void loadSolid(eastl::vector_set<tileid_t>& state,
+					  const tsxtileset_t& tileset,
+					  tilesetid_t tilesetID) {
+
+	for (const auto& tile : tileset.tiles) {
+		auto solidPropIt = tile.properties.find("solid");
+		if (solidPropIt != tile.properties.end()) {
+			assert(solidPropIt->second == "true");
+			state.insert(tileid_t({ tilesetID, tile.id }));
+		}
+	}
+}
+
 void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname) {
 	bool loaded = loadSource(state.source, state.nextID, pathname);
 	if (!loaded) {
@@ -101,6 +133,8 @@ void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char 
 	loadAnimation(state.animation, tileset, id);
 	loadControllerID(state.controllerID, state.nextControllerID, tileset);
 	loadController(state.controller, state.controllerID, tileset, id);
+	loadCollider(state.colliderID, state.nextColliderID, state.collider, tileset);
+	loadSolid(state.solid, tileset, id);
 }
 
 } // namespace te

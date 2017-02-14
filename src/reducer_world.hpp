@@ -18,8 +18,6 @@ void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathn
 void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
 void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState);
-//void loadWorld(worldstate_t& state, const tmx_t& tmx);
-//void loadEntity(entitystate_t& state, const decltype(tmx_t::objectgroups)& tmx, const mapstrdata_t& mapData);
 void runGame(gamestate_t& state, levelid_t levelID);
 void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState);
 void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState);

@@ -12,6 +12,7 @@ struct levelstate_t {
 	levelmap_t<map_t> map;
 	levelmap_t<vector_t<leveltileset_t>> tilesets;
 	levelmap_t<vector_t<layer_t>> layers;
+	levelmap_t<int> platformIndex;
 
 	levelobjectmap_t<levelobject_t> objects;
 	levelmap_t<int> playerObject;

@@ -5,6 +5,7 @@
 #include <EASTL/vector_map.h>
 #include <EASTL/hash_map.h>
 #include <EASTL/string.h>
+#include <EASTL/vector_set.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
@@ -38,6 +39,7 @@ struct levelobject_t {
 	glm::vec3 translation;
 	tileid_t tile;
 	animctrlid_t animationController;
+	colliderid_t collider;
 };
 
 struct frame_t {
@@ -60,6 +62,8 @@ struct animator_t {
 	animid_t animation;
 	float elapsed;
 };
+
+using entityset_t = eastl::vector_set<entity_t>;
 
 template <typename T>
 using entitymap_t = eastl::vector_map<entity_t, T>;
