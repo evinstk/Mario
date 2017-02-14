@@ -94,8 +94,7 @@ void loadObjects(levelobjectmap_t<levelobject_t>& state,
 				 const decltype(tmx_t::objectgroups)& groups,
 				 const vector_t<leveltileset_t>& tilesets,
 				 levelid_t levelID,
-				 const stringmap_t<animctrlid_t>& controllers,
-				 const stringmap_t<colliderid_t>& colliders) {
+				 const stringmap_t<animctrlid_t>& controllers) {
 
 	for (const auto& group : groups) {
 		for (const auto& object : group.objects) {
@@ -147,7 +146,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadTilesets(state.tilesets, tmx.externalTilesets, levelID, tilesetState.source);
 	loadLayers(state.layers, state.tilesets.find(levelID)->second, tilesetState.tileset, tmx.layers, levelID);
 
-	loadObjects(state.objects, tmx.objectgroups, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID, tilesetState.colliderID);
+	loadObjects(state.objects, tmx.objectgroups, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 }
 
