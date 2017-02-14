@@ -4,7 +4,7 @@
 namespace te {
 
 void stepGame(gamestate_t& state, float dt, const Uint8 *keyboardState) {
-	stepWorld(state.world, dt, keyboardState, state.tileset, state.level);
+	stepWorld(state.world, dt, keyboardState, state);
 }
 
 } // namespace te

@@ -1,5 +1,6 @@
 #include "reducer_world.hpp"
 #include "entity_state.hpp"
+#include "game_state.hpp"
 #include "tileset_state.hpp"
 #include "level_state.hpp"
 
@@ -72,20 +73,13 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 	}
 }
 
-// void stepEntity(entitystate_t& state,
-// 				float dt,
-// 				const Uint8 *keyboardState,
-// 				entity_t playerEntity,
-// 				const animctrlmap_t<animctrl_t>& animationControllers,
-// 				const animmap_t<animation_t>& animations,
-// 				const vector_t<leveltileset_t>& levelTilesets) {
-void stepEntity(entitystate_t& state, float dt, const Uint8 *keyboardState, entity_t playerEntity, levelid_t levelID, const tilesetstate_t& tilesetState, const levelstate_t& levelState) {
-	stepVelocities(state.velocities, playerEntity, keyboardState);
+void stepEntity(entitystate_t& state, float dt, const Uint8 *keyboardState, const gamestate_t& game) {
+	stepVelocities(state.velocities, game.world.playerEntity, keyboardState);
 	stepTranslations(state.velocities, dt, state.translations);
-	stepAnimators(tilesetState.controller, state.velocities, dt, state.animators);
-	auto levelTilesetsIt = levelState.tilesets.find(levelID);
-	assert(levelTilesetsIt != levelState.tilesets.end());
-	stepSprites(state.animators, tilesetState.animation, state.tilesetSprites, levelTilesetsIt->second);
+	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
+	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
+	assert(levelTilesetsIt != game.level.tilesets.end());
+	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second);
 }
 
 } // namespace te
