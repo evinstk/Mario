@@ -26,7 +26,6 @@ struct tileset_t {
 
 struct leveltileset_t {
 	tilesetid_t tileset;
-	int firstgid;
 };
 
 struct layer_t {
