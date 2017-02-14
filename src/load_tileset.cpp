@@ -113,9 +113,8 @@ static void loadSolid(eastl::vector_set<tileid_t>& state,
 					  tilesetid_t tilesetID) {
 
 	for (const auto& tile : tileset.tiles) {
-		auto solidPropIt = tile.properties.find("solid");
-		if (solidPropIt != tile.properties.end()) {
-			assert(solidPropIt->second == "true");
+		auto solidPropIt = tile.bProperties.find("solid");
+		if (solidPropIt != tile.bProperties.end() && solidPropIt->second) {
 			state.insert(tileid_t({ tilesetID, tile.id }));
 		}
 	}
