@@ -45,6 +45,12 @@ static void stepColliders(entitymap_t<int>& grounded,
 
 	for (const auto& entityColliderRow : game.world.entity.colliders) {
 		entity_t entityID = entityColliderRow.first;
+
+		if (game.world.entity.velocities.find(entityID)->second.y < 0) {
+			falling.insert(entityID);
+			continue;
+		}
+
 		colliderid_t colliderID = entityColliderRow.second;
 
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
