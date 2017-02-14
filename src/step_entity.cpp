@@ -81,10 +81,7 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const Uint8 *keyb
 
 	for (const auto& groundedRow : game.world.entity.grounded) {
 		entity_t entityID = groundedRow.first;
-		glm::vec3& velocity = velocities.find(entityID)->second;
-		if (velocity.y > 0) {
-			velocity.y = 0;
-		}
+		velocities.find(entityID)->second.y = 0;
 	}
 
 	for (const entity_t& fallingEntity : game.world.entity.falling) {
