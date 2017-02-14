@@ -85,7 +85,7 @@ static int MarioMain() {
 				if (evt.type == SDL_QUIT) {
 					running = false;
 				}
-				//inputWorld(worldState, evt);
+				inputGame(gameState, evt);
 			}
 			stepGame(gameState, timePerFrame, SDL_GetKeyboardState(NULL));
 		}

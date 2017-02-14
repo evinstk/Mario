@@ -21,6 +21,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 void runGame(gamestate_t& state, levelid_t levelID);
 void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState);
 void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState);
-void inputWorld(worldstate_t& state, const SDL_Event& evt);
+void inputGame(gamestate_t& state, const SDL_Event& evt);
+void inputWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
 
 } // namespace te

@@ -16,6 +16,7 @@ add_executable(mario
   texture_manager.cpp
   sprite_renderer.cpp
   world_state.cpp
+  input_game.cpp
   input_world.cpp)
 
 set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_MOVE_SEMANTICS_ENABLED")
