@@ -3,8 +3,8 @@
 
 namespace te {
 
-void inputGame(gamestate_t& state, const SDL_Event& evt) {
-	inputWorld(state.world, evt, state);
+void inputGame(gamestate_t& state, const Uint8 *keyboardState) {
+	inputWorld(state.world, keyboardState, state);
 }
 
 } // namespace te

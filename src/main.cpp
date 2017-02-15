@@ -85,9 +85,10 @@ static int MarioMain() {
 				if (evt.type == SDL_QUIT) {
 					running = false;
 				}
-				inputGame(gameState, evt);
+				processGame(gameState, evt);
 			}
-			stepGame(gameState, timePerFrame, SDL_GetKeyboardState(NULL));
+			inputGame(gameState, SDL_GetKeyboardState(NULL));
+			stepGame(gameState, timePerFrame);
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

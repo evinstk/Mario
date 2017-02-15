@@ -3,8 +3,8 @@
 
 namespace te {
 
-void stepGame(gamestate_t& state, float dt, const Uint8 *keyboardState) {
-	stepWorld(state.world, dt, keyboardState, state);
+void stepGame(gamestate_t& state, float dt) {
+	stepWorld(state.world, dt, state);
 }
 
 } // namespace te

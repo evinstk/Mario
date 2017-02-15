@@ -133,10 +133,7 @@ static void stepColliders(entitymap_t<int>& grounded,
 	}
 }
 
-static void stepVelocities(entitymap_t<glm::vec3>& velocities, const Uint8 *keyboard, const gamestate_t& game) {
-	static constexpr float SPEED = 3 * 32.0f;
-	velocities[game.world.playerEntity].x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED;
-
+static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t& game) {
 	for (const auto& wallRow : game.world.entity.wallOffsets) {
 		if (wallRow.second != 0) {
 			velocities.find(wallRow.first)->second.x = 0;
@@ -225,10 +222,10 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 	}
 }
 
-void stepEntity(entitystate_t& state, float dt, const Uint8 *keyboardState, const gamestate_t& game) {
+void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, game);
 	stepColliders(state.grounded, state.falling, game);
-	stepVelocities(state.velocities, keyboardState, game);
+	stepVelocities(state.velocities, game);
 	stepTranslations(state.translations, dt, game);
 	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
 	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
