@@ -55,7 +55,8 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 	glUseProgram(m_shader);
 
 	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(state.world.projection));
-	glUniformMatrix4fv(m_viewLoc, 1, GL_FALSE, glm::value_ptr(state.world.view));
+	glm::mat4 view = state.world.view;
+	glUniformMatrix4fv(m_viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray( m_vertexArray );

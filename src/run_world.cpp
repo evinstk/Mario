@@ -12,7 +12,7 @@ static void runPlayerEntity(entity_t& playerEntity, levelid_t levelID, const lev
 	playerEntity = entity_t(playerEntityIt->second);
 }
 
-static void runView(glm::mat4& view,
+static void runView(glm::imat4& view,
 					const glm::vec3& playerTranslation) {
 	setView(view, playerTranslation);
 }

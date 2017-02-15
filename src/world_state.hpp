@@ -6,6 +6,7 @@
 #include <EASTL/vector_map.h>
 #include <EASTL/vector.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_integer.hpp>
 #include <GL/glew.h>
 
 namespace te {
@@ -14,7 +15,7 @@ struct worldstate_t {
 	worldstate_t();
 
 	glm::mat4 projection;
-	glm::mat4 view;
+	glm::imat4 view;
 
 	entitystate_t entity;
 

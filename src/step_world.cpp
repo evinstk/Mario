@@ -12,7 +12,7 @@
 
 namespace te {
 
-static void stepView(glm::mat4& state,
+static void stepView(glm::imat4& state,
 					 float dt,
 					 const gamestate_t& game) {
 	static constexpr int HALF_CAMERA = (CAMERA_WIDTH / 2) - 16;
@@ -23,10 +23,10 @@ static void stepView(glm::mat4& state,
 	float xPlayerVelocity = game.world.entity.velocities.find(game.world.playerEntity)->second.x;
 
 	if (playerView.x > HALF_CAMERA) {
-		state = glm::translate(state, glm::vec3(HALF_CAMERA - playerView.x, 0, 0));
+		state = glm::translate(state, glm::ivec3(HALF_CAMERA - playerView.x, 0, 0));
 	} else if (playerView.x > PUSH_THRESHOLD && xPlayerVelocity > 0) {
 		float pushFactor = (playerView.x / HALF_CAMERA) * 0.75f;
-		state = glm::translate(state, glm::vec3(-xPlayerVelocity * dt * pushFactor, 0, 0));
+		state = glm::translate(state, glm::ivec3(-xPlayerVelocity * dt * pushFactor, 0, 0));
 	}
 }
 
