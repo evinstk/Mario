@@ -1,7 +1,7 @@
 #include "reducer_world.hpp"
 #include "game_state.hpp"
+#include "util.hpp"
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
 #include <cassert>
 
 namespace te {
@@ -14,9 +14,7 @@ static void runPlayerEntity(entity_t& playerEntity, levelid_t levelID, const lev
 
 static void runView(glm::mat4& view,
 					const glm::vec3& playerTranslation) {
-	view = glm::translate(glm::ivec3(-playerTranslation.x,
-									 -playerTranslation.y,
-									 0));
+	setView(view, playerTranslation);
 }
 
 void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState) {

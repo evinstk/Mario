@@ -1,5 +1,7 @@
 #pragma once
 #include "types.hpp"
+#include "game_state.hpp"
+#include <glm/gtx/transform.hpp>
 
 namespace te {
 
@@ -15,6 +17,12 @@ inline const layer_t& getPlatformLayer(const gamestate_t& game) {
 
 inline const map_t& getMap(const gamestate_t& game) {
 	return game.level.map.find(game.world.level)->second;
+}
+
+inline void setView(glm::mat4& view, const glm::vec3& playerTranslation) {
+	view = glm::translate(glm::ivec3(-playerTranslation.x + 16 * 4,
+									 -playerTranslation.y + 16 * 8,
+									 0));
 }
 
 } // namespace te
