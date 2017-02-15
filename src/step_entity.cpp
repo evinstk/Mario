@@ -225,8 +225,8 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, game);
 	stepColliders(state.grounded, state.falling, game);
-	stepVelocities(state.velocities, game);
 	stepTranslations(state.translations, dt, game);
+	stepVelocities(state.velocities, game);
 	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
 	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
 	assert(levelTilesetsIt != game.level.tilesets.end());
