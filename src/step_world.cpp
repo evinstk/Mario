@@ -25,7 +25,8 @@ static void stepView(glm::mat4& state,
 	if (playerView.x > HALF_CAMERA) {
 		state = glm::translate(state, glm::vec3(HALF_CAMERA - playerView.x, 0, 0));
 	} else if (playerView.x > PUSH_THRESHOLD && xPlayerVelocity > 0) {
-		state = glm::translate(state, glm::vec3(-xPlayerVelocity * dt * 4.0f / 5.0f, 0, 0));
+		float pushFactor = (playerView.x / HALF_CAMERA) * 0.75f;
+		state = glm::translate(state, glm::vec3(-xPlayerVelocity * dt * pushFactor, 0, 0));
 	}
 }
 
