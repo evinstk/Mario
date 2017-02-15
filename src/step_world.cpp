@@ -11,8 +11,8 @@ namespace te {
 
 static void stepView(const glm::vec3& playerTranslation,
 					 glm::mat4& view) {
-	view = glm::translate(glm::ivec3(-playerTranslation.x,
-									 -playerTranslation.y,
+	view = glm::translate(glm::ivec3(-playerTranslation.x + 16 * 4,
+									 -playerTranslation.y + 16 * 8,
 									 0));
 }
 

@@ -6,7 +6,7 @@
 namespace te {
 
 void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game) {
-	static constexpr float JUMP_SPEED = -6.5f * 32;
+	static constexpr float JUMP_SPEED = -8 * 32;
 
 	if (evt.type == SDL_KEYDOWN) {
 		if (evt.key.keysym.sym == SDLK_SPACE &&
