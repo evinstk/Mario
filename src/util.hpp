@@ -21,7 +21,7 @@ inline const map_t& getMap(const gamestate_t& game) {
 
 inline void setView(glm::mat4& view, const glm::vec3& playerTranslation) {
 	view = glm::translate(glm::ivec3(-playerTranslation.x + 16 * 4,
-									 -playerTranslation.y + 16 * 8,
+									 -playerTranslation.y + 16 * 9,
 									 0));
 }
 
