@@ -8,7 +8,7 @@ namespace te {
 struct entitystate_t {
 	entitymap_t<colliderid_t> colliders;
 	entitymap_t<float> wallOffsets;
-	entitymap_t<int> grounded;
+	entitymap_t<float> groundOffsets;
 	entityset_t falling;
 
 	entitymap_t<glm::vec3> velocities;

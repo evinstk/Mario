@@ -92,10 +92,11 @@ static int senseGround(int x,
 	return -1;
 }
 
-static void stepColliders(entitymap_t<int>& grounded,
+static void stepColliders(entitymap_t<float>& groundOffsets,
 						  entityset_t& falling,
+						  float dt,
 						  const gamestate_t& game) {
-	grounded.clear();
+	groundOffsets.clear();
 	falling.clear();
 
 	glm::ivec2 tileSize = getMap(game).tileSize;
@@ -112,7 +113,8 @@ static void stepColliders(entitymap_t<int>& grounded,
 		colliderid_t colliderID = entityColliderRow.second;
 
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
-		glm::vec3 translation = game.world.entity.translations.find(entityID)->second;
+		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
+		glm::vec3 translation = game.world.entity.translations.find(entityID)->second + velocity * dt;
 		translation.x += game.world.entity.wallOffsets.find(entityID)->second;
 
 		int halfColliderSizeY = collider.size.y / 2;
@@ -125,9 +127,9 @@ static void stepColliders(entitymap_t<int>& grounded,
 		int solidTile2 = senseGround(x2, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
 
 		if (solidTile1 >= 0) {
-			grounded.insert({ entityID, solidTile1 });
+			groundOffsets.insert({ entityID, solidTile1 - translation.y - collider.pos.y - collider.size.y });
 		} else if (solidTile2 >= 0) {
-			grounded.insert({ entityID, solidTile2 });
+			groundOffsets.insert({ entityID, solidTile2 - translation.y - collider.pos.y - collider.size.y });
 		} else {
 			falling.insert(entityID);
 		}
@@ -141,8 +143,8 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t
 		}
 	}
 
-	for (const auto& groundedRow : game.world.entity.grounded) {
-		velocities.find(groundedRow.first)->second.y = 0;
+	for (const auto& groundRow : game.world.entity.groundOffsets) {
+		velocities.find(groundRow.first)->second.y = 0;
 	}
 
 	for (const entity_t& fallingEntity : game.world.entity.falling) {
@@ -159,13 +161,8 @@ static void stepTranslations(entitymap_t<glm::vec3>& translations, float dt, con
 		translations.find(wallRow.first)->second.x += wallRow.second;
 	}
 
-	for (const auto& groundedRow : game.world.entity.grounded) {
-		entity_t entityID = groundedRow.first;
-		int yGround = groundedRow.second;
-		colliderid_t colliderID = game.world.entity.colliders.find(entityID)->second;
-		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
-
-		translations[entityID].y = yGround - collider.pos.y - collider.size.y;
+	for (const auto& groundRow : game.world.entity.groundOffsets) {
+		translations.find(groundRow.first)->second.y += groundRow.second;
 	}
 }
 
@@ -225,7 +222,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
-	stepColliders(state.grounded, state.falling, game);
+	stepColliders(state.groundOffsets, state.falling, dt, game);
 	stepTranslations(state.translations, dt, game);
 	stepVelocities(state.velocities, game);
 	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
