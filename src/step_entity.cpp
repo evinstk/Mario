@@ -148,7 +148,7 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t
 	}
 
 	for (const entity_t& fallingEntity : game.world.entity.falling) {
-		velocities[fallingEntity].y += 6.5f;
+		velocities[fallingEntity].y += 10.0f;
 	}
 }
 
