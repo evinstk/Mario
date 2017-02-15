@@ -13,18 +13,25 @@
 namespace te {
 
 static void stepView(glm::mat4& state,
-					 const glm::vec3& playerTranslation) {
+					 float dt,
+					 const gamestate_t& game) {
 	static constexpr int HALF_CAMERA = (CAMERA_WIDTH / 2) - 16;
+	static constexpr int PUSH_THRESHOLD = HALF_CAMERA - 32;
 
-	const glm::vec3 playerView = state * glm::vec4(playerTranslation, 1.0f);
+	glm::vec3 playerTranslation = game.world.entity.translations.find(game.world.playerEntity)->second;
+	glm::vec3 playerView = state * glm::vec4(playerTranslation, 1.0f);
+	float xPlayerVelocity = game.world.entity.velocities.find(game.world.playerEntity)->second.x;
+
 	if (playerView.x > HALF_CAMERA) {
 		state = glm::translate(state, glm::vec3(HALF_CAMERA - playerView.x, 0, 0));
+	} else if (playerView.x > PUSH_THRESHOLD && xPlayerVelocity > 0) {
+		state = glm::translate(state, glm::vec3(-xPlayerVelocity * dt * 4.0f / 5.0f, 0, 0));
 	}
 }
 
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepEntity(state.entity, dt, gameState);
-	stepView(state.view, state.entity.translations[state.playerEntity]);
+	stepView(state.view, dt, gameState);
 }
 
 } // namespace te
