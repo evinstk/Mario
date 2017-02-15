@@ -33,7 +33,7 @@ static int senseOnWall(int y,
 	return -1;
 }
 
-static void stepWallOffsets(entitymap_t<float>& state, const gamestate_t& game) {
+static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate_t& game) {
 	state.clear();
 
 	const layer_t& platformLayer = getPlatformLayer(game);
@@ -43,7 +43,8 @@ static void stepWallOffsets(entitymap_t<float>& state, const gamestate_t& game) 
 		entity_t entityID = colliderRow.first;
 		colliderid_t colliderID = colliderRow.second;
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
-		glm::vec3 translation = game.world.entity.translations.find(entityID)->second;
+		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
+		glm::vec3 translation = game.world.entity.translations.find(entityID)->second + velocity * dt;
 
 		int y      = translation.y + collider.pos.y + ((collider.size.y * 3) / 4);
 		int xStart = translation.x + collider.pos.x;
@@ -223,7 +224,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 }
 
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
-	stepWallOffsets(state.wallOffsets, game);
+	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.grounded, state.falling, game);
 	stepTranslations(state.translations, dt, game);
 	stepVelocities(state.velocities, game);
