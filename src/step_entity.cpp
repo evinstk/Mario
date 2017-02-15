@@ -46,7 +46,7 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
 		glm::vec3 translation = game.world.entity.translations.find(entityID)->second + velocity * dt;
 
-		int y      = translation.y + collider.pos.y + ((collider.size.y * 3) / 4);
+		int y      = translation.y + collider.pos.y + (collider.size.y / 2);
 		int xStart = translation.x + collider.pos.x;
 		int xEnd   = xStart + collider.size.x;
 
