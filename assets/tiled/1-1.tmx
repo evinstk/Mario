@@ -4934,6 +4934,7 @@
    <properties>
     <property name="animctrl" value="mario"/>
     <property name="collider" value="mario"/>
+    <property name="gravity" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>
