@@ -4815,29 +4815,121 @@
   </data>
  </layer>
  <objectgroup name="objects">
-  <object id="8" type="brick" gid="2" x="336" y="176" width="16" height="16"/>
-  <object id="15" type="brick" gid="2" x="368" y="176" width="16" height="16"/>
-  <object id="16" type="brick" gid="2" x="400" y="176" width="16" height="16"/>
-  <object id="17" type="prize" gid="25" x="352" y="176" width="16" height="16"/>
-  <object id="18" type="prize" gid="25" x="384" y="176" width="16" height="16"/>
-  <object id="19" type="prize" gid="25" x="272" y="176" width="16" height="16"/>
-  <object id="20" type="prize" gid="25" x="368" y="112" width="16" height="16"/>
-  <object id="21" type="brick" gid="2" x="1232" y="176" width="16" height="16"/>
-  <object id="22" type="brick" gid="2" x="1264" y="176" width="16" height="16"/>
-  <object id="23" type="brick" gid="2" x="1280" y="112" width="16" height="16"/>
-  <object id="24" type="brick" gid="2" x="1296" y="112" width="16" height="16"/>
-  <object id="25" type="brick" gid="2" x="1312" y="112" width="16" height="16"/>
-  <object id="26" type="brick" gid="2" x="1328" y="112" width="16" height="16"/>
-  <object id="27" type="brick" gid="2" x="1344" y="112" width="16" height="16"/>
-  <object id="28" type="brick" gid="2" x="1360" y="112" width="16" height="16"/>
-  <object id="29" type="brick" gid="2" x="1376" y="112" width="16" height="16"/>
-  <object id="30" type="brick" gid="2" x="1392" y="112" width="16" height="16"/>
-  <object id="31" type="prize" gid="25" x="1248" y="176" width="16" height="16"/>
-  <object id="32" type="brick" gid="2" x="1456" y="112" width="16" height="16"/>
-  <object id="33" type="brick" gid="2" x="1472" y="112" width="16" height="16"/>
-  <object id="34" type="brick" gid="2" x="1488" y="112" width="16" height="16"/>
-  <object id="35" type="prize" gid="25" x="1504" y="112" width="16" height="16"/>
-  <object id="36" type="brick" gid="2" x="1504" y="176" width="16" height="16"/>
+  <object id="8" type="brick" gid="2" x="336" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="15" type="brick" gid="2" x="368" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="16" type="brick" gid="2" x="400" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="17" type="prize" gid="25" x="352" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="prize"/>
+   </properties>
+  </object>
+  <object id="18" type="prize" gid="25" x="384" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="prize"/>
+   </properties>
+  </object>
+  <object id="19" type="prize" gid="25" x="272" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="prize"/>
+   </properties>
+  </object>
+  <object id="20" type="prize" gid="25" x="368" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="prize"/>
+   </properties>
+  </object>
+  <object id="21" type="brick" gid="2" x="1232" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="22" type="brick" gid="2" x="1264" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="23" type="brick" gid="2" x="1280" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="24" type="brick" gid="2" x="1296" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="25" type="brick" gid="2" x="1312" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="26" type="brick" gid="2" x="1328" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="27" type="brick" gid="2" x="1344" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="28" type="brick" gid="2" x="1360" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="29" type="brick" gid="2" x="1376" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="30" type="brick" gid="2" x="1392" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="31" type="prize" gid="25" x="1248" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="prize"/>
+   </properties>
+  </object>
+  <object id="32" type="brick" gid="2" x="1456" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="33" type="brick" gid="2" x="1472" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="34" type="brick" gid="2" x="1488" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
+  <object id="35" type="prize" gid="25" x="1504" y="112" width="16" height="16">
+   <properties>
+    <property name="collider" value="prize"/>
+   </properties>
+  </object>
+  <object id="36" type="brick" gid="2" x="1504" y="176" width="16" height="16">
+   <properties>
+    <property name="collider" value="brick"/>
+   </properties>
+  </object>
   <object id="38" name="player" type="mario" gid="925" x="64" y="224" width="16" height="16">
    <properties>
     <property name="animctrl" value="mario"/>

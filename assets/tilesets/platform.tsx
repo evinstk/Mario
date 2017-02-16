@@ -6,6 +6,22 @@
    <property name="solid" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="1">
+  <properties>
+   <property name="collider" value="brick"/>
+  </properties>
+  <objectgroup draworder="index">
+   <object id="2" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="24">
+  <properties>
+   <property name="collider" value="prize"/>
+  </properties>
+  <objectgroup draworder="index">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
  <tile id="264">
   <properties>
    <property name="solid" type="bool" value="true"/>
