@@ -102,18 +102,16 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 	glm::ivec2 tileSize = getMap(game).tileSize;
 	const layer_t& platformLayer = getPlatformLayer(game);
 
-	for (const auto& entityColliderRow : game.world.entity.colliders) {
-		entity_t entityID = entityColliderRow.first;
+	for (entity_t entityID : game.world.entity.underGravity) {
 
-		if (game.world.entity.velocities.find(entityID)->second.y < 0) {
+		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
+		if (velocity.y < 0) {
 			falling.insert(entityID);
 			continue;
 		}
 
-		colliderid_t colliderID = entityColliderRow.second;
-
+		colliderid_t colliderID = game.world.entity.colliders.find(entityID)->second;
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
-		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
 		glm::vec3 translation = game.world.entity.translations.find(entityID)->second + velocity * dt;
 		translation.x += game.world.entity.wallOffsets.find(entityID)->second;
 

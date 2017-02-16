@@ -40,6 +40,7 @@ struct levelobject_t {
 	tileid_t tile;
 	animctrlid_t animationController;
 	colliderid_t collider;
+	bool gravity;
 };
 
 struct frame_t {

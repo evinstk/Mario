@@ -44,6 +44,17 @@ void runColliders(entitymap_t<colliderid_t>& state, Iter first, Iter last) {
 }
 
 template <typename Iter>
+void runUnderGravity(entityset_t& state, Iter first, Iter last) {
+	for (auto it = first; it != last; ++it) {
+		bool gravity = it->second.gravity;
+		if (gravity) {
+			entity_t entityID(it->first.id.second);
+			state.insert({ entityID });
+		}
+	}
+}
+
+template <typename Iter>
 void runVelocities(entitymap_t<glm::vec3>& state, Iter first, Iter last) {
 	for (auto it = first; it != last; ++it) {
 		colliderid_t colliderID = it->second.collider;
@@ -100,6 +111,7 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& leve
 	auto upperBound = levelState.objects.lower_bound(levelobjectid_t({ levelID.next(), 0 }));
 
 	runColliders(state.colliders, lowerBound, upperBound);
+	runUnderGravity(state.underGravity, lowerBound, upperBound);
 	runVelocities(state.velocities, lowerBound, upperBound);
 	runTranslations(state.translations, lowerBound, upperBound);
 	runTilesetSprites(state.tilesetSprites, lowerBound, upperBound);
