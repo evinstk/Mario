@@ -46,19 +46,19 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
 		glm::vec3 translation = game.world.entity.translations.find(entityID)->second + velocity * dt;
 
-		int y      = translation.y + collider.pos.y + (collider.size.y / 2);
-		int xStart = translation.x + collider.pos.x;
-		int xEnd   = xStart + collider.size.x;
+		glm::vec2 halfSize = collider.size / glm::vec2(2, 2);
+		glm::vec2 start = glm::vec2(translation) + collider.pos + halfSize;
+		glm::vec2 end1  = start - glm::vec2(halfSize.x, 0);
+		glm::vec2 end2  = start + glm::vec2(halfSize.x, 0);
 
-		int xWallPos = senseOnWall(y, xStart, xEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int xWallPos1 = senseOnWall(start.y, start.x, end1.x, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int xWallPos2 = senseOnWall(start.y, start.x, end2.x, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
 
 		float offset = 0;
-		if (xWallPos >= 0) {
-			if (translation.x > xWallPos) {
-				offset = xWallPos + tileSize.x - translation.x - collider.pos.x;
-			} else {
-				offset = xWallPos - translation.x - collider.pos.x - collider.size.x;
-			}
+		if (xWallPos1 != -1) {
+				offset = xWallPos1 + tileSize.x - translation.x - collider.pos.x;
+		} else if (xWallPos2 != -1) {
+			offset = xWallPos2 - translation.x - collider.pos.x - collider.size.x;
 		} else {
 			aabb_t entityCollider = collider;
 			entityCollider.pos += glm::vec2(translation);
