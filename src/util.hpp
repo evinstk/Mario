@@ -33,6 +33,14 @@ inline const aabb_t& getCollider(entity_t entityID, const gamestate_t& game) {
 	return game.tileset.collider.find(game.world.entity.colliders.find(entityID)->second)->second;
 }
 
+inline const glm::vec3& getVelocity(entity_t entityID, const gamestate_t& game) {
+	return game.world.entity.velocities.find(entityID)->second;
+}
+
+inline float getWallOffset(entity_t entityID, const gamestate_t& game) {
+	return game.world.entity.wallOffsets.find(entityID)->second;
+}
+
 inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
 	return ( aabb1.pos.x < aabb2.pos.x + aabb2.size.x &&
 			 aabb1.pos.x + aabb1.size.x > aabb2.pos.x &&
