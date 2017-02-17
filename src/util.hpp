@@ -26,17 +26,11 @@ inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {
 }
 
 inline const glm::vec3& getTranslation(entity_t entityID, const gamestate_t& game) {
-	auto it = game.world.entity.translations.find(entityID);
-	assert(it != game.world.entity.translations.end());
-	return it->second;
+	return game.world.entity.translations.find(entityID)->second;
 }
 
 inline const aabb_t& getCollider(entity_t entityID, const gamestate_t& game) {
-	auto it = game.world.entity.colliders.find(entityID);
-	assert(it != game.world.entity.colliders.end());
-	auto colliderIt = game.tileset.collider.find(it->second);
-	assert(colliderIt != game.tileset.collider.end());
-	return colliderIt->second;
+	return game.tileset.collider.find(game.world.entity.colliders.find(entityID)->second)->second;
 }
 
 inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
