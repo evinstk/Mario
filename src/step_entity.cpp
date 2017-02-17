@@ -196,6 +196,19 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets, float dt, con
 			ceilingOffsets.insert({ entityID, solidTile1 + tileSize.y - translation.y - collider.pos.y });
 		} else if (solidTile2 >= 0) {
 			ceilingOffsets.insert({ entityID, solidTile2 + tileSize.y - translation.y - collider.pos.y });
+		} else {
+			aabb_t entityCollider = collider;
+			entityCollider.pos += translation;
+			entityCollider.size.y /= 2;
+			for (entity_t groundID : game.world.entity.isGround) {
+				glm::vec2 groundTranslation = getTranslation(groundID, game);
+				aabb_t groundCollider = getCollider(groundID, game);
+				groundCollider.pos += groundTranslation;
+				if (isColliding(entityCollider, groundCollider)) {
+					ceilingOffsets.insert({ entityID, collider.pos.y + groundCollider.pos.y + groundCollider.size.y - translation.y });
+					break;
+				}
+			}
 		}
 	}
 }
