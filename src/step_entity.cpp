@@ -112,11 +112,9 @@ static int senseGround(int x,
 }
 
 static void stepColliders(entitymap_t<float>& groundOffsets,
-						  entityset_t& falling,
 						  float dt,
 						  const gamestate_t& game) {
 	groundOffsets.clear();
-	falling.clear();
 
 	glm::ivec2 tileSize = getMap(game).tileSize;
 	const layer_t& platformLayer = getPlatformLayer(game);
@@ -125,7 +123,6 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 
 		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
 		if (velocity.y < 0) {
-			falling.insert(entityID);
 			continue;
 		}
 
@@ -136,7 +133,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 
 		int halfColliderSizeY = collider.size.y / 2;
 		int yStart = translation.y + collider.pos.y + halfColliderSizeY;
-		int yEnd   = yStart + halfColliderSizeY + 1;
+		int yEnd   = yStart + halfColliderSizeY;
 		int x1     = translation.x + collider.pos.x + 1;
 		int x2     = translation.x + collider.pos.x + collider.size.x - 1;
 
@@ -166,8 +163,6 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 			}
 			if (onGround) {
 				groundOffsets.insert({ entityID, offset });
-			} else {
-				falling.insert(entityID);
 			}
 		}
 	}
@@ -216,8 +211,8 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t
 		velocities.find(groundRow.first)->second.y = 0;
 	}
 
-	for (const entity_t& fallingEntity : game.world.entity.falling) {
-		velocities[fallingEntity].y += 10.0f;
+	for (entity_t entityID : game.world.entity.underGravity) {
+		velocities[entityID].y += 10.0f;
 	}
 
 	for (const auto& ceilingRow : game.world.entity.ceilingOffsets) {
@@ -299,7 +294,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
-	stepColliders(state.groundOffsets, state.falling, dt, game);
+	stepColliders(state.groundOffsets, dt, game);
 	stepCeilingOffsets(state.ceilingOffsets, dt, game);
 	stepTranslations(state.translations, dt, game);
 	stepVelocities(state.velocities, game);

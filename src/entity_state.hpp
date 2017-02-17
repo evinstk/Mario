@@ -9,7 +9,6 @@ struct entitystate_t {
 	entitymap_t<colliderid_t> colliders;
 	entitymap_t<float> wallOffsets;
 	entitymap_t<float> groundOffsets;
-	entityset_t falling;
 	entitymap_t<float> ceilingOffsets;
 
 	entityset_t underGravity;
