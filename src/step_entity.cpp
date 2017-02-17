@@ -16,8 +16,9 @@ static int senseOnWall(int y,
 					   const eastl::vector_set<tileid_t>& solids) {
 
 	int yTile = y / ySize;
+	bool pos = xEnd > xStart;
 
-	for (int xTile = xStart / xSize, end = xEnd / xSize; xTile <= end; ++xTile) {
+	for (int xTile = xStart / xSize, end = xEnd / xSize; pos ? xTile <= end : xTile >= end; pos ? ++xTile : --xTile) {
 
 		int tileIndex = yTile * platformLayer.size.x + xTile;
 		if (tileIndex >= platformLayer.tiles.size()) {
@@ -56,7 +57,7 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 
 		float offset = 0;
 		if (xWallPos1 != -1) {
-				offset = xWallPos1 + tileSize.x - translation.x - collider.pos.x;
+			offset = xWallPos1 + tileSize.x - translation.x - collider.pos.x;
 		} else if (xWallPos2 != -1) {
 			offset = xWallPos2 - translation.x - collider.pos.x - collider.size.x;
 		} else {
