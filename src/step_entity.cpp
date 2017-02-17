@@ -52,17 +52,34 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 
 		int xWallPos = senseOnWall(y, xStart, xEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
 
+		float offset = 0;
 		if (xWallPos >= 0) {
 			if (translation.x > xWallPos) {
-				float offset = xWallPos + tileSize.x - translation.x - collider.pos.x;
-				state.insert({ entityID, offset });
+				offset = xWallPos + tileSize.x - translation.x - collider.pos.x;
 			} else {
-				float offset = xWallPos - translation.x - collider.pos.x - collider.size.x;
-				state.insert({ entityID, offset });
+				offset = xWallPos - translation.x - collider.pos.x - collider.size.x;
 			}
 		} else {
-			state.insert({ entityID, 0 });
+			aabb_t entityCollider = collider;
+			entityCollider.pos += glm::vec2(translation);
+			entityCollider.pos.y += entityCollider.size.y / 2;
+			entityCollider.size.y = 1;
+			for (entity_t groundID : game.world.entity.isGround) {
+				aabb_t groundCollider = getCollider(groundID, game);
+				groundCollider.pos += glm::vec2(getTranslation(groundID, game));
+				if (groundID != entityID && isColliding(entityCollider, groundCollider)) {
+					//offset = groundCollider.pos.x - translation.x - collider.pos.x - collider.size.x;
+					if (translation.x > groundCollider.pos.x) {
+						offset = groundCollider.pos.x + groundCollider.size.x - translation.x - collider.pos.x;
+						//offset = -offset;
+						//break;
+					} else {
+						offset = groundCollider.pos.x - translation.x - collider.pos.x - collider.size.x;
+					}
+				}
+			}
 		}
+		state.insert({ entityID, offset });
 	}
 }
 
@@ -134,13 +151,15 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 			float offset = 0;
 			aabb_t entityCollider = collider;
 			entityCollider.pos += glm::vec2(translation);
-			++entityCollider.size.y;
+			entityCollider.pos.y += collider.size.y / 2;
+			entityCollider.size.y = (collider.size.y / 2) + 1;
 			for (entity_t groundID : game.world.entity.isGround) {
 				aabb_t groundCollider = getCollider(groundID, game);
 				groundCollider.pos += glm::vec2(getTranslation(groundID, game));
 				if (isColliding(entityCollider, groundCollider)) {
 					offset = groundCollider.pos.y - translation.y - collider.pos.y - collider.size.y;
 					onGround = true;
+					break;
 				}
 			}
 			if (onGround) {
