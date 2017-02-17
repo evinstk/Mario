@@ -12,6 +12,7 @@ struct entitystate_t {
 	entityset_t falling;
 
 	entityset_t underGravity;
+	entityset_t isGround;
 	entitymap_t<glm::vec3> velocities;
 	entitymap_t<glm::vec3> translations;
 	entitymap_t<tileid_t> tilesetSprites;

@@ -44,6 +44,17 @@ void runColliders(entitymap_t<colliderid_t>& state, Iter first, Iter last) {
 }
 
 template <typename Iter>
+void runIsGround(entityset_t& state, Iter first, Iter last) {
+	for (auto it = first; it != last; ++it) {
+		bool isGround = it->second.ground;
+		if (isGround) {
+			entity_t entityID(it->first.id.second);
+			state.insert({ entityID });
+		}
+	}
+}
+
+template <typename Iter>
 void runUnderGravity(entityset_t& state, Iter first, Iter last) {
 	for (auto it = first; it != last; ++it) {
 		bool gravity = it->second.gravity;
@@ -112,6 +123,7 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& leve
 
 	runColliders(state.colliders, lowerBound, upperBound);
 	runUnderGravity(state.underGravity, lowerBound, upperBound);
+	runIsGround(state.isGround, lowerBound, upperBound);
 	runVelocities(state.velocities, lowerBound, upperBound);
 	runTranslations(state.translations, lowerBound, upperBound);
 	runTilesetSprites(state.tilesetSprites, lowerBound, upperBound);

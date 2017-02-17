@@ -148,6 +148,11 @@ void loadObjects(levelobjectmap_t<levelobject_t>& state,
 				levelObject.gravity = gravityPropIt->second;
 			}
 
+			auto groundPropIt = object.bProperties.find("ground");
+			if (groundPropIt != object.bProperties.end()) {
+				levelObject.ground = groundPropIt->second;
+			}
+
 			levelobjectid_t id({ levelID, object.id });
 			state.insert({ id, eastl::move(levelObject) });
 		}

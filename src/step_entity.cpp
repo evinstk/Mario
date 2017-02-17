@@ -112,7 +112,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 
 		colliderid_t colliderID = game.world.entity.colliders.find(entityID)->second;
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
-		glm::vec3 translation = game.world.entity.translations.find(entityID)->second + velocity * dt;
+		glm::vec3 translation = getTranslation(entityID, game) + velocity * dt;
 		translation.x += game.world.entity.wallOffsets.find(entityID)->second;
 
 		int halfColliderSizeY = collider.size.y / 2;
@@ -129,7 +129,25 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 		} else if (solidTile2 >= 0) {
 			groundOffsets.insert({ entityID, solidTile2 - translation.y - collider.pos.y - collider.size.y });
 		} else {
-			falling.insert(entityID);
+
+			bool onGround = false;
+			float offset = 0;
+			aabb_t entityCollider = collider;
+			entityCollider.pos += glm::vec2(translation);
+			++entityCollider.size.y;
+			for (entity_t groundID : game.world.entity.isGround) {
+				aabb_t groundCollider = getCollider(groundID, game);
+				groundCollider.pos += glm::vec2(getTranslation(groundID, game));
+				if (isColliding(entityCollider, groundCollider)) {
+					offset = groundCollider.pos.y - translation.y - collider.pos.y - collider.size.y;
+					onGround = true;
+				}
+			}
+			if (onGround) {
+				groundOffsets.insert({ entityID, offset });
+			} else {
+				falling.insert(entityID);
+			}
 		}
 	}
 }
