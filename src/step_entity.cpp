@@ -92,8 +92,9 @@ static int senseGround(int x,
 					   const eastl::vector_set<tileid_t>& solids) {
 
 	int xTile = x / xSize;
+	bool pos = yEnd > yStart;
 
-	for (int yTile = yStart / ySize, end = yEnd / ySize; yTile <= end; ++yTile) {
+	for (int yTile = yStart / ySize, end = yEnd / ySize; pos ? yTile <= end : yTile >= end; pos ? ++yTile : --yTile) {
 
 		int tileIndex = yTile * platformLayer.size.x + xTile;
 		if (tileIndex >= platformLayer.tiles.size()) {
@@ -171,6 +172,38 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 	}
 }
 
+static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets, float dt, const gamestate_t& game) {
+	ceilingOffsets.clear();
+
+	for (entity_t entityID : game.world.entity.underGravity) {
+		glm::vec2 velocity = getVelocity(entityID, game);
+		if (velocity.y >= 0) {
+			continue;
+		}
+
+		aabb_t collider = getCollider(entityID, game);
+		float halfColliderSizeY = collider.size.y * 0.5f;
+		glm::vec2 translation = glm::vec2(getTranslation(entityID, game)) + velocity * dt;
+		translation.x += getWallOffset(entityID, game);
+		glm::vec2 tileSize = getMap(game).tileSize;
+		const layer_t& platformLayer = getPlatformLayer(game);
+
+		glm::vec2 start1 = translation + collider.pos + glm::vec2(1.0f, halfColliderSizeY);
+		glm::vec2 end1   = translation + collider.pos + glm::vec2(1.0f, 0.0f);
+		glm::vec2 start2 = translation + collider.pos + glm::vec2(collider.size.x, halfColliderSizeY);
+		glm::vec2 end2   = translation + collider.pos + glm::vec2(collider.size.x, 0.0f);
+
+		int solidTile1 = senseGround(start1.x, start1.y, end1.y, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int solidTile2 = senseGround(start2.x, start2.y, end2.y, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+
+		if (solidTile1 >= 0) {
+			ceilingOffsets.insert({ entityID, solidTile1 + tileSize.y - translation.y - collider.pos.y });
+		} else if (solidTile2 >= 0) {
+			ceilingOffsets.insert({ entityID, solidTile2 + tileSize.y - translation.y - collider.pos.y });
+		}
+	}
+}
+
 static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t& game) {
 	for (const auto& wallRow : game.world.entity.wallOffsets) {
 		if (wallRow.second != 0) {
@@ -185,19 +218,27 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t
 	for (const entity_t& fallingEntity : game.world.entity.falling) {
 		velocities[fallingEntity].y += 10.0f;
 	}
+
+	for (const auto& ceilingRow : game.world.entity.ceilingOffsets) {
+		velocities.find(ceilingRow.first)->second.y = 0;
+	}
 }
 
-static void stepTranslations(entitymap_t<glm::vec3>& translations, float dt, const gamestate_t& game) {
+static void stepTranslations(entitymap_t<glm::vec3>& state, float dt, const gamestate_t& game) {
 	for (const auto& velocityRow : game.world.entity.velocities) {
-		translations[velocityRow.first] += velocityRow.second * dt;
+		state[velocityRow.first] += velocityRow.second * dt;
 	}
 
 	for (const auto& wallRow : game.world.entity.wallOffsets) {
-		translations.find(wallRow.first)->second.x += wallRow.second;
+		state.find(wallRow.first)->second.x += wallRow.second;
 	}
 
 	for (const auto& groundRow : game.world.entity.groundOffsets) {
-		translations.find(groundRow.first)->second.y += groundRow.second;
+		state.find(groundRow.first)->second.y += groundRow.second;
+	}
+
+	for (const auto& ceilingRow : game.world.entity.ceilingOffsets) {
+		state.find(ceilingRow.first)->second.y += ceilingRow.second;
 	}
 }
 
@@ -258,6 +299,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.groundOffsets, state.falling, dt, game);
+	stepCeilingOffsets(state.ceilingOffsets, dt, game);
 	stepTranslations(state.translations, dt, game);
 	stepVelocities(state.velocities, game);
 	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
