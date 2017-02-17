@@ -1,6 +1,7 @@
 #include "reducer_world.hpp"
 #include "entity_state.hpp"
 #include "level_state.hpp"
+#include "util.hpp"
 #include <EASTL/algorithm.h>
 
 namespace te {
@@ -118,8 +119,9 @@ void runAnimators(entitymap_t<animator_t>& state, Iter first, Iter last) {
 }
 
 void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState) {
-	auto lowerBound = levelState.objects.lower_bound(levelobjectid_t({ levelID, 0 }));
-	auto upperBound = levelState.objects.lower_bound(levelobjectid_t({ levelID.next(), 0 }));
+	auto range = parentRange(levelState.objects, levelID);
+	auto lowerBound = range.first;
+	auto upperBound = range.second;
 
 	runColliders(state.colliders, lowerBound, upperBound);
 	runUnderGravity(state.underGravity, lowerBound, upperBound);

@@ -46,13 +46,12 @@ inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
 			 aabb1.pos.y + aabb1.size.y > aabb2.pos.y );
 }
 
-template <typename Iter, typename Container, typename Key>
-inline eastl::pair<Iter, Iter> parentRange(const Container& container, const Key& parentKey) {
-	eastl::pair<Iter, Iter> iterPair = {
-		container.lower_bound(Container::key_type({ parentKey, 0 })),
-		container.lower_bound(Container::key_type({ parentKey.next(), 0 })),
+template <typename Container, typename Key>
+inline eastl::pair<typename Container::const_iterator, typename Container::const_iterator> parentRange(const Container& container, const Key& parentKey) {
+	return {
+		container.lower_bound(typename Container::key_type({ parentKey, 0 })),
+		container.lower_bound(typename Container::key_type({ parentKey.next(), 0 })),
 	};
-	return iterPair;
 }
 
 } // namespace te
