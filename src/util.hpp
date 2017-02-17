@@ -25,4 +25,25 @@ inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {
 									 0));
 }
 
+inline const glm::vec3& getTranslation(entity_t entityID, const gamestate_t& game) {
+	auto it = game.world.entity.translations.find(entityID);
+	assert(it != game.world.entity.translations.end());
+	return it->second;
+}
+
+inline const aabb_t& getCollider(entity_t entityID, const gamestate_t& game) {
+	auto it = game.world.entity.colliders.find(entityID);
+	assert(it != game.world.entity.colliders.end());
+	auto colliderIt = game.tileset.collider.find(it->second);
+	assert(colliderIt != game.tileset.collider.end());
+	return colliderIt->second;
+}
+
+inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
+	return ( aabb1.pos.x < aabb2.pos.x + aabb2.size.x &&
+			 aabb1.pos.x + aabb1.size.x > aabb2.pos.x &&
+			 aabb1.pos.y < aabb2.pos.y + aabb2.size.y &&
+			 aabb1.pos.y + aabb1.size.y > aabb2.pos.y );
+}
+
 } // namespace te
