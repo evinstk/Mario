@@ -102,63 +102,6 @@ static void loadPlatformIndex(levelmap_t<int>& state,
 	}
 }
 
-void loadObjects(levelobjectmap_t<levelobject_t>& state,
-				 const decltype(tmx_t::objectgroups)& groups,
-				 const decltype(tmx_t::externalTilesets)& tmxTilesets,
-				 const vector_t<leveltileset_t>& tilesets,
-				 levelid_t levelID,
-				 const stringmap_t<animctrlid_t>& controllers,
-				 const stringmap_t<colliderid_t>& colliders) {
-
-	assert(tmxTilesets.size() == tilesets.size());
-
-	for (const auto& group : groups) {
-		for (const auto& object : group.objects) {
-
-			const tmxexternaltileset_t *pTmxTileset = nullptr;
-			const leveltileset_t *pTileset = nullptr;
-			for (int i = 0, size = tmxTilesets.size(); i < size; ++i) {
-				if (object.gid >= tmxTilesets[i].firstgid) {
-					pTmxTileset = &tmxTilesets[i];
-					pTileset = &tilesets[i];
-				}
-			}
-
-			levelobject_t levelObject = {
-				.translation = { object.x, object.y - object.height, group.layerIndex },
-				.tile = tileid_t({ pTileset->tileset, object.gid - pTmxTileset->firstgid })
-			};
-
-			auto animCtrlPropIt = object.properties.find("animctrl");
-			if (animCtrlPropIt != object.properties.end()) {
-				auto controllerIt = controllers.find_as(animCtrlPropIt->second.c_str());
-				assert(controllerIt != controllers.end());
-				levelObject.animationController = controllerIt->second;
-			}
-
-			auto colliderPropIt = object.properties.find("collider");
-			if (colliderPropIt != object.properties.end()) {
-				auto colliderIt = colliders.find_as(colliderPropIt->second.c_str());
-				assert(colliderIt != colliders.end());
-				levelObject.collider = colliderIt->second;
-			}
-
-			auto gravityPropIt = object.bProperties.find("gravity");
-			if (gravityPropIt != object.bProperties.end()) {
-				levelObject.gravity = gravityPropIt->second;
-			}
-
-			auto groundPropIt = object.bProperties.find("ground");
-			if (groundPropIt != object.bProperties.end()) {
-				levelObject.ground = groundPropIt->second;
-			}
-
-			levelobjectid_t id({ levelID, object.id });
-			state.insert({ id, eastl::move(levelObject) });
-		}
-	}
-}
-
 static void loadPlayerObject(levelmap_t<int>& playerObject, const decltype(tmx_t::objectgroups)& groups, levelid_t levelID) {
 	for (const auto& group : groups) {
 		auto playerIt = eastl::find_if(group.objects.begin(), group.objects.end(), [](const auto& object) {
@@ -182,8 +125,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadLayers(state.layers, state.tilesets.find(levelID)->second, tilesetState.tileset, tmx.layers, tmx.externalTilesets, levelID);
 	loadPlatformIndex(state.platformIndex, tmx.layers, levelID);
 
-	loadObjects(state.objects, tmx.objectgroups, tmx.externalTilesets, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID, tilesetState.colliderID);
-	loadLevelObjects(state.objects2, tmx, levelID, game);
+	loadLevelObjects(state.objects, tmx, levelID, game);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 }
 

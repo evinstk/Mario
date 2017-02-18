@@ -35,15 +35,6 @@ struct layer_t {
 	glm::ivec2 size;
 };
 
-struct levelobject_t {
-	glm::vec3 translation;
-	tileid_t tile;
-	animctrlid_t animationController;
-	colliderid_t collider;
-	bool gravity;
-	bool ground;
-};
-
 struct frame_t {
 	int tileid;
 	int duration;

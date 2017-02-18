@@ -25,7 +25,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game);
 void runGame(gamestate_t& state, levelid_t levelID);
 void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState);
-void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState);
+void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects);
 void processGame(gamestate_t& state, const SDL_Event& evt);
 void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
 

@@ -15,9 +15,7 @@ struct levelstate_t {
 	levelmap_t<vector_t<layer_t>> layers;
 	levelmap_t<int> platformIndex;
 
-	levelobjectmap_t<levelobject_t> objects;
-
-	levelobjectstate_t objects2;
+	levelobjectstate_t objects;
 
 	levelmap_t<int> playerObject;
 };

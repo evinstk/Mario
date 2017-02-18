@@ -33,103 +33,82 @@ struct ObjectComp {
 //};
 } // anon namespace
 
-template <typename Iter>
-void runColliders(entitymap_t<colliderid_t>& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		colliderid_t colliderID = it->second.collider;
-		if (colliderID.id > 0) {
-			entity_t entityID(it->first.id.second);
-			state.insert({ entityID, colliderID });
-		}
+static void runColliders(entitymap_t<colliderid_t>& state,
+						 levelid_t levelID,
+						 const levelobjectmap_t<colliderid_t>& colliders) {
+	auto range = parentRange(colliders, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entity_t(it->first.id.second), it->second });
 	}
 }
 
-template <typename Iter>
-void runIsGround(entityset_t& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		bool isGround = it->second.ground;
-		if (isGround) {
-			entity_t entityID(it->first.id.second);
-			state.insert({ entityID });
-		}
+static void runIsGround(entityset_t& state,
+						levelid_t levelID,
+						const levelobjectset_t& grounds) {
+	auto range = parentRange(grounds, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert(entity_t(it->id.second));
 	}
 }
 
-template <typename Iter>
-void runUnderGravity(entityset_t& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		bool gravity = it->second.gravity;
-		if (gravity) {
-			entity_t entityID(it->first.id.second);
-			state.insert({ entityID });
-		}
+static void runUnderGravity(entityset_t& state,
+							levelid_t levelID,
+							const levelobjectset_t& gravities) {
+	auto range = parentRange(gravities, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert(entity_t(it->id.second));
 	}
 }
 
-template <typename Iter>
-void runVelocities(entitymap_t<glm::vec3>& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		colliderid_t colliderID = it->second.collider;
-		if (colliderID.id > 0) {
-			entity_t entityID(it->first.id.second);
-			state.insert({ entityID, { 0, 0, 0 } });
-		}
+static void runVelocities(entitymap_t<glm::vec3>& state,
+						  levelid_t levelID,
+						  const levelobjectmap_t<colliderid_t>& colliders) {
+	auto range = parentRange(colliders, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entity_t(it->first.id.second), { 0, 0, 0 } });
 	}
 }
 
-template <typename Iter>
-void runTranslations(entitymap_t<glm::vec3>& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		entity_t id(it->first.id.second);
-		state.insert({ id, it->second.translation });
-	}
-
-	//MapRange range(levelState.objects.begin(), levelState.objects.end(), levelID);
-	//for (const auto& row : range) {
-	//	entity_t id(row.first.id.second);
-	//	state.insert({ id, row.second.translation });
-	//}
-}
-
-template <typename Iter>
-void runTilesetSprites(entitymap_t<tileid_t>& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		tileid_t tile = it->second.tile;
-		if (tile.id.first.id > 0) {
-			entity_t id(it->first.id.second);
-			state.insert({ id, tile });
-		}
+static void runTranslations(entitymap_t<glm::vec3>& state,
+							levelid_t levelID,
+							const levelobjectmap_t<glm::vec3>& translations) {
+	auto range = parentRange(translations, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entity_t(it->first.id.second), it->second });
 	}
 }
 
-template <typename Iter>
-void runAnimators(entitymap_t<animator_t>& state, Iter first, Iter last) {
-	for (auto it = first; it != last; ++it) {
-		animctrlid_t ctrl = it->second.animationController;
-		if (ctrl.id > 0) {
-			entity_t id(it->first.id.second);
-			animator_t animator = {
-				.controller = ctrl,
-				.animation = {},
-				.elapsed = 0
-			};
-			state.insert({ id, animator });
-		}
+static void runTilesetSprites(entitymap_t<tileid_t>& state,
+							  levelid_t levelID,
+							  const levelobjectmap_t<tileid_t>& tilesets) {
+	auto range = parentRange(tilesets, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entity_t(it->first.id.second), it->second });
 	}
 }
 
-void runEntity(entitystate_t& state, levelid_t levelID, const levelstate_t& levelState) {
-	auto range = parentRange(levelState.objects, levelID);
-	auto lowerBound = range.first;
-	auto upperBound = range.second;
+static void runAnimators(entitymap_t<animator_t>& state,
+						 levelid_t levelID,
+						 const levelobjectmap_t<animctrlid_t>& controllers) {
+	auto range = parentRange(controllers, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		animator_t animator = {
+			.controller = it->second,
+			.animation = {},
+			.elapsed = 0
+		};
+		state.insert({ entity_t(it->first.id.second), animator });
+	}
+}
 
-	runColliders(state.colliders, lowerBound, upperBound);
-	runUnderGravity(state.underGravity, lowerBound, upperBound);
-	runIsGround(state.isGround, lowerBound, upperBound);
-	runVelocities(state.velocities, lowerBound, upperBound);
-	runTranslations(state.translations, lowerBound, upperBound);
-	runTilesetSprites(state.tilesetSprites, lowerBound, upperBound);
-	runAnimators(state.animators, lowerBound, upperBound);
+void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
+	runColliders(state.colliders, levelID, objects.colliders);
+	runUnderGravity(state.underGravity, levelID, objects.gravities);
+	runIsGround(state.isGround, levelID, objects.grounds);
+	runVelocities(state.velocities, levelID, objects.colliders);
+	runTranslations(state.translations, levelID, objects.translations);
+	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
+	runAnimators(state.animators, levelID, objects.animationControllers);
 }
 
 } // namespace te
