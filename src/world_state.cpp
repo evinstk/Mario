@@ -1,5 +1,6 @@
 #include "world_state.hpp"
 #include "camera.hpp"
+#include "game_values.hpp"
 #include <glm/gtx/transform.hpp>
 
 namespace te {
@@ -10,7 +11,7 @@ worldstate_t::worldstate_t()
 	, playerEntity(0)
 	, score(0)
 	, coinCount(0)
-	, lives(0)
+	, lives(LIVE_COUNT_START)
 {
 }
 

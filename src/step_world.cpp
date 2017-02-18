@@ -2,13 +2,12 @@
 #include "world_state.hpp"
 #include "util.hpp"
 #include "camera.hpp"
+#include "game_values.hpp"
 #include <EASTL/hash_map.h>
 #include <EASTL/string.h>
 #include <EASTL/algorithm.h>
 #include <EASTL/iterator.h>
 #include <SDL.h>
-
-#include <iostream>
 
 namespace te {
 
@@ -30,9 +29,6 @@ static void stepView(glm::imat4& state,
 	}
 }
 
-constexpr int COIN_SCORE = 200;
-constexpr int COIN_COUNT_LIVE_UP = 100;
-
 static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t& game) {
 	for (entity_t blockID : game.world.entity.hitGround) {
 		prize_t prize;
@@ -44,7 +40,6 @@ static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t&
 
 	if (coinCount >= COIN_COUNT_LIVE_UP) {
 		++lives;
-		std::cout << "Level up! : " << lives << std::endl;
 		coinCount %= COIN_COUNT_LIVE_UP;
 	}
 }
