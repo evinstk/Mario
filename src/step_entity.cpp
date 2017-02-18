@@ -190,10 +190,10 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 		glm::vec2 tileSize = getMap(game).tileSize;
 		const layer_t& platformLayer = getPlatformLayer(game);
 
-		glm::vec2 start1 = translation + collider.pos + glm::vec2(1.0f, halfColliderSizeY);
-		glm::vec2 end1   = translation + collider.pos + glm::vec2(1.0f, 0.0f);
-		glm::vec2 start2 = translation + collider.pos + glm::vec2(collider.size.x - 1.0f, halfColliderSizeY);
-		glm::vec2 end2   = translation + collider.pos + glm::vec2(collider.size.x - 1.0f, 0.0f);
+		glm::vec2 start1 = translation + collider.pos + glm::vec2(2.0f, halfColliderSizeY);
+		glm::vec2 end1   = translation + collider.pos + glm::vec2(2.0f, 0.0f);
+		glm::vec2 start2 = translation + collider.pos + glm::vec2(collider.size.x - 3.0f, halfColliderSizeY);
+		glm::vec2 end2   = translation + collider.pos + glm::vec2(collider.size.x - 3.0f, 0.0f);
 
 		int solidTile1 = senseGround(start1.x, start1.y, end1.y, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
 		int solidTile2 = senseGround(start2.x, start2.y, end2.y, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
@@ -211,9 +211,8 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 				aabb_t groundCollider = getCollider(groundID, game);
 				groundCollider.pos += groundTranslation;
 				if (isColliding(entityCollider, groundCollider)) {
-					ceilingOffsets.insert({ entityID, collider.pos.y + groundCollider.pos.y + groundCollider.size.y - translation.y });
+					ceilingOffsets[entityID] = collider.pos.y + groundCollider.pos.y + groundCollider.size.y - translation.y;
 					hitGround.insert(groundID);
-					break;
 				}
 			}
 		}
