@@ -1,5 +1,6 @@
 #include "sprite_renderer.hpp"
 #include "game_state.hpp"
+#include "util.hpp"
 #include <tegl/types.hpp>
 #include <tegl/util.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -120,10 +121,15 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 
 			if (sprite.id.first == layerTileset.tileset) {
 
-				auto translationIt = state.world.entity.translations.find(entityID);
-				assert(translationIt != state.world.entity.translations.end());
+				glm::vec3 translation = getTranslation(entityID, state);
+				glm::vec3 spriteOffset;
+				auto offsetIt = state.world.entity.spriteOffsets.find(entityID);
+				if (offsetIt != state.world.entity.spriteOffsets.end()) {
+					spriteOffset += offsetIt->second;
+				}
+				translation += spriteOffset;
 
-				translations.push_back(translationIt->second);
+				translations.push_back(translation);
 				ids.push_back(sprite.id.second);
 			}
 		}

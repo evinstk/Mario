@@ -11,6 +11,10 @@ struct entitystate_t {
 	entitymap_t<float> groundOffsets;
 	entitymap_t<float> ceilingOffsets;
 
+	entityset_t            hitGround;
+	entitymap_t<float>     hitGroundElapsed;
+	entitymap_t<glm::vec3> spriteOffsets;
+
 	entityset_t underGravity;
 	entityset_t isGround;
 	entitymap_t<glm::vec3> velocities;

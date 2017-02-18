@@ -4,6 +4,8 @@
 #include "tileset_state.hpp"
 #include "level_state.hpp"
 #include "util.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 namespace te {
 
@@ -168,8 +170,12 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 	}
 }
 
-static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets, float dt, const gamestate_t& game) {
+static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
+							   entityset_t& hitGround,
+							   float dt,
+							   const gamestate_t& game) {
 	ceilingOffsets.clear();
+	hitGround.clear();
 
 	for (entity_t entityID : game.world.entity.underGravity) {
 		glm::vec2 velocity = getVelocity(entityID, game);
@@ -206,9 +212,41 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets, float dt, con
 				groundCollider.pos += groundTranslation;
 				if (isColliding(entityCollider, groundCollider)) {
 					ceilingOffsets.insert({ entityID, collider.pos.y + groundCollider.pos.y + groundCollider.size.y - translation.y });
+					hitGround.insert(groundID);
 					break;
 				}
 			}
+		}
+	}
+}
+
+constexpr float BOUNCE_DURATION = 0.2f;
+
+static void stepHitGroundElapsed(entitymap_t<float>& state, float dt, const gamestate_t& game) {
+	for (auto& row : state) {
+		if (row.second < BOUNCE_DURATION) {
+			row.second += dt;
+		}
+	}
+
+	for (entity_t groundID : game.world.entity.hitGround) {
+		float& elapsed = state[groundID];
+		if (elapsed >= BOUNCE_DURATION) {
+			elapsed = 0;
+		}
+	}
+}
+
+constexpr float BOUNCE_HEIGHT = 8.0f;
+
+static void stepSpriteOffsets(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
+	for (const auto& groundRow : game.world.entity.hitGroundElapsed) {
+		entity_t groundID = groundRow.first;
+		float elapsed = groundRow.second;
+		float& yOffset = state[groundID].y;
+		yOffset = 0;
+		if (elapsed < BOUNCE_DURATION) {
+			yOffset = -glm::sin(glm::pi<float>() * elapsed / BOUNCE_DURATION) * BOUNCE_HEIGHT;
 		}
 	}
 }
@@ -308,7 +346,11 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.groundOffsets, dt, game);
-	stepCeilingOffsets(state.ceilingOffsets, dt, game);
+	stepCeilingOffsets(state.ceilingOffsets, state.hitGround, dt, game);
+
+	stepHitGroundElapsed(state.hitGroundElapsed, dt, game);
+	stepSpriteOffsets(state.spriteOffsets, game);
+
 	stepTranslations(state.translations, dt, game);
 	stepVelocities(state.velocities, game);
 	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
