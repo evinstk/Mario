@@ -56,4 +56,13 @@ inline eastl::pair<typename Container::const_iterator, typename Container::const
 	};
 }
 
+inline bool hasPrize(entity_t blockID, prize_t& prize, const gamestate_t& game) {
+	auto prizeIt = game.world.entity.prizes.find(blockID);
+	if (prizeIt != game.world.entity.prizes.end()) {
+		prize = prizeIt->second;
+		return true;
+	}
+	return false;
+}
+
 } // namespace te

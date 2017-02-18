@@ -23,6 +23,9 @@ struct worldstate_t {
 	vector_t<layer_t> layers;
 
 	entity_t playerEntity;
+	int score;
+	int coinCount;
+	int lives;
 };
 
 } // namespace te

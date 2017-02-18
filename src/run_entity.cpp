@@ -101,6 +101,16 @@ static void runAnimators(entitymap_t<animator_t>& state,
 	}
 }
 
+static void runPrizes(entitymap_t<prize_t>& state,
+					  levelid_t levelID,
+					  const levelobjectmap_t<prize_t>& prizes) {
+
+	auto range = parentRange(prizes, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entity_t(it->first.id.second), it->second });
+	}
+}
+
 void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
 	runColliders(state.colliders, levelID, objects.colliders);
 	runUnderGravity(state.underGravity, levelID, objects.gravities);
@@ -109,6 +119,7 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t
 	runTranslations(state.translations, levelID, objects.translations);
 	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
 	runAnimators(state.animators, levelID, objects.animationControllers);
+	runPrizes(state.prizes, levelID, objects.prizes);
 }
 
 } // namespace te

@@ -56,6 +56,11 @@ struct animator_t {
 	float elapsed;
 };
 
+enum class prize_t {
+	COIN,
+	FIRE
+};
+
 using entityset_t = eastl::vector_set<entity_t>;
 
 template <typename T>

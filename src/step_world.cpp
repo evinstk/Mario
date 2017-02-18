@@ -30,8 +30,28 @@ static void stepView(glm::imat4& state,
 	}
 }
 
+constexpr int COIN_SCORE = 200;
+constexpr int COIN_COUNT_LIVE_UP = 100;
+
+static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t& game) {
+	for (entity_t blockID : game.world.entity.hitGround) {
+		prize_t prize;
+		if (hasPrize(blockID, prize, game) && prize == prize_t::COIN) {
+			score += COIN_SCORE;
+			++coinCount;
+		}
+	}
+
+	if (coinCount >= COIN_COUNT_LIVE_UP) {
+		++lives;
+		std::cout << "Level up! : " << lives << std::endl;
+		coinCount %= COIN_COUNT_LIVE_UP;
+	}
+}
+
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepEntity(state.entity, dt, gameState);
+	stepScore(state.score, state.coinCount, state.lives, gameState);
 	stepView(state.view, dt, gameState);
 }
 
