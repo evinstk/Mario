@@ -170,7 +170,7 @@ static void loadPlayerObject(levelmap_t<int>& playerObject, const decltype(tmx_t
 	}
 }
 
-void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState) {
+void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game) {
 	bool loaded = loadSource(state.source, state.nextLevelID, pathname);
 	if (!loaded) {
 		return;
@@ -183,6 +183,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadPlatformIndex(state.platformIndex, tmx.layers, levelID);
 
 	loadObjects(state.objects, tmx.objectgroups, tmx.externalTilesets, state.tilesets.find(levelID)->second, levelID, tilesetState.controllerID, tilesetState.colliderID);
+	loadLevelObjects(state.objects2, tmx, levelID, game);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 }
 

@@ -13,6 +13,7 @@ add_executable(mario
   load_game.cpp
   load_tileset.cpp
   load_level.cpp
+  load_level_object.cpp
   run_game.cpp
   run_world.cpp
   run_entity.cpp

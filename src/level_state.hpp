@@ -1,4 +1,5 @@
 #pragma once
+#include "level_object_state.hpp"
 #include "types.hpp"
 
 namespace te {
@@ -15,6 +16,9 @@ struct levelstate_t {
 	levelmap_t<int> platformIndex;
 
 	levelobjectmap_t<levelobject_t> objects;
+
+	levelobjectstate_t objects2;
+
 	levelmap_t<int> playerObject;
 };
 

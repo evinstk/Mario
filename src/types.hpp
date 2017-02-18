@@ -94,4 +94,6 @@ using levelmap_t = eastl::vector_map<levelid_t, T>;
 template <typename T>
 using levelobjectmap_t = eastl::vector_map<levelobjectid_t, T>;
 
+using levelobjectset_t = eastl::vector_set<levelobjectid_t>;
+
 } // namespace te
