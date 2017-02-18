@@ -4849,6 +4849,7 @@
    <properties>
     <property name="collider" value="prize"/>
     <property name="ground" type="bool" value="true"/>
+    <property name="prize" value="coin"/>
    </properties>
   </object>
   <object id="20" type="prize" gid="25" x="368" y="112" width="16" height="16">
