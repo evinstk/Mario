@@ -67,10 +67,10 @@ enum class prize_t {
 	FIRE
 };
 
-using entityset_t = eastl::vector_set<entity_t>;
+using entityset_t = eastl::vector_set<entityid_t>;
 
 template <typename T>
-using entitymap_t = eastl::vector_map<entity_t, T>;
+using entitymap_t = eastl::vector_map<entityid_t, T>;
 
 template <typename T>
 using collidermap_t = eastl::vector_map<colliderid_t, T>;

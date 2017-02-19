@@ -22,7 +22,7 @@ struct worldstate_t {
 	levelid_t level;
 	vector_t<layer_t> layers;
 
-	entity_t playerEntity;
+	entityid_t playerEntity;
 	int score;
 	int coinCount;
 	int lives;

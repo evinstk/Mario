@@ -44,7 +44,7 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 	glm::vec2 tileSize = getMap(game).tileSize;
 
 	for (const auto& colliderRow : game.world.entity.colliders) {
-		entity_t entityID = colliderRow.first;
+		entityid_t entityID = colliderRow.first;
 		colliderid_t colliderID = colliderRow.second;
 		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
 		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
@@ -68,7 +68,7 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 			entityCollider.pos += glm::vec2(translation);
 			entityCollider.pos.y += entityCollider.size.y / 2;
 			entityCollider.size.y = 1;
-			for (entity_t groundID : game.world.entity.isGround) {
+			for (entityid_t groundID : game.world.entity.isGround) {
 				aabb_t groundCollider = getCollider(groundID, game);
 				groundCollider.pos += glm::vec2(getTranslation(groundID, game));
 				if (groundID != entityID && isColliding(entityCollider, groundCollider)) {
@@ -122,7 +122,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 	glm::ivec2 tileSize = getMap(game).tileSize;
 	const layer_t& platformLayer = getPlatformLayer(game);
 
-	for (entity_t entityID : game.world.entity.underGravity) {
+	for (entityid_t entityID : game.world.entity.underGravity) {
 
 		glm::vec3 velocity = game.world.entity.velocities.find(entityID)->second;
 		if (velocity.y < 0) {
@@ -155,7 +155,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 			entityCollider.pos += glm::vec2(translation);
 			entityCollider.pos.y += collider.size.y / 2;
 			entityCollider.size.y = (collider.size.y / 2) + 1;
-			for (entity_t groundID : game.world.entity.isGround) {
+			for (entityid_t groundID : game.world.entity.isGround) {
 				aabb_t groundCollider = getCollider(groundID, game);
 				groundCollider.pos += glm::vec2(getTranslation(groundID, game));
 				if (isColliding(entityCollider, groundCollider)) {
@@ -178,7 +178,7 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 	ceilingOffsets.clear();
 	hitGround.clear();
 
-	for (entity_t entityID : game.world.entity.underGravity) {
+	for (entityid_t entityID : game.world.entity.underGravity) {
 		glm::vec2 velocity = getVelocity(entityID, game);
 		if (velocity.y >= 0) {
 			continue;
@@ -207,7 +207,7 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 			aabb_t entityCollider = collider;
 			entityCollider.pos += translation;
 			entityCollider.size.y /= 2;
-			for (entity_t groundID : game.world.entity.isGround) {
+			for (entityid_t groundID : game.world.entity.isGround) {
 				glm::vec2 groundTranslation = getTranslation(groundID, game);
 				aabb_t groundCollider = getCollider(groundID, game);
 				groundCollider.pos += groundTranslation;
@@ -228,7 +228,7 @@ static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, con
 		}
 	}
 
-	for (entity_t groundID : game.world.entity.hitGround) {
+	for (entityid_t groundID : game.world.entity.hitGround) {
 		bounceanim_t& anim = state[groundID];
 		if (anim.elapsed >= anim.duration) {
 			anim.duration = BLOCK_BOUNCE_DURATION;
@@ -240,7 +240,7 @@ static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, con
 
 static void stepSpriteOffsets(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
 	for (const auto& bounceRow : game.world.entity.bounceAnimations) {
-		entity_t id = bounceRow.first;
+		entityid_t id = bounceRow.first;
 		const bounceanim_t& anim = bounceRow.second;
 		float& yOffset = state[id].y;
 		yOffset = 0;
@@ -261,7 +261,7 @@ static void stepVelocities(entitymap_t<glm::vec3>& velocities, const gamestate_t
 		velocities.find(groundRow.first)->second.y = 0;
 	}
 
-	for (entity_t entityID : game.world.entity.underGravity) {
+	for (entityid_t entityID : game.world.entity.underGravity) {
 		velocities[entityID].y += 10.0f;
 	}
 
@@ -296,7 +296,7 @@ static void stepAnimators(const animctrlmap_t<animctrl_t>& controllers,
 	for (auto& animatorRow : animators) {
 		animator_t& animator = animatorRow.second;
 		animator.elapsed += dt;
-		entity_t entityID = animatorRow.first;
+		entityid_t entityID = animatorRow.first;
 		glm::vec3 velocity = velocities.find(entityID)->second;
 		const animctrl_t& controller = controllers.find(animator.controller)->second;
 		animid_t newAnim;
@@ -329,7 +329,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 		for (const auto& frame : animation.frames) {
 			acc += frame.duration;
 			if (clampedElapsed < acc) {
-				entity_t entityID = animatorRow.first;
+				entityid_t entityID = animatorRow.first;
 				tilesetid_t tilesetID = animationID.id.first;
 				auto tilesetIt = eastl::find_if(levelTilesets.begin(), levelTilesets.end(), [tilesetID](const auto& ltileset) {
 						return ltileset.tileset == tilesetID;

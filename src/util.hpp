@@ -25,19 +25,19 @@ inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {
 									 0));
 }
 
-inline const glm::vec3& getTranslation(entity_t entityID, const gamestate_t& game) {
+inline const glm::vec3& getTranslation(entityid_t entityID, const gamestate_t& game) {
 	return game.world.entity.translations.find(entityID)->second;
 }
 
-inline const aabb_t& getCollider(entity_t entityID, const gamestate_t& game) {
+inline const aabb_t& getCollider(entityid_t entityID, const gamestate_t& game) {
 	return game.tileset.collider.find(game.world.entity.colliders.find(entityID)->second)->second;
 }
 
-inline const glm::vec3& getVelocity(entity_t entityID, const gamestate_t& game) {
+inline const glm::vec3& getVelocity(entityid_t entityID, const gamestate_t& game) {
 	return game.world.entity.velocities.find(entityID)->second;
 }
 
-inline float getWallOffset(entity_t entityID, const gamestate_t& game) {
+inline float getWallOffset(entityid_t entityID, const gamestate_t& game) {
 	return game.world.entity.wallOffsets.find(entityID)->second;
 }
 
@@ -56,7 +56,7 @@ inline eastl::pair<typename Container::const_iterator, typename Container::const
 	};
 }
 
-inline bool hasPrize(entity_t blockID, prize_t& prize, const gamestate_t& game) {
+inline bool hasPrize(entityid_t blockID, prize_t& prize, const gamestate_t& game) {
 	auto prizeIt = game.world.entity.prizes.find(blockID);
 	if (prizeIt != game.world.entity.prizes.end()) {
 		prize = prizeIt->second;

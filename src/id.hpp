@@ -42,7 +42,7 @@ struct id_t {
 //	return lhs < id.first;
 //}
 
-using entity_t        = id_t<id_type_t::ENTITY>;
+using entityid_t        = id_t<id_type_t::ENTITY>;
 using colliderid_t    = id_t<id_type_t::COLLIDER>;
 using tilesetid_t     = id_t<id_type_t::TILESET>;
 using levelid_t       = id_t<id_type_t::LEVEL>;

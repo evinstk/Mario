@@ -30,7 +30,7 @@ static void stepView(glm::imat4& state,
 }
 
 static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t& game) {
-	for (entity_t blockID : game.world.entity.hitGround) {
+	for (entityid_t blockID : game.world.entity.hitGround) {
 		prize_t prize;
 		if (hasPrize(blockID, prize, game) && prize == prize_t::COIN) {
 			score += COIN_SCORE;

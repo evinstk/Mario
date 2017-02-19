@@ -116,7 +116,7 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 		}
 
 		for (const auto& spriteRow : state.world.entity.tilesetSprites) {
-			entity_t entityID = spriteRow.first;
+			entityid_t entityID = spriteRow.first;
 			tileid_t sprite = spriteRow.second;
 
 			if (sprite.id.first == layerTileset.tileset) {

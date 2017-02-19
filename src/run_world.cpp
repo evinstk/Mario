@@ -6,10 +6,10 @@
 
 namespace te {
 
-static void runPlayerEntity(entity_t& playerEntity, levelid_t levelID, const levelmap_t<int>& playerObjectState) {
+static void runPlayerEntity(entityid_t& playerEntity, levelid_t levelID, const levelmap_t<int>& playerObjectState) {
 	auto playerEntityIt = playerObjectState.find(levelID);
 	assert(playerEntityIt != playerObjectState.end());
-	playerEntity = entity_t(playerEntityIt->second);
+	playerEntity = entityid_t(playerEntityIt->second);
 }
 
 static void runView(glm::imat4& view,
