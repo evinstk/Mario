@@ -17,6 +17,7 @@ struct levelstate_t {
 
 	levelobjectstate_t objects;
 
+	levelmap_t<int> nextObjectID;
 	levelmap_t<int> playerObject;
 };
 

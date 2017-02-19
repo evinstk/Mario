@@ -102,6 +102,10 @@ static void loadPlatformIndex(levelmap_t<int>& state,
 	}
 }
 
+static void loadNextObjectID(levelmap_t<int>& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
+	state[levelID] = tmx.nextobjectid;
+}
+
 static void loadPlayerObject(levelmap_t<int>& playerObject, const decltype(tmx_t::objectgroups)& groups, levelid_t levelID) {
 	for (const auto& group : groups) {
 		auto playerIt = eastl::find_if(group.objects.begin(), group.objects.end(), [](const auto& object) {
@@ -126,6 +130,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadPlatformIndex(state.platformIndex, tmx.layers, levelID);
 
 	loadLevelObjects(state.objects, tmx, levelID, game);
+	loadNextObjectID(state.nextObjectID, tmx, levelID, game);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 }
 
