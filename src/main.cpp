@@ -89,6 +89,9 @@ static int MarioMain() {
 			}
 			inputGame(gameState, SDL_GetKeyboardState(NULL));
 			stepGame(gameState, timePerFrame);
+			for (const auto& newEntity : gameState.world.newEntityQueue) {
+				makeEntity(gameState, newEntity.type, newEntity.translation);
+			}
 		}
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

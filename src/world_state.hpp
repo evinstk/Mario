@@ -18,6 +18,7 @@ struct worldstate_t {
 	glm::imat4 view;
 
 	entitystate_t entity;
+	int nextEntityID;
 
 	levelid_t level;
 	vector_t<layer_t> layers;
@@ -26,6 +27,8 @@ struct worldstate_t {
 	int score;
 	int coinCount;
 	int lives;
+
+	vector_t<entityrequest_t> newEntityQueue;
 };
 
 } // namespace te

@@ -62,6 +62,15 @@ struct animator_t {
 	float elapsed;
 };
 
+enum class entity_t {
+	BLOCK_COIN
+};
+
+struct entityrequest_t {
+	entity_t type;
+	glm::vec3 translation;
+};
+
 enum class prize_t {
 	COIN,
 	FIRE

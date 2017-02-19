@@ -44,10 +44,26 @@ static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t&
 	}
 }
 
+static void stepNewEntityQueue(vector_t<entityrequest_t>& state, const gamestate_t& game) {
+	state.clear();
+	for (entityid_t blockID : game.world.entity.hitGround) {
+		prize_t prize;
+		if (hasPrize(blockID, prize, game) && prize == prize_t::COIN) {
+			float yTileSize = getMap(game).tileSize.y;
+			entityrequest_t newEntity = {
+				.type = entity_t::BLOCK_COIN,
+				.translation = getTranslation(blockID, game) + glm::vec3(0, -yTileSize, 0)
+			};
+			state.push_back(newEntity);
+		}
+	}
+}
+
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepEntity(state.entity, dt, gameState);
 	stepScore(state.score, state.coinCount, state.lives, gameState);
 	stepView(state.view, dt, gameState);
+	stepNewEntityQueue(state.newEntityQueue, gameState);
 }
 
 } // namespace te

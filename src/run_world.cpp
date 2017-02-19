@@ -6,6 +6,10 @@
 
 namespace te {
 
+static void runNextEntityID(int& state, levelid_t levelID, const levelstate_t& level) {
+	state = level.nextObjectID.find(levelID)->second;
+}
+
 static void runPlayerEntity(entityid_t& playerEntity, levelid_t levelID, const levelmap_t<int>& playerObjectState) {
 	auto playerEntityIt = playerObjectState.find(levelID);
 	assert(playerEntityIt != playerObjectState.end());
@@ -27,6 +31,7 @@ void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelS
 	state.layers = layersIt->second;
 
 	runEntity(state.entity, levelID, levelState.objects);
+	runNextEntityID(state.nextEntityID, levelID, levelState);
 	runPlayerEntity(state.playerEntity, levelID, levelState.playerObject);
 	runView(state.view, state.entity.translations[state.playerEntity]);
 }

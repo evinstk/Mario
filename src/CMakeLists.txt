@@ -21,7 +21,10 @@ add_executable(mario
   sprite_renderer.cpp
   world_state.cpp
   process_game.cpp
-  process_world.cpp)
+  process_world.cpp
+  make_entity_game.cpp
+  make_entity_world.cpp
+  make_entity_entity.cpp)
 
 set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_ASSERT_ENABLED -DEASTL_MOVE_SEMANTICS_ENABLED -DGLM_PRECISION_HIGHP_INT")
 
