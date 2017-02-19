@@ -53,6 +53,16 @@ static void loadAnimation(animmap_t<animation_t>& state, const tsxtileset_t& til
 	}
 }
 
+static void loadAnimationID(stringmap_t<animid_t>& state, const tsxtileset_t& tileset, tilesetid_t tilesetID) {
+	for (const auto& tile : tileset.tiles) {
+		auto animationPropIt = tile.properties.find("animation");
+		if (animationPropIt != tile.properties.end()) {
+			animid_t animID({ tilesetID, tile.id });
+			state.insert({ eastl::string(animationPropIt->second.c_str()), animID });
+		}
+	}
+}
+
 static void loadControllerID(stringmap_t<animctrlid_t>& state, int& nextID, const tsxtileset_t& tileset) {
 	for (const auto& tile : tileset.tiles) {
 		auto ctrlPropIt = tile.properties.find("animctrl");
@@ -130,6 +140,7 @@ void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char 
 	tilesetid_t id = state.source.find_as(pathname)->second;
 	loadTileset(state.tileset, tileset, id);
 	loadAnimation(state.animation, tileset, id);
+	loadAnimationID(state.animationID, tileset, id);
 	loadControllerID(state.controllerID, state.nextControllerID, tileset);
 	loadController(state.controller, state.controllerID, tileset, id);
 	loadCollider(state.colliderID, state.nextColliderID, state.collider, tileset);

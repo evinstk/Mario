@@ -16,6 +16,7 @@ struct tilesetstate_t {
 
 	tilesetmap_t<tileset_t> tileset;
 	animmap_t<animation_t> animation;
+	stringmap_t<animid_t> animationID;
 
 	int nextControllerID;
 	stringmap_t<animctrlid_t> controllerID;
