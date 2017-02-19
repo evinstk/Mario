@@ -1,6 +1,6 @@
 #include "game_state.hpp"
 #include "sprite_renderer.hpp"
-#include "reducer_world.hpp"
+#include "game_action.hpp"
 #include <tegl/readtmx.hpp>
 #include <GL/glew.h>
 #include <SDL.h>
