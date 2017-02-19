@@ -8,8 +8,8 @@ void makeEntity(worldstate_t& state,
 	state.newEntityIDs.clear();
 	for (auto it = state.newEntityQueue.begin(), end = state.newEntityQueue.end(); it < end; ++it) {
 		entityid_t newID;
-		auto freeIDIt = state.freeIDs.begin();
-		if (freeIDIt != state.freeIDs.end()) {
+		auto freeIDIt = state.freeIDs.rbegin();
+		if (freeIDIt != state.freeIDs.rend()) {
 			newID = entityid_t(*freeIDIt);
 			state.freeIDs.erase(freeIDIt);
 		} else {
