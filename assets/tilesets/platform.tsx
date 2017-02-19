@@ -22,6 +22,15 @@
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
+ <tile id="57">
+  <properties>
+   <property name="animation" value="coin"/>
+  </properties>
+  <animation>
+   <frame tileid="57" duration="100"/>
+   <frame tileid="123" duration="100"/>
+  </animation>
+ </tile>
  <tile id="264">
   <properties>
    <property name="solid" type="bool" value="true"/>
