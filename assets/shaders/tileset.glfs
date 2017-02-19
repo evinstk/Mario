@@ -16,4 +16,7 @@ void main() {
 							  ( id / columns ) * ( tileSize.y + spacing ) + margin );
 
 	color = texelFetch( tex, ivec2( texOffset ) + tileCoords, 0 );
+	if (color.a == 0) {
+		discard;
+	}
 }
