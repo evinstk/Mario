@@ -4,6 +4,7 @@
 #include "tileset_state.hpp"
 #include "level_state.hpp"
 #include "util.hpp"
+#include "game_values.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
@@ -219,9 +220,6 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 	}
 }
 
-constexpr float BOUNCE_DURATION = 0.2f;
-constexpr float BOUNCE_HEIGHT = 8.0f;
-
 static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, const gamestate_t& game) {
 	for (auto& row : state) {
 		bounceanim_t& anim = row.second;
@@ -233,8 +231,8 @@ static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, con
 	for (entity_t groundID : game.world.entity.hitGround) {
 		bounceanim_t& anim = state[groundID];
 		if (anim.elapsed >= anim.duration) {
-			anim.duration = BOUNCE_DURATION;
-			anim.height = BOUNCE_HEIGHT;
+			anim.duration = BLOCK_BOUNCE_DURATION;
+			anim.height = BLOCK_BOUNCE_HEIGHT;
 			anim.elapsed = 0;
 		}
 	}
