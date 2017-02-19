@@ -19,6 +19,7 @@ struct worldstate_t {
 
 	entitystate_t entity;
 	int nextEntityID;
+	entityset_t freeIDs;
 
 	levelid_t level;
 	vector_t<layer_t> layers;
