@@ -58,11 +58,22 @@ static void stepNewEntityQueue(vector_t<entityrequest_t>& state, const gamestate
 	}
 }
 
+static void stepDestroyQueue(entityset_t& state, const gamestate_t& game) {
+	for (const auto& lifetimeRow : game.world.entity.lifetimes) {
+		entityid_t entityID = lifetimeRow.first;
+		float timeLeft = lifetimeRow.second;
+		if (timeLeft <= 0) {
+			state.insert(entityID);
+		}
+	}
+}
+
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepEntity(state.entity, dt, gameState);
 	stepScore(state.score, state.coinCount, state.lives, gameState);
 	stepView(state.view, dt, gameState);
 	stepNewEntityQueue(state.newEntityQueue, gameState);
+	stepDestroyQueue(state.destroyQueue, gameState);
 }
 
 } // namespace te

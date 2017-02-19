@@ -38,4 +38,8 @@ void makeEntity(gamestate_t& state);
 void makeEntity(worldstate_t& state, const gamestate_t& game);
 void makeEntity(entitystate_t& state, const gamestate_t& game);
 
+void destroyEntity(gamestate_t& state);
+void destroyEntity(worldstate_t& state, const gamestate_t& game);
+void destroyEntity(entitystate_t& state, const gamestate_t& game);
+
 } // namespace te

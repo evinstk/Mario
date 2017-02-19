@@ -342,6 +342,12 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 	}
 }
 
+static void stepLifetimes(entitymap_t<float>& state, float dt) {
+	for (auto& row : state) {
+		row.second -= dt;
+	}
+}
+
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.groundOffsets, dt, game);
@@ -356,6 +362,8 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
 	assert(levelTilesetsIt != game.level.tilesets.end());
 	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second);
+
+	stepLifetimes(state.lifetimes, dt);
 }
 
 } // namespace te

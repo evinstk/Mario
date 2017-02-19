@@ -89,6 +89,7 @@ static int MarioMain() {
 			}
 			inputGame(gameState, SDL_GetKeyboardState(NULL));
 			stepGame(gameState, timePerFrame);
+			destroyEntity(gameState);
 			makeEntity(gameState);
 		}
 		glClearColor(0, 0, 0, 1.f);

@@ -22,6 +22,8 @@ struct entitystate_t {
 	entitymap_t<glm::vec3> translations;
 	entitymap_t<tileid_t> tilesetSprites;
 	entitymap_t<animator_t> animators;
+
+	entitymap_t<float> lifetimes;
 };
 
 } // namespace te
