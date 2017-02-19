@@ -45,6 +45,12 @@ struct animation_t {
 	eastl::vector<frame_t> frames;
 };
 
+struct bounceanim_t {
+	float duration;
+	float height;
+	float elapsed;
+};
+
 struct animctrl_t {
 	animid_t walkLeft;
 	animid_t walkRight;

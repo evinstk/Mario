@@ -220,32 +220,34 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 }
 
 constexpr float BOUNCE_DURATION = 0.2f;
+constexpr float BOUNCE_HEIGHT = 8.0f;
 
-static void stepHitGroundElapsed(entitymap_t<float>& state, float dt, const gamestate_t& game) {
+static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, const gamestate_t& game) {
 	for (auto& row : state) {
-		if (row.second < BOUNCE_DURATION) {
-			row.second += dt;
+		bounceanim_t& anim = row.second;
+		if (anim.elapsed < anim.duration) {
+			row.second.elapsed += dt;
 		}
 	}
 
 	for (entity_t groundID : game.world.entity.hitGround) {
-		float& elapsed = state[groundID];
-		if (elapsed >= BOUNCE_DURATION) {
-			elapsed = 0;
+		bounceanim_t& anim = state[groundID];
+		if (anim.elapsed >= anim.duration) {
+			anim.duration = BOUNCE_DURATION;
+			anim.height = BOUNCE_HEIGHT;
+			anim.elapsed = 0;
 		}
 	}
 }
 
-constexpr float BOUNCE_HEIGHT = 8.0f;
-
 static void stepSpriteOffsets(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
-	for (const auto& groundRow : game.world.entity.hitGroundElapsed) {
-		entity_t groundID = groundRow.first;
-		float elapsed = groundRow.second;
-		float& yOffset = state[groundID].y;
+	for (const auto& bounceRow : game.world.entity.bounceAnimations) {
+		entity_t id = bounceRow.first;
+		const bounceanim_t& anim = bounceRow.second;
+		float& yOffset = state[id].y;
 		yOffset = 0;
-		if (elapsed < BOUNCE_DURATION) {
-			yOffset = -glm::sin(glm::pi<float>() * elapsed / BOUNCE_DURATION) * BOUNCE_HEIGHT;
+		if (anim.elapsed < BOUNCE_DURATION) {
+			yOffset = -glm::sin(glm::pi<float>() * anim.elapsed / BOUNCE_DURATION) * BOUNCE_HEIGHT;
 		}
 	}
 }
@@ -347,7 +349,7 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepColliders(state.groundOffsets, dt, game);
 	stepCeilingOffsets(state.ceilingOffsets, state.hitGround, dt, game);
 
-	stepHitGroundElapsed(state.hitGroundElapsed, dt, game);
+	stepBounceAnimations(state.bounceAnimations, dt, game);
 	stepSpriteOffsets(state.spriteOffsets, game);
 
 	stepTranslations(state.translations, dt, game);
