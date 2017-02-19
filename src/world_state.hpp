@@ -29,6 +29,7 @@ struct worldstate_t {
 	int lives;
 
 	vector_t<entityrequest_t> newEntityQueue;
+	vector_t<entityid_t> newEntityIDs;
 };
 
 } // namespace te

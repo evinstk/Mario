@@ -34,8 +34,8 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t
 void processGame(gamestate_t& state, const SDL_Event& evt);
 void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
 
-void makeEntity(gamestate_t& state, entity_t entity, const glm::vec3& translation);
-void makeEntity(worldstate_t& state, entity_t entity, const glm::vec3& translation, const gamestate_t& game);
-void makeEntity(entitystate_t& state, entityid_t entityID, entity_t entity, const glm::vec3& translation, const gamestate_t& game);
+void makeEntity(gamestate_t& state);
+void makeEntity(worldstate_t& state, const gamestate_t& game);
+void makeEntity(entitystate_t& state, const gamestate_t& game);
 
 } // namespace te

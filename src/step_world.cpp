@@ -45,7 +45,6 @@ static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t&
 }
 
 static void stepNewEntityQueue(vector_t<entityrequest_t>& state, const gamestate_t& game) {
-	state.clear();
 	for (entityid_t blockID : game.world.entity.hitGround) {
 		prize_t prize;
 		if (hasPrize(blockID, prize, game) && prize == prize_t::COIN) {
