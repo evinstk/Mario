@@ -246,8 +246,8 @@ static void stepSpriteOffsets(entitymap_t<glm::vec3>& state, const gamestate_t& 
 		const bounceanim_t& anim = bounceRow.second;
 		float& yOffset = state[id].y;
 		yOffset = 0;
-		if (anim.elapsed < BOUNCE_DURATION) {
-			yOffset = -glm::sin(glm::pi<float>() * anim.elapsed / BOUNCE_DURATION) * BOUNCE_HEIGHT;
+		if (anim.elapsed < anim.duration) {
+			yOffset = -glm::sin(glm::pi<float>() * anim.elapsed / anim.duration) * anim.height;
 		}
 	}
 }
