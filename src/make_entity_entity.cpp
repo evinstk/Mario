@@ -2,6 +2,7 @@
 #include "entity_state.hpp"
 #include "game_state.hpp"
 #include "game_values.hpp"
+#include <cassert>
 
 namespace te {
 
@@ -33,6 +34,9 @@ void makeEntity(entitystate_t& state,
 	switch (entity) {
 	case entity_t::BLOCK_COIN:
 		makeBlockCoin(state, entityID, translation, game);
+		break;
+	default:
+		assert(false);
 	}
 }
 
