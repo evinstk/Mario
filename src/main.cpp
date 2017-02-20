@@ -74,9 +74,11 @@ static int MarioMain() {
 			auto soundProp = object.properties.find("bounce-sound");
 			if (soundProp != object.properties.end()) {
 				std::string wavPathname = "tiled/" + soundProp->second;
-				std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(wavPathname.c_str()),
-																			&Mix_FreeChunk);
-				loadGame(gameState, std::move(pChunk), wavPathname.c_str());
+				if (gameState.sound.soundID.find_as(wavPathname.c_str()) == gameState.sound.soundID.end()) {
+					std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(wavPathname.c_str()),
+																				&Mix_FreeChunk);
+					loadGame(gameState, std::move(pChunk), wavPathname.c_str());
+				}
 			}
 		}
 	}
