@@ -26,7 +26,7 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& gameState);
 void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
 void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
 
-void loadGame(gamestate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char* pathname);
+void loadSound(gamestate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char* pathname);
 void loadSound(soundstate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char *pathname);
 
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);

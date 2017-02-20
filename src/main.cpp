@@ -65,7 +65,7 @@ static int MarioMain() {
 	{
 		std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pCoinChunk(Mix_LoadWAV(COIN_SOUND),
 																		&Mix_FreeChunk);
-		loadGame(gameState, std::move(pCoinChunk), COIN_SOUND);
+		loadSound(gameState, std::move(pCoinChunk), COIN_SOUND);
 	}
 
 	const char *tmxPathname = "tiled/1-1.tmx";
@@ -84,7 +84,7 @@ static int MarioMain() {
 				if (gameState.sound.soundID.find_as(wavPathname.c_str()) == gameState.sound.soundID.end()) {
 					std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(wavPathname.c_str()),
 																				&Mix_FreeChunk);
-					loadGame(gameState, std::move(pChunk), wavPathname.c_str());
+					loadSound(gameState, std::move(pChunk), wavPathname.c_str());
 				}
 			}
 		}
