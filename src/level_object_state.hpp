@@ -11,6 +11,7 @@ struct levelobjectstate_t {
 	levelobjectset_t               gravities;
 	levelobjectset_t               grounds;
 	levelobjectmap_t<prize_t>      prizes;
+	levelobjectmap_t<soundid_t>    bounceSounds;
 };
 
 } // namespace te

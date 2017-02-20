@@ -1,6 +1,7 @@
 #include "game_action.hpp"
 #include "level_object_state.hpp"
 #include "game_state.hpp"
+#include "util.hpp"
 
 namespace te {
 
@@ -124,6 +125,23 @@ static void loadPrizes(levelobjectmap_t<prize_t>& state,
 	}
 }
 
+static void loadBounceSounds(levelobjectmap_t<soundid_t>& state,
+							 const tmx_t& tmx,
+							 levelid_t levelID,
+							 const gamestate_t& game) {
+	for (const auto& group : tmx.objectgroups) {
+		for (const auto& object : group.objects) {
+			auto soundPropIt = object.properties.find("bounce-sound");
+			if (soundPropIt != object.properties.end()) {
+				levelobjectid_t objectID({ levelID, object.id });
+				const std::string& soundPathname = "tiled/" + soundPropIt->second;
+				soundid_t soundID = getSoundID(soundPathname.c_str(), game);
+				state.insert({ objectID, soundID });
+			}
+		}
+	}
+}
+
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
 	loadTranslations(state.translations, tmx, levelID);
 	loadTiles(state.tiles, tmx, levelID, game);
@@ -132,6 +150,7 @@ void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t lev
 	loadGravities(state.gravities, tmx, levelID);
 	loadGrounds(state.grounds, tmx, levelID);
 	loadPrizes(state.prizes, tmx, levelID);
+	loadBounceSounds(state.bounceSounds, tmx, levelID, game);
 }
 
 } // namespace te

@@ -65,4 +65,8 @@ inline bool hasPrize(entityid_t blockID, prize_t& prize, const gamestate_t& game
 	return false;
 }
 
+inline soundid_t getSoundID(const char *pathname, const gamestate_t& game) {
+	return game.sound.soundID.find_as(pathname)->second;
+}
+
 } // namespace te
