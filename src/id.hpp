@@ -10,6 +10,7 @@ enum class id_type_t {
 	COLLIDER,
 	TILESET,
 	SOUND,
+	MUSIC,
 	LEVEL,
 	LEVEL_OBJECT,
 	TILE
@@ -43,10 +44,11 @@ struct id_t {
 //	return lhs < id.first;
 //}
 
-using entityid_t        = id_t<id_type_t::ENTITY>;
+using entityid_t      = id_t<id_type_t::ENTITY>;
 using colliderid_t    = id_t<id_type_t::COLLIDER>;
 using tilesetid_t     = id_t<id_type_t::TILESET>;
 using soundid_t       = id_t<id_type_t::SOUND>;
+using musicid_t       = id_t<id_type_t::MUSIC>;
 using levelid_t       = id_t<id_type_t::LEVEL>;
 using levelobjectid_t = id_t<id_type_t::LEVEL_OBJECT, eastl::pair<levelid_t, int>>;
 using animid_t        = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;

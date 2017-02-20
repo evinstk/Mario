@@ -8,6 +8,9 @@
 #include <EASTL/vector_set.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <memory>
 
 namespace te {
 
@@ -101,6 +104,11 @@ using animctrlmap_t = eastl::vector_map<animctrlid_t, T>;
 
 template <typename T>
 using soundmap_t = eastl::vector_map<soundid_t, T>;
+
+template <typename T>
+using musicmap_t = eastl::vector_map<musicid_t, T>;
+
+using musicptr_t = std::unique_ptr<Mix_Music, decltype(&Mix_FreeMusic)>;
 
 template <typename T>
 using levelmap_t = eastl::vector_map<levelid_t, T>;

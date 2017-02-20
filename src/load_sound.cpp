@@ -14,4 +14,15 @@ void loadSound(soundstate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_Fre
 	state.chunk.insert(eastl::move(newRow));
 }
 
+void loadMusic(soundstate_t& state, musicptr_t&& pMusic, const char *pathname) {
+	if (state.musicID.find_as(pathname) != state.musicID.end()) {
+		return;
+	}
+
+	musicid_t musicID(state.nextMusicID++);
+	state.musicID.insert({ eastl::string(pathname), musicID });
+	decltype(soundstate_t::music)::value_type newRow(musicID, eastl::move(pMusic));
+	state.music.insert(eastl::move(newRow));
+}
+
 } // namespace te

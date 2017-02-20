@@ -7,11 +7,18 @@
 namespace te {
 
 struct soundstate_t {
-	soundstate_t() : nextSoundID(1) {}
+	soundstate_t()
+		: nextSoundID(1)
+		, nextMusicID(1)
+		{}
 
 	int nextSoundID;
 	stringmap_t<soundid_t> soundID;
 	soundmap_t<std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>> chunk;
+
+	int nextMusicID;
+	stringmap_t<musicid_t> musicID;
+	musicmap_t<musicptr_t> music;
 };
 
 } // namespace te
