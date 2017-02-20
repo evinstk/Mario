@@ -62,6 +62,12 @@ static int MarioMain() {
 
 	gamestate_t gameState;
 
+	{
+		std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pCoinChunk(Mix_LoadWAV(COIN_SOUND),
+																		&Mix_FreeChunk);
+		loadGame(gameState, std::move(pCoinChunk), COIN_SOUND);
+	}
+
 	const char *tmxPathname = "tiled/1-1.tmx";
 	tmx_t tmx(tmxPathname);
 	assert(tmx.tilesets.size() == 0);

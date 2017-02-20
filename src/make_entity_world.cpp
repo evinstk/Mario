@@ -1,5 +1,7 @@
 #include "game_action.hpp"
 #include "world_state.hpp"
+#include "game_values.hpp"
+#include "util.hpp"
 
 namespace te {
 
@@ -18,6 +20,11 @@ void makeEntity(worldstate_t& state,
 		state.newEntityIDs.push_back(newID);
 	}
 	makeEntity(state.entity, game);
+	for (const auto& newEntity : state.newEntityQueue) {
+		if (newEntity.type == entity_t::BLOCK_COIN) {
+			state.soundQueue.push_back(getSoundID(COIN_SOUND, game));
+		}
+	}
 	state.newEntityQueue.clear();
 	state.newEntityIDs.clear();
 }

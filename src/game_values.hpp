@@ -14,4 +14,6 @@ constexpr float COIN_BOUNCE_HEIGHT    = 16.0f * 3.0f;
 constexpr float BLOCK_BOUNCE_DURATION = 0.2f;
 constexpr float BLOCK_BOUNCE_HEIGHT   = 8.0f;
 
+extern const char *COIN_SOUND;
+
 } // namespace te

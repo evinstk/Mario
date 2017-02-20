@@ -4,6 +4,7 @@ link_directories(~/usr/local/lib)
 
 add_executable(mario
   main.cpp
+  game_values.cpp
   input_game.cpp
   input_world.cpp
   input_entity.cpp
