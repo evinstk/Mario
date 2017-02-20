@@ -19,6 +19,8 @@ struct levelstate_t {
 
 	levelmap_t<int> nextObjectID;
 	levelmap_t<int> playerObject;
+
+	levelmap_t<musicid_t> music;
 };
 
 } // namespace te

@@ -71,6 +71,14 @@ static int MarioMain() {
 	const char *tmxPathname = "tiled/1-1.tmx";
 	tmx_t tmx(tmxPathname);
 	assert(tmx.tilesets.size() == 0);
+
+	auto musicIt = tmx.properties.find("music");
+	if (musicIt != tmx.properties.end()) {
+		std::string musicStr = "tiled/" + musicIt->second;
+		musicptr_t pMusic(Mix_LoadMUS(musicStr.c_str()), Mix_FreeMusic);
+		loadMusic(gameState, std::move(pMusic), musicStr.c_str());
+	}
+
 	for (const auto& externalTileset : tmx.externalTilesets) {
 		std::string tilesetPathname = "tiled/" + externalTileset.source;
 		tsxtileset_t tileset(tilesetPathname.c_str());
@@ -93,6 +101,13 @@ static int MarioMain() {
 
 	levelid_t levelID = gameState.level.source.find(tmxPathname)->second;
 	runGame(gameState, levelID);
+	{
+		auto musicIt = gameState.level.music.find(levelID);
+		if (musicIt != gameState.level.music.end()) {
+			Mix_Music *pMusic = getMusic(musicIt->second, gameState);
+			Mix_PlayMusic(pMusic, -1);
+		}
+	}
 
 	SpriteRenderer spriteRenderer;
 	

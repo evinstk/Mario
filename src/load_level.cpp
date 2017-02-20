@@ -1,6 +1,7 @@
 #include "game_action.hpp"
 #include "level_state.hpp"
 #include "tileset_state.hpp"
+#include "util.hpp"
 #include <EASTL/algorithm.h>
 #include <cassert>
 
@@ -117,6 +118,14 @@ static void loadPlayerObject(levelmap_t<int>& playerObject, const decltype(tmx_t
 	}
 }
 
+static void loadMusic(levelmap_t<musicid_t>& state, const decltype(tmx_t::properties)& properties, levelid_t levelID, const gamestate_t& game) {
+	auto musicIt = properties.find("music");
+	if (musicIt != properties.end()) {
+		std::string musicPath = "tiled/" + musicIt->second;
+		state.insert({ levelID, getMusicID(musicPath.c_str(), game) });
+	}
+}
+
 void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game) {
 	bool loaded = loadSource(state.source, state.nextLevelID, pathname);
 	if (!loaded) {
@@ -132,6 +141,8 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadLevelObjects(state.objects, tmx, levelID, game);
 	loadNextObjectID(state.nextObjectID, tmx, levelID, game);
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
+
+	loadMusic(state.music, tmx.properties, levelID, game);
 }
 
 } // namespace te

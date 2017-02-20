@@ -73,4 +73,12 @@ inline Mix_Chunk *getChunk(soundid_t soundID, const gamestate_t& game) {
 	return game.sound.chunk.find(soundID)->second.get();
 }
 
+inline musicid_t getMusicID(const char *pathname, const gamestate_t& game) {
+	return game.sound.musicID.find_as(pathname)->second;
+}
+
+inline Mix_Music *getMusic(musicid_t musicID, const gamestate_t& game) {
+	return game.sound.music.find(musicID)->second.get();
+}
+
 } // namespace te

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="16" tilewidth="16" tileheight="16" nextobjectid="40">
+ <properties>
+  <property name="music" type="file" value="../music/main-theme.mp3"/>
+ </properties>
  <tileset firstgid="1" source="../tilesets/platform.tsx"/>
  <tileset firstgid="925" source="../tilesets/sprite.tsx"/>
  <layer name="background" width="100" height="16">
