@@ -1,10 +1,12 @@
 #include "game_state.hpp"
 #include "sprite_renderer.hpp"
+#include "game_values.hpp"
 #include "game_action.hpp"
 #include <tegl/readtmx.hpp>
 #include <GL/glew.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include <SDL_mixer.h>
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <memory>
@@ -15,17 +17,22 @@ namespace te {
 
 struct Libs {
 	Libs() {
-		SDL_Init(SDL_INIT_VIDEO);
+		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+		Mix_OpenAudio(SOUND_FREQUENCY, MIX_DEFAULT_FORMAT, SOUND_CHANNEL_NUM, SOUND_SAMPLE_SIZE);
 
 		ilInit();
 		iluInit();
 		ilClearColour(255, 255, 255, 0);
 		assert(ilGetError() == IL_NO_ERROR);
 	}
-	~Libs() { SDL_Quit(); }
+	~Libs() {
+		Mix_Quit();
+		SDL_Quit();
+	}
 };
 
 static int MarioMain() {

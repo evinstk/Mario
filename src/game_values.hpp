@@ -2,6 +2,10 @@
 
 namespace te {
 
+constexpr int   SOUND_FREQUENCY       = 44100;
+constexpr int   SOUND_CHANNEL_NUM     = 2;
+constexpr int   SOUND_SAMPLE_SIZE     = 2048;
+
 constexpr int   COIN_SCORE            = 200;
 constexpr int   COIN_COUNT_LIVE_UP    = 100;
 constexpr int   LIVE_COUNT_START      = 3;
