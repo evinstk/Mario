@@ -68,12 +68,23 @@ static void stepDestroyQueue(entityset_t& state, const gamestate_t& game) {
 	}
 }
 
+static void stepSoundQueue(vector_t<soundid_t>& state, const gamestate_t& game) {
+	state.clear();
+	for (entityid_t entityID : game.world.entity.hitGround) {
+		auto soundIt = game.world.entity.bounceSounds.find(entityID);
+		if (soundIt != game.world.entity.bounceSounds.end()) {
+			state.push_back(soundIt->second);
+		}
+	}
+}
+
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepEntity(state.entity, dt, gameState);
 	stepScore(state.score, state.coinCount, state.lives, gameState);
 	stepView(state.view, dt, gameState);
 	stepNewEntityQueue(state.newEntityQueue, gameState);
 	stepDestroyQueue(state.destroyQueue, gameState);
+	stepSoundQueue(state.soundQueue, gameState);
 }
 
 } // namespace te

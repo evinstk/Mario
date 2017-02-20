@@ -15,6 +15,8 @@ struct entitystate_t {
 	entitymap_t<bounceanim_t> bounceAnimations;
 	entitymap_t<glm::vec3>    spriteOffsets;
 
+	entitymap_t<soundid_t> bounceSounds;
+
 	entityset_t underGravity;
 	entityset_t isGround;
 	entitymap_t<prize_t> prizes;

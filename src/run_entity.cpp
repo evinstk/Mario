@@ -42,6 +42,15 @@ static void runColliders(entitymap_t<colliderid_t>& state,
 	}
 }
 
+static void runBounceSounds(entitymap_t<soundid_t>& state,
+							levelid_t levelID,
+							const levelobjectmap_t<soundid_t>& colliders) {
+	auto range = parentRange(colliders, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entityid_t(it->first.id.second), it->second });
+	}
+}
+
 static void runIsGround(entityset_t& state,
 						levelid_t levelID,
 						const levelobjectset_t& grounds) {
@@ -113,6 +122,7 @@ static void runPrizes(entitymap_t<prize_t>& state,
 
 void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
 	runColliders(state.colliders, levelID, objects.colliders);
+	runBounceSounds(state.bounceSounds, levelID, objects.bounceSounds);
 	runUnderGravity(state.underGravity, levelID, objects.gravities);
 	runIsGround(state.isGround, levelID, objects.grounds);
 	runVelocities(state.velocities, levelID, objects.colliders);
