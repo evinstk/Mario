@@ -69,6 +69,17 @@ static int MarioMain() {
 		tsxtileset_t tileset(tilesetPathname.c_str());
 		loadGame(gameState, tileset, tilesetPathname.c_str());
 	}
+	for (const auto& group : tmx.objectgroups) {
+		for (const auto& object : group.objects) {
+			auto soundProp = object.properties.find("bounce-sound");
+			if (soundProp != object.properties.end()) {
+				std::string wavPathname = "tiled/" + soundProp->second;
+				std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(wavPathname.c_str()),
+																			&Mix_FreeChunk);
+				loadGame(gameState, std::move(pChunk), wavPathname.c_str());
+			}
+		}
+	}
 	loadGame(gameState, tmx, tmxPathname);
 
 	levelid_t levelID = gameState.level.source.find(tmxPathname)->second;

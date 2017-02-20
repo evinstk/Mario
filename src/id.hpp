@@ -9,6 +9,7 @@ enum class id_type_t {
 	ANIMATION_CONTROLLER,
 	COLLIDER,
 	TILESET,
+	SOUND,
 	LEVEL,
 	LEVEL_OBJECT,
 	TILE
@@ -45,6 +46,7 @@ struct id_t {
 using entityid_t        = id_t<id_type_t::ENTITY>;
 using colliderid_t    = id_t<id_type_t::COLLIDER>;
 using tilesetid_t     = id_t<id_type_t::TILESET>;
+using soundid_t       = id_t<id_type_t::SOUND>;
 using levelid_t       = id_t<id_type_t::LEVEL>;
 using levelobjectid_t = id_t<id_type_t::LEVEL_OBJECT, eastl::pair<levelid_t, int>>;
 using animid_t        = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;

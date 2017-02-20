@@ -100,6 +100,9 @@ template <typename T>
 using animctrlmap_t = eastl::vector_map<animctrlid_t, T>;
 
 template <typename T>
+using soundmap_t = eastl::vector_map<soundid_t, T>;
+
+template <typename T>
 using levelmap_t = eastl::vector_map<levelid_t, T>;
 
 template <typename T>

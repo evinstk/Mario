@@ -2,6 +2,8 @@
 #include "types.hpp"
 #include <tegl/readtmx.hpp>
 #include <SDL.h>
+#include <SDL_mixer.h>
+#include <memory>
 
 namespace te {
 
@@ -9,6 +11,7 @@ struct gamestate_t;
 struct worldstate_t;
 struct entitystate_t;
 struct tilesetstate_t;
+struct soundstate_t;
 struct levelstate_t;
 struct levelobjectstate_t;
 
@@ -22,6 +25,9 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& gameState);
 
 void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
 void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
+
+void loadGame(gamestate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char* pathname);
+void loadSound(soundstate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char *pathname);
 
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
 void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game);

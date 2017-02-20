@@ -12,6 +12,7 @@ add_executable(mario
   step_entity.cpp
   load_game.cpp
   load_tileset.cpp
+  load_sound.cpp
   load_level.cpp
   load_level_object.cpp
   run_game.cpp
