@@ -4817,6 +4817,7 @@
  <objectgroup name="objects">
   <object id="8" type="brick" gid="2" x="336" y="176" width="16" height="16">
    <properties>
+    <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="collider" value="brick"/>
     <property name="ground" type="bool" value="true"/>
    </properties>
