@@ -133,11 +133,14 @@ static int MarioMain() {
 			stepGame(gameState, timePerFrame);
 			destroyEntity(gameState);
 			makeEntity(gameState);
-			for (soundid_t soundID : gameState.world.soundQueue) {
-				Mix_Chunk *pChunk = getChunk(soundID, gameState);
-				Mix_PlayChannel(-1, pChunk, 0);
-			}
 		}
+
+		for (soundid_t soundID : gameState.world.soundQueue) {
+			Mix_Chunk *pChunk = getChunk(soundID, gameState);
+			Mix_PlayChannel(-1, pChunk, 0);
+		}
+		flushSoundQueue(gameState);
+
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		spriteRenderer.draw(gameState);

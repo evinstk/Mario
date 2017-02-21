@@ -69,7 +69,6 @@ static void stepDestroyQueue(entityset_t& state, const gamestate_t& game) {
 }
 
 static void stepSoundQueue(vector_t<soundid_t>& state, const gamestate_t& game) {
-	state.clear();
 	for (entityid_t entityID : game.world.entity.hitGround) {
 		auto soundIt = game.world.entity.bounceSounds.find(entityID);
 		if (soundIt != game.world.entity.bounceSounds.end() && canBounce(entityID, game)) {

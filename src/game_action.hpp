@@ -51,4 +51,6 @@ void destroyEntity(gamestate_t& state);
 void destroyEntity(worldstate_t& state, const gamestate_t& game);
 void destroyEntity(entitystate_t& state, const gamestate_t& game);
 
+void flushSoundQueue(gamestate_t& state);
+
 } // namespace te

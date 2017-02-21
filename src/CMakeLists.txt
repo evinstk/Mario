@@ -29,7 +29,8 @@ add_executable(mario
   make_entity_entity.cpp
   destroy_entity_game.cpp
   destroy_entity_world.cpp
-  destroy_entity_entity.cpp)
+  destroy_entity_entity.cpp
+  flush_sound_queue.cpp)
 
 set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_ASSERT_ENABLED -DEASTL_MOVE_SEMANTICS_ENABLED -DGLM_PRECISION_HIGHP_INT")
 
