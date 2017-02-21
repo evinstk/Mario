@@ -229,11 +229,13 @@ static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, con
 	}
 
 	for (entityid_t groundID : game.world.entity.hitGround) {
-		bounceanim_t& anim = state[groundID];
-		if (anim.elapsed >= anim.duration) {
-			anim.duration = BLOCK_BOUNCE_DURATION;
-			anim.height = BLOCK_BOUNCE_HEIGHT;
-			anim.elapsed = 0;
+		if (game.world.entity.canBounce.find(groundID) != game.world.entity.canBounce.end()) {
+			bounceanim_t& anim = state[groundID];
+			if (anim.elapsed >= anim.duration) {
+				anim.duration = BLOCK_BOUNCE_DURATION;
+				anim.height = BLOCK_BOUNCE_HEIGHT;
+				anim.elapsed = 0;
+			}
 		}
 	}
 }
@@ -348,6 +350,27 @@ static void stepLifetimes(entitymap_t<float>& state, float dt) {
 	}
 }
 
+static void stepBounceNum(entitymap_t<int>& state, const gamestate_t& game) {
+	for (entityid_t groundID : game.world.entity.hitGround) {
+		auto bounceNumIt = state.find(groundID);
+		if (bounceNumIt != state.end()) {
+			--(bounceNumIt->second);
+		}
+	}
+}
+
+static void stepCanBounce(entityset_t& state, const gamestate_t& game) {
+	auto it = state.begin();
+	while (it != state.end()) {
+		auto bounceNumIt = game.world.entity.bounceNum.find(*it);
+		if (bounceNumIt != game.world.entity.bounceNum.end() && bounceNumIt->second <= 0) {
+			it = state.erase(it);
+		} else {
+			++it;
+		}
+	}
+}
+
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.groundOffsets, dt, game);
@@ -362,6 +385,9 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
 	assert(levelTilesetsIt != game.level.tilesets.end());
 	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second);
+
+	stepBounceNum(state.bounceNum, game);
+	stepCanBounce(state.canBounce, game);
 
 	stepLifetimes(state.lifetimes, dt);
 }

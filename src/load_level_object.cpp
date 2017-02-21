@@ -142,6 +142,34 @@ static void loadBounceSounds(levelobjectmap_t<soundid_t>& state,
 	}
 }
 
+static void loadCanBounce(levelobjectset_t& state,
+						  const tmx_t& tmx,
+						  levelid_t levelID) {
+	for (const auto& group : tmx.objectgroups) {
+		for (const auto& object : group.objects) {
+			auto canBouncePropIt = object.bProperties.find("can-bounce");
+			if (canBouncePropIt != object.bProperties.end() && canBouncePropIt->second) {
+				levelobjectid_t objectID({ levelID, object.id });
+				state.insert(objectID);
+			}
+		}
+	}
+}
+
+static void loadBounceNum(levelobjectmap_t<int>& state,
+						  const tmx_t& tmx,
+						  levelid_t levelID) {
+	for (const auto& group : tmx.objectgroups) {
+		for (const auto& object : group.objects) {
+			auto bounceNumPropIt = object.iProperties.find("bounce-num");
+			if (bounceNumPropIt != object.iProperties.end()) {
+				levelobjectid_t objectID({ levelID, object.id });
+				state.insert({ objectID, bounceNumPropIt->second });
+			}
+		}
+	}
+}
+
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
 	loadTranslations(state.translations, tmx, levelID);
 	loadTiles(state.tiles, tmx, levelID, game);
@@ -151,6 +179,8 @@ void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t lev
 	loadGrounds(state.grounds, tmx, levelID);
 	loadPrizes(state.prizes, tmx, levelID);
 	loadBounceSounds(state.bounceSounds, tmx, levelID, game);
+	loadCanBounce(state.canBounce, tmx, levelID);
+	loadBounceNum(state.bounceNum, tmx, levelID);
 }
 
 } // namespace te

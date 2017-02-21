@@ -25,6 +25,9 @@ struct entitystate_t {
 	entitymap_t<tileid_t> tilesetSprites;
 	entitymap_t<animator_t> animators;
 
+	entityset_t canBounce;
+	entitymap_t<int> bounceNum;
+
 	entitymap_t<float> lifetimes;
 };
 

@@ -120,6 +120,25 @@ static void runPrizes(entitymap_t<prize_t>& state,
 	}
 }
 
+void transferProperty(entityset_t& state,
+					  levelid_t levelID,
+					  const levelobjectset_t& props) {
+	auto range = parentRange(props, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entityid_t(it->id.second) });
+	}
+}
+
+template <typename T>
+void transferProperty(entitymap_t<T>& state,
+					  levelid_t levelID,
+					  const levelobjectmap_t<T>& props) {
+	auto range = parentRange(props, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		state.insert({ entityid_t(it->first.id.second), it->second });
+	}
+}
+
 void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
 	runColliders(state.colliders, levelID, objects.colliders);
 	runBounceSounds(state.bounceSounds, levelID, objects.bounceSounds);
@@ -130,6 +149,8 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t
 	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
 	runAnimators(state.animators, levelID, objects.animationControllers);
 	runPrizes(state.prizes, levelID, objects.prizes);
+	transferProperty(state.canBounce, levelID, objects.canBounce);
+	transferProperty(state.bounceNum, levelID, objects.bounceNum);
 }
 
 } // namespace te
