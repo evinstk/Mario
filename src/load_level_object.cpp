@@ -170,6 +170,20 @@ static void loadBounceNum(levelobjectmap_t<int>& state,
 	}
 }
 
+static void loadPrizeNum(levelobjectmap_t<int>& state,
+						 const tmx_t& tmx,
+						 levelid_t levelID) {
+	for (const auto& group : tmx.objectgroups) {
+		for (const auto& object : group.objects) {
+			auto bounceNumPropIt = object.iProperties.find("prize-num");
+			if (bounceNumPropIt != object.iProperties.end()) {
+				levelobjectid_t objectID({ levelID, object.id });
+				state.insert({ objectID, bounceNumPropIt->second });
+			}
+		}
+	}
+}
+
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
 	loadTranslations(state.translations, tmx, levelID);
 	loadTiles(state.tiles, tmx, levelID, game);
@@ -178,6 +192,7 @@ void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t lev
 	loadGravities(state.gravities, tmx, levelID);
 	loadGrounds(state.grounds, tmx, levelID);
 	loadPrizes(state.prizes, tmx, levelID);
+	loadPrizeNum(state.prizeNum, tmx, levelID);
 	loadBounceSounds(state.bounceSounds, tmx, levelID, game);
 	loadCanBounce(state.canBounce, tmx, levelID);
 	loadBounceNum(state.bounceNum, tmx, levelID);

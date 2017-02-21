@@ -149,6 +149,7 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t
 	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
 	runAnimators(state.animators, levelID, objects.animationControllers);
 	runPrizes(state.prizes, levelID, objects.prizes);
+	transferProperty(state.prizeNum, levelID, objects.prizeNum);
 	transferProperty(state.canBounce, levelID, objects.canBounce);
 	transferProperty(state.bounceNum, levelID, objects.bounceNum);
 }

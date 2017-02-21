@@ -20,6 +20,7 @@ struct entitystate_t {
 	entityset_t underGravity;
 	entityset_t isGround;
 	entitymap_t<prize_t> prizes;
+	entitymap_t<int> prizeNum;
 	entitymap_t<glm::vec3> velocities;
 	entitymap_t<glm::vec3> translations;
 	entitymap_t<tileid_t> tilesetSprites;

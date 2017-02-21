@@ -85,4 +85,8 @@ inline bool canBounce(entityid_t entityID, const gamestate_t& game) {
 	return game.world.entity.canBounce.find(entityID) != game.world.entity.canBounce.end();
 }
 
+inline int getPrizeNum(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.prizeNum.find(entityID)->second;
+}
+
 } // namespace te

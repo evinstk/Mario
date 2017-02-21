@@ -371,6 +371,28 @@ static void stepCanBounce(entityset_t& state, const gamestate_t& game) {
 	}
 }
 
+static void stepPrizeNum(entitymap_t<int>& state, const gamestate_t& game) {
+	for (entityid_t entityID : game.world.entity.hitGround) {
+		auto prizeIt = state.find(entityID);
+		if (prizeIt != state.end()) {
+			--(prizeIt->second);
+		}
+	}
+}
+
+static void stepPrizes(entitymap_t<prize_t>& state, const gamestate_t& game) {
+	auto it = state.begin();
+	while (it != state.end()) {
+		entityid_t entityID = it->first;
+		int prizeNum = getPrizeNum(entityID, game);
+		if (prizeNum <= 0) {
+			it = state.erase(it);
+		} else {
+			++it;
+		}
+	}
+}
+
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.groundOffsets, dt, game);
@@ -388,6 +410,9 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 
 	stepCanBounce(state.canBounce, game);
 	stepBounceNum(state.bounceNum, game);
+
+	stepPrizes(state.prizes, game);
+	stepPrizeNum(state.prizeNum, game);
 
 	stepLifetimes(state.lifetimes, dt);
 }

@@ -11,6 +11,7 @@ struct levelobjectstate_t {
 	levelobjectset_t               gravities;
 	levelobjectset_t               grounds;
 	levelobjectmap_t<prize_t>      prizes;
+	levelobjectmap_t<int>          prizeNum;
 	levelobjectmap_t<soundid_t>    bounceSounds;
 	levelobjectset_t               canBounce;
 	levelobjectmap_t<int>          bounceNum;
