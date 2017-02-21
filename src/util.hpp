@@ -81,4 +81,8 @@ inline Mix_Music *getMusic(musicid_t musicID, const gamestate_t& game) {
 	return game.sound.music.find(musicID)->second.get();
 }
 
+inline bool canBounce(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.canBounce.find(entityID) != game.world.entity.canBounce.end();
+}
+
 } // namespace te

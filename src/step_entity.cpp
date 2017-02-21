@@ -371,17 +371,6 @@ static void stepCanBounce(entityset_t& state, const gamestate_t& game) {
 	}
 }
 
-static void stepBounceSounds(entitymap_t<soundid_t>& state, const gamestate_t& game) {
-	auto it = state.begin();
-	while (it != state.end()) {
-		if (game.world.entity.canBounce.find(it->first) == game.world.entity.canBounce.end()) {
-			it = state.erase(it);
-		} else {
-			++it;
-		}
-	}
-}
-
 void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepWallOffsets(state.wallOffsets, dt, game);
 	stepColliders(state.groundOffsets, dt, game);
@@ -397,9 +386,8 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	assert(levelTilesetsIt != game.level.tilesets.end());
 	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second);
 
-	stepBounceSounds(state.bounceSounds, game);
-	stepBounceNum(state.bounceNum, game);
 	stepCanBounce(state.canBounce, game);
+	stepBounceNum(state.bounceNum, game);
 
 	stepLifetimes(state.lifetimes, dt);
 }
