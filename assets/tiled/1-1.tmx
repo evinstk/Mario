@@ -4850,6 +4850,8 @@
     <property name="collider" value="prize"/>
     <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
+    <property name="prize" value="coin"/>
+    <property name="prize-num" type="int" value="1"/>
    </properties>
   </object>
   <object id="18" type="prize" gid="25" x="384" y="176" width="16" height="16">
@@ -4860,6 +4862,8 @@
     <property name="collider" value="prize"/>
     <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
+    <property name="prize" value="coin"/>
+    <property name="prize-num" type="int" value="1"/>
    </properties>
   </object>
   <object id="19" type="prize" gid="25" x="272" y="176" width="16" height="16">
@@ -4882,6 +4886,8 @@
     <property name="collider" value="prize"/>
     <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
+    <property name="prize" value="coin"/>
+    <property name="prize-num" type="int" value="1"/>
    </properties>
   </object>
   <object id="21" type="brick" gid="2" x="1232" y="176" width="16" height="16">
@@ -4972,6 +4978,8 @@
     <property name="collider" value="prize"/>
     <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
+    <property name="prize" value="coin"/>
+    <property name="prize-num" type="int" value="1"/>
    </properties>
   </object>
   <object id="32" type="brick" gid="2" x="1456" y="112" width="16" height="16">
@@ -5006,6 +5014,8 @@
     <property name="collider" value="prize"/>
     <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
+    <property name="prize" value="coin"/>
+    <property name="prize-num" type="int" value="1"/>
    </properties>
   </object>
   <object id="36" type="brick" gid="2" x="1504" y="176" width="16" height="16">
