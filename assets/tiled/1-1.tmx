@@ -4848,6 +4848,7 @@
     <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="can-bounce" type="bool" value="true"/>
     <property name="collider" value="prize"/>
+    <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
    </properties>
   </object>
@@ -4857,6 +4858,7 @@
     <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="can-bounce" type="bool" value="true"/>
     <property name="collider" value="prize"/>
+    <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
    </properties>
   </object>
@@ -4866,6 +4868,7 @@
     <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="can-bounce" type="bool" value="true"/>
     <property name="collider" value="prize"/>
+    <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
     <property name="prize" value="coin"/>
     <property name="prize-num" type="int" value="1"/>
@@ -4877,6 +4880,7 @@
     <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="can-bounce" type="bool" value="true"/>
     <property name="collider" value="prize"/>
+    <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
    </properties>
   </object>
@@ -4966,6 +4970,7 @@
     <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="can-bounce" type="bool" value="true"/>
     <property name="collider" value="prize"/>
+    <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
    </properties>
   </object>
@@ -4999,6 +5004,7 @@
     <property name="bounce-sound" type="file" value="../sounds/smb_bump.wav"/>
     <property name="can-bounce" type="bool" value="true"/>
     <property name="collider" value="prize"/>
+    <property name="empty-tile" value="empty-block"/>
     <property name="ground" type="bool" value="true"/>
    </properties>
   </object>

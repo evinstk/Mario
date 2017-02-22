@@ -130,6 +130,18 @@ static void loadSolid(eastl::vector_set<tileid_t>& state,
 	}
 }
 
+static void loadTileID(stringmap_t<tileid_t>& state,
+					   const tsxtileset_t& tileset,
+					   tilesetid_t tilesetID) {
+
+	for (const auto& tile : tileset.tiles) {
+		auto spriteIter = tile.properties.find("name");
+		if (spriteIter != tile.properties.end()) {
+			state.insert({ eastl::string(spriteIter->second.c_str()), tileid_t({ tilesetID, tile.id }) });
+		}
+	}
+}
+
 void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname) {
 	bool loaded = loadSource(state.source, state.nextID, pathname);
 	if (!loaded) {
@@ -145,6 +157,7 @@ void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char 
 	loadController(state.controller, state.controllerID, tileset, id);
 	loadCollider(state.colliderID, state.nextColliderID, state.collider, tileset);
 	loadSolid(state.solid, tileset, id);
+	loadTileID(state.tileID, tileset, id);
 }
 
 } // namespace te

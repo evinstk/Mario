@@ -317,7 +317,8 @@ static void stepAnimators(const animctrlmap_t<animctrl_t>& controllers,
 static void stepSprites(const entitymap_t<animator_t>& animators,
 						const animmap_t<animation_t>& animations,
 						entitymap_t<tileid_t>& sprites,
-						const vector_t<leveltileset_t>& levelTilesets) {
+						const vector_t<leveltileset_t>& levelTilesets,
+						const gamestate_t& game) {
 	for (const auto& animatorRow : animators) {
 		const auto& animator = animatorRow.second;
 		if (animator.animation.id.second == 0) {
@@ -339,6 +340,16 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 				assert(tilesetIt != levelTilesets.end());
 				sprites[entityID] = tileid_t({ tilesetIt->tileset, frame.tileid });
 				break;
+			}
+		}
+	}
+
+	for (const auto& row : game.world.entity.prizeNum) {
+		if (row.second <= 0) {
+			entityid_t entityID = row.first;
+			auto emptyTileIt = game.level.objects.emptyTiles.find(levelobjectid_t({ game.world.level, entityID.id }));
+			if (emptyTileIt != game.level.objects.emptyTiles.end()) {
+				sprites[entityID] = emptyTileIt->second;
 			}
 		}
 	}
@@ -406,7 +417,7 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
 	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
 	assert(levelTilesetsIt != game.level.tilesets.end());
-	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second);
+	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second, game);
 
 	stepCanBounce(state.canBounce, game);
 	stepBounceNum(state.bounceNum, game);

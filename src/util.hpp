@@ -89,4 +89,8 @@ inline int getPrizeNum(entityid_t entityID, const gamestate_t& game) {
 	return game.world.entity.prizeNum.find(entityID)->second;
 }
 
+inline tileid_t getTileID(const char *strID, const gamestate_t& game) {
+	return game.tileset.tileID.find_as(strID)->second;
+}
+
 } // namespace te

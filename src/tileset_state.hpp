@@ -27,6 +27,8 @@ struct tilesetstate_t {
 	collidermap_t<aabb_t> collider;
 
 	eastl::vector_set<tileid_t> solid;
+
+	stringmap_t<tileid_t> tileID;
 };
 
 } // namespace te
