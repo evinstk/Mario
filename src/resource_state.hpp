@@ -15,13 +15,13 @@ struct resourcestate_t {
 
 template <typename ID, typename R>
 void insert(resourcestate_t<ID, R> state, const char *strID, R&& resource) {
-	if (state.find_as(strID) != state.end()) {
+	if (state.id.find_as(strID) != state.id.end()) {
 		return; // already registered
 	}
 
 	ID id(state.nextID++);
 	state.id.insert({ eastl::string(strID), id });
-	state.resource.insert({ id, std::forward<R>(resource) });
+	state.resource.insert({ id, eastl::forward<R>(resource) });
 }
 
 } // namespace te
