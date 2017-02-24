@@ -34,5 +34,5 @@ add_executable(mario
 
 set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_ASSERT_ENABLED -DEASTL_MOVE_SEMANTICS_ENABLED -DGLM_PRECISION_HIGHP_INT")
 
-target_include_directories(mario PRIVATE ${SDL2_INCLUDE_DIRS} /usr/local/include ~/usr/local/include)
-target_link_libraries(mario SDL2 SDL2main SDL2_mixer GL EASTL tegl GLEW IL ILU)
+target_include_directories(mario PRIVATE ${SDL2_INCLUDE_DIRS} /usr/local/include ~/usr/local/include /usr/include/freetype2)
+target_link_libraries(mario SDL2 SDL2main SDL2_mixer GL EASTL tegl GLEW IL ILU freetype)
