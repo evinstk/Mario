@@ -21,6 +21,7 @@ add_executable(mario
   run_entity.cpp
   texture_manager.cpp
   sprite_renderer.cpp
+  text_renderer.cpp
   world_state.cpp
   process_game.cpp
   process_world.cpp

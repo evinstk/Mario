@@ -16,5 +16,8 @@ constexpr float BLOCK_BOUNCE_HEIGHT   = 8.0f;
 
 extern const char *COIN_SOUND;
 extern const char *JUMP_SOUND;
+extern const char *FONT_NES;
+
+constexpr int FONT_PIXEL_SIZE = 12;
 
 } // namespace te
