@@ -21,6 +21,7 @@
  </tile>
  <tile id="24">
   <properties>
+   <property name="animation" value="prize"/>
    <property name="collider" value="prize"/>
   </properties>
   <objectgroup draworder="index">
