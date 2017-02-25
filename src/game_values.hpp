@@ -18,6 +18,6 @@ extern const char *COIN_SOUND;
 extern const char *JUMP_SOUND;
 extern const char *FONT_NES;
 
-constexpr int FONT_PIXEL_SIZE = 12;
+constexpr int FONT_PIXEL_SIZE = 8;
 
 } // namespace te
