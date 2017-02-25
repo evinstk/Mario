@@ -46,36 +46,37 @@ static void loadTiles(levelobjectmap_t<tileid_t>& state,
 	}
 }
 
-static void loadAnimationControllers(levelobjectmap_t<animctrlid_t>& state,
-									 const tmx_t& tmx,
-									 levelid_t levelID,
-									 const gamestate_t& game) {
+template <typename ID>
+void load(levelobjectmap_t<ID>& state,
+		  const tmx_t& tmx,
+		  levelid_t levelID,
+		  const char *prop,
+		  const stringmap_t<ID>& lookup) {
+
 	for (const auto& group : tmx.objectgroups) {
 		for (const auto& object : group.objects) {
-			auto animCtrlPropIt = object.properties.find("animctrl");
-			if (animCtrlPropIt != object.properties.end()) {
+			auto propIt = object.properties.find(prop);
+			if (propIt != object.properties.end()) {
 				levelobjectid_t objectID({ levelID, object.id });
-				animctrlid_t ctrlID = game.tileset.controllerID.find_as(animCtrlPropIt->second.c_str())->second;
-				state.insert({ objectID, ctrlID });
+				ID animID = lookup.find_as(propIt->second.c_str())->second;
+				state.insert({ objectID, animID });
 			}
 		}
 	}
+}
+
+static inline void loadAnimationControllers(levelobjectmap_t<animctrlid_t>& state,
+											const tmx_t& tmx,
+											levelid_t levelID,
+											const gamestate_t& game) {
+	load(state, tmx, levelID, "animctrl", game.tileset.controllerID);
 }
 
 static void loadColliders(levelobjectmap_t<colliderid_t>& state,
 						  const tmx_t& tmx,
 						  levelid_t levelID,
 						  const gamestate_t& game) {
-	for (const auto& group : tmx.objectgroups) {
-		for (const auto& object : group.objects) {
-			auto colliderPropIt = object.properties.find("collider");
-			if (colliderPropIt != object.properties.end()) {
-				levelobjectid_t objectID({ levelID, object.id });
-				colliderid_t colliderID = game.tileset.colliderID.find_as(colliderPropIt->second.c_str())->second;
-				state.insert({ objectID, colliderID });
-			}
-		}
-	}
+	load(state, tmx, levelID, "collider", game.tileset.colliderID);
 }
 
 static void loadGravities(levelobjectset_t& state,
@@ -184,21 +185,11 @@ static void loadPrizeNum(levelobjectmap_t<int>& state,
 	}
 }
 
-static void loadEmptyTiles(levelobjectmap_t<tileid_t>& state,
-						   const tmx_t& tmx,
-						   levelid_t levelID,
-						   const gamestate_t& game) {
-
-	for (const auto& group : tmx.objectgroups) {
-		for (const auto& object : group.objects) {
-			auto emptyTilePropIt = object.properties.find("empty-tile");
-			if (emptyTilePropIt != object.properties.end()) {
-				levelobjectid_t objectID({ levelID, object.id });
-				tileid_t tileID = getTileID(emptyTilePropIt->second.c_str(), game);
-				state.insert({ objectID, tileID });
-			}
-		}
-	}
+static inline void loadEmptyTiles(levelobjectmap_t<tileid_t>& state,
+								  const tmx_t& tmx,
+								  levelid_t levelID,
+								  const gamestate_t& game) {
+	load(state, tmx, levelID, "empty-tile", game.tileset.tileID);
 }
 
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
