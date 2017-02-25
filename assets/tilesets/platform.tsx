@@ -26,6 +26,12 @@
   <objectgroup draworder="index">
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
+  <animation>
+   <frame tileid="24" duration="600"/>
+   <frame tileid="25" duration="200"/>
+   <frame tileid="26" duration="200"/>
+   <frame tileid="25" duration="200"/>
+  </animation>
  </tile>
  <tile id="57">
   <properties>
