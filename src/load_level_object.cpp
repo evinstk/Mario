@@ -65,13 +65,6 @@ void load(levelobjectmap_t<ID>& state,
 	}
 }
 
-static inline void loadAnimationControllers(levelobjectmap_t<animctrlid_t>& state,
-											const tmx_t& tmx,
-											levelid_t levelID,
-											const gamestate_t& game) {
-	load(state, tmx, levelID, "animctrl", game.tileset.controllerID);
-}
-
 static void loadColliders(levelobjectmap_t<colliderid_t>& state,
 						  const tmx_t& tmx,
 						  levelid_t levelID,
@@ -195,7 +188,10 @@ static inline void loadEmptyTiles(levelobjectmap_t<tileid_t>& state,
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
 	loadTranslations(state.translations, tmx, levelID);
 	loadTiles(state.tiles, tmx, levelID, game);
-	loadAnimationControllers(state.animationControllers, tmx, levelID, game);
+
+	load(state.animationsLeft, tmx, levelID, "anim-left", game.tileset.animationID);
+	load(state.animationsRight, tmx, levelID, "anim-right", game.tileset.animationID);
+
 	loadColliders(state.colliders, tmx, levelID, game);
 	loadGravities(state.gravities, tmx, levelID);
 	loadGrounds(state.grounds, tmx, levelID);

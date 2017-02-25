@@ -5028,7 +5028,8 @@
   </object>
   <object id="38" name="player" type="mario" gid="925" x="64" y="224" width="16" height="16">
    <properties>
-    <property name="animctrl" value="mario"/>
+    <property name="anim-left" value="mario-right"/>
+    <property name="anim-right" value="mario-right"/>
     <property name="collider" value="mario"/>
     <property name="gravity" type="bool" value="true"/>
    </properties>

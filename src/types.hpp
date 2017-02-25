@@ -39,7 +39,7 @@ struct layer_t {
 };
 
 struct frame_t {
-	int tileid;
+	tileid_t tileid;
 	int duration;
 };
 
@@ -54,15 +54,10 @@ struct bounceanim_t {
 	float elapsed;
 };
 
-struct animctrl_t {
-	animid_t walkLeft;
-	animid_t walkRight;
-};
-
-struct animator_t {
-	animctrlid_t controller;
+struct spriteanimator_t {
 	animid_t animation;
 	float elapsed;
+	spriteanimator_t() : animation({ tilesetid_t(0), 0 }), elapsed(0) {}
 };
 
 enum class entity_t {
@@ -98,9 +93,6 @@ using tilesetmap_t = eastl::vector_map<tilesetid_t, T>;
 
 template <typename T>
 using animmap_t = eastl::vector_map<animid_t, T>;
-
-template <typename T>
-using animctrlmap_t = eastl::vector_map<animctrlid_t, T>;
 
 template <typename T>
 using soundmap_t = eastl::vector_map<soundid_t, T>;

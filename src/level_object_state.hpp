@@ -6,7 +6,10 @@ namespace te {
 struct levelobjectstate_t {
 	levelobjectmap_t<glm::vec3>    translations;
 	levelobjectmap_t<tileid_t>     tiles;
-	levelobjectmap_t<animctrlid_t> animationControllers;
+
+	levelobjectmap_t<animid_t>     animationsLeft;
+	levelobjectmap_t<animid_t>     animationsRight;
+
 	levelobjectmap_t<colliderid_t> colliders;
 	levelobjectset_t               gravities;
 	levelobjectset_t               grounds;

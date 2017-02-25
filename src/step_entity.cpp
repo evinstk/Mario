@@ -290,42 +290,47 @@ static void stepTranslations(entitymap_t<glm::vec3>& state, float dt, const game
 	}
 }
 
-static void stepAnimators(const animctrlmap_t<animctrl_t>& controllers,
-						  const entitymap_t<glm::vec3>& velocities,
-						  float dt,
-						  entitymap_t<animator_t>& animators) {
+static void stepSpriteAnimators(entitymap_t<spriteanimator_t>& state,
+								float dt,
+								const gamestate_t& game) {
+	for (auto& row : state) {
+		row.second.elapsed += dt;
+	}
 
-	for (auto& animatorRow : animators) {
-		animator_t& animator = animatorRow.second;
-		animator.elapsed += dt;
-		entityid_t entityID = animatorRow.first;
-		glm::vec3 velocity = velocities.find(entityID)->second;
-		const animctrl_t& controller = controllers.find(animator.controller)->second;
-		animid_t newAnim;
-		if (velocity.x > 0) {
-			newAnim = controller.walkRight;
-		} else if (velocity.x < 0) {
-			newAnim = controller.walkLeft;
+	for (const auto& animRow : game.world.entity.animationsLeft) {
+		entityid_t entityID = animRow.first;
+		animid_t animID = animRow.second;
+		float xVel = getVelocity(entityID, game).x;
+
+		if (xVel < 0) {
+			auto& animator = state[entityID];
+			if (animator.animation != animID) {
+				animator.animation = animRow.second;
+				animator.elapsed = 0;
+			}
 		}
-		if (newAnim != animator.animation && newAnim.id.second > 0) {
-			animator.animation = newAnim;
-			animator.elapsed = 0;
+	}
+
+	for (const auto& animRow : game.world.entity.animationsRight) {
+		entityid_t entityID = animRow.first;
+		animid_t animID = animRow.second;
+		float xVel = getVelocity(entityID, game).x;
+
+		if (xVel > 0) {
+			auto& animator = state[entityID];
+			if (animator.animation != animID) {
+				animator.animation = animRow.second;
+				animator.elapsed = 0;
+			}
 		}
 	}
 }
 
-static void stepSprites(const entitymap_t<animator_t>& animators,
-						const animmap_t<animation_t>& animations,
-						entitymap_t<tileid_t>& sprites,
-						const vector_t<leveltileset_t>& levelTilesets,
-						const gamestate_t& game) {
-	for (const auto& animatorRow : animators) {
+static void stepSprites(entitymap_t<tileid_t>& state, const gamestate_t& game) {
+	for (const auto& animatorRow : game.world.entity.spriteAnimators) {
 		const auto& animator = animatorRow.second;
-		if (animator.animation.id.second == 0) {
-			continue;
-		}
 		animid_t animationID = animator.animation;
-		const auto& animation = animations.find(animationID)->second;
+		const auto& animation = getAnimation(animationID, game);
 		int elapsedMS = animator.elapsed * 1000;
 		int clampedElapsed = elapsedMS % animation.totalDuration;
 		int acc = 0;
@@ -333,12 +338,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 			acc += frame.duration;
 			if (clampedElapsed < acc) {
 				entityid_t entityID = animatorRow.first;
-				tilesetid_t tilesetID = animationID.id.first;
-				auto tilesetIt = eastl::find_if(levelTilesets.begin(), levelTilesets.end(), [tilesetID](const auto& ltileset) {
-						return ltileset.tileset == tilesetID;
-					});
-				assert(tilesetIt != levelTilesets.end());
-				sprites[entityID] = tileid_t({ tilesetIt->tileset, frame.tileid });
+				state[entityID] = frame.tileid;
 				break;
 			}
 		}
@@ -349,7 +349,7 @@ static void stepSprites(const entitymap_t<animator_t>& animators,
 			entityid_t entityID = row.first;
 			auto emptyTileIt = game.level.objects.emptyTiles.find(levelobjectid_t({ game.world.level, entityID.id }));
 			if (emptyTileIt != game.level.objects.emptyTiles.end()) {
-				sprites[entityID] = emptyTileIt->second;
+				state[entityID] = emptyTileIt->second;
 			}
 		}
 	}
@@ -414,10 +414,10 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 
 	stepTranslations(state.translations, dt, game);
 	stepVelocities(state.velocities, game);
-	stepAnimators(game.tileset.controller, state.velocities, dt, state.animators);
+	stepSpriteAnimators(state.spriteAnimators, dt, game);
 	auto levelTilesetsIt = game.level.tilesets.find(game.world.level);
 	assert(levelTilesetsIt != game.level.tilesets.end());
-	stepSprites(state.animators, game.tileset.animation, state.tilesetSprites, levelTilesetsIt->second, game);
+	stepSprites(state.tilesetSprites, game);
 
 	stepCanBounce(state.canBounce, game);
 	stepBounceNum(state.bounceNum, game);

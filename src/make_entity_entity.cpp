@@ -80,7 +80,7 @@ static void makeEntitySprites(entitymap_t<tileid_t>& state, const gamestate_t& g
 		if (request.type == entity_t::BLOCK_COIN) {
 			const animid_t& animID = game.tileset.animationID.find_as("coin")->second;
 			const animation_t& animation = game.tileset.animation.find(animID)->second;
-			state[*idIt] = tileid_t({ animID.id.first, animation.frames[0].tileid });
+			state[*idIt] = animation.frames[0].tileid;
 		}
 		++idIt;
 	}

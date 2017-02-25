@@ -42,7 +42,7 @@ static void loadAnimation(animmap_t<animation_t>& state, const tsxtileset_t& til
 			};
 			for (const auto& tmxframe : tile.animation.frames) {
 				frame_t frame = {
-					.tileid = tmxframe.tileid,
+					.tileid = tileid_t({ tilesetID, tmxframe.tileid }),
 					.duration = tmxframe.duration
 				};
 				animation.frames.push_back(frame);
@@ -59,42 +59,6 @@ static void loadAnimationID(stringmap_t<animid_t>& state, const tsxtileset_t& ti
 		if (animationPropIt != tile.properties.end()) {
 			animid_t animID({ tilesetID, tile.id });
 			state.insert({ eastl::string(animationPropIt->second.c_str()), animID });
-		}
-	}
-}
-
-static void loadControllerID(stringmap_t<animctrlid_t>& state, int& nextID, const tsxtileset_t& tileset) {
-	for (const auto& tile : tileset.tiles) {
-		auto ctrlPropIt = tile.properties.find("animctrl");
-		if (ctrlPropIt != tile.properties.end()) {
-			auto existingIDIter = state.find_as(ctrlPropIt->second.c_str());
-			if (existingIDIter == state.end()) {
-				animctrlid_t id(nextID++);
-				state.insert({ eastl::string(ctrlPropIt->second.c_str()), id });
-			}
-		}
-	}
-}
-
-static void loadController(animctrlmap_t<animctrl_t>& state,
-						   const stringmap_t<animctrlid_t>& ids,
-						   const tsxtileset_t& tileset,
-						   tilesetid_t tilesetID) {
-	for (const auto& tile : tileset.tiles) {
-		auto ctrlPropIt = tile.properties.find("animctrl");
-		if (ctrlPropIt != tile.properties.end()) {
-			animctrlid_t ctrlID = ids.find_as(ctrlPropIt->second.c_str())->second;
-			auto motionIt = tile.properties.find("motion");
-			assert(motionIt != tile.properties.end());
-			animctrl_t ctrl;
-			animid_t animID({ tilesetID, tile.id });
-			auto motionStr = motionIt->second;
-			if (motionStr == "walk-right") {
-				ctrl.walkRight = animID;
-			} else if (motionStr == "walk-left") {
-				ctrl.walkLeft = animID;
-			}
-			state.insert({ ctrlID, eastl::move(ctrl) });
 		}
 	}
 }
@@ -153,8 +117,6 @@ void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char 
 	loadTileset(state.tileset, tileset, id);
 	loadAnimation(state.animation, tileset, id);
 	loadAnimationID(state.animationID, tileset, id);
-	loadControllerID(state.controllerID, state.nextControllerID, tileset);
-	loadController(state.controller, state.controllerID, tileset, id);
 	loadCollider(state.colliderID, state.nextColliderID, state.collider, tileset);
 	loadSolid(state.solid, tileset, id);
 	loadTileID(state.tileID, tileset, id);

@@ -41,6 +41,10 @@ inline float getWallOffset(entityid_t entityID, const gamestate_t& game) {
 	return game.world.entity.wallOffsets.find(entityID)->second;
 }
 
+inline const animation_t& getAnimation(animid_t id, const gamestate_t& game) {
+	return game.tileset.animation.find(id)->second;
+}
+
 inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
 	return ( aabb1.pos.x < aabb2.pos.x + aabb2.size.x &&
 			 aabb1.pos.x + aabb1.size.x > aabb2.pos.x &&

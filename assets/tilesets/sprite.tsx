@@ -11,8 +11,7 @@
  </tile>
  <tile id="1">
   <properties>
-   <property name="animctrl" value="mario"/>
-   <property name="motion" value="walk-right"/>
+   <property name="animation" value="mario-right"/>
   </properties>
   <animation>
    <frame tileid="1" duration="100"/>

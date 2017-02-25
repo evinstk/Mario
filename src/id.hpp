@@ -6,7 +6,6 @@ namespace te {
 enum class id_type_t {
 	ENTITY,
 	ANIMATION,
-	ANIMATION_CONTROLLER,
 	COLLIDER,
 	TILESET,
 	SOUND,
@@ -52,7 +51,6 @@ using musicid_t       = id_t<id_type_t::MUSIC>;
 using levelid_t       = id_t<id_type_t::LEVEL>;
 using levelobjectid_t = id_t<id_type_t::LEVEL_OBJECT, eastl::pair<levelid_t, int>>;
 using animid_t        = id_t<id_type_t::ANIMATION, eastl::pair<tilesetid_t, int>>;
-using animctrlid_t    = id_t<id_type_t::ANIMATION_CONTROLLER>;
 using tileid_t        = id_t<id_type_t::TILE, eastl::pair<tilesetid_t, int>>;
 
 } // namespace te

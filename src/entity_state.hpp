@@ -25,8 +25,11 @@ struct entitystate_t {
 
 	entitymap_t<glm::vec3> velocities;
 	entitymap_t<glm::vec3> translations;
+
+	entitymap_t<animid_t> animationsLeft;
+	entitymap_t<animid_t> animationsRight;
+	entitymap_t<spriteanimator_t> spriteAnimators;
 	entitymap_t<tileid_t> tilesetSprites;
-	entitymap_t<animator_t> animators;
 
 	entityset_t canBounce;
 	entitymap_t<int> bounceNum;
