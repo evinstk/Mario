@@ -189,6 +189,7 @@ void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t lev
 	loadTranslations(state.translations, tmx, levelID);
 	loadTiles(state.tiles, tmx, levelID, game);
 
+	load(state.animations, tmx, levelID, "animation", game.tileset.animationID);
 	load(state.animationsLeft, tmx, levelID, "anim-left", game.tileset.animationID);
 	load(state.animationsRight, tmx, levelID, "anim-right", game.tileset.animationID);
 

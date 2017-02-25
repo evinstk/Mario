@@ -7,6 +7,7 @@ struct levelobjectstate_t {
 	levelobjectmap_t<glm::vec3>    translations;
 	levelobjectmap_t<tileid_t>     tiles;
 
+	levelobjectmap_t<animid_t>     animations;
 	levelobjectmap_t<animid_t>     animationsLeft;
 	levelobjectmap_t<animid_t>     animationsRight;
 

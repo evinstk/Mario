@@ -58,6 +58,8 @@ struct spriteanimator_t {
 	animid_t animation;
 	float elapsed;
 	spriteanimator_t() : animation({ tilesetid_t(0), 0 }), elapsed(0) {}
+	spriteanimator_t(animid_t _animation, float _elapsed)
+		: animation(_animation), elapsed(_elapsed) {}
 };
 
 enum class entity_t {

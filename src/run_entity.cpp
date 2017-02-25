@@ -98,6 +98,17 @@ void transferProperty(entitymap_t<T>& state,
 	}
 }
 
+static void runSpriteAnimators(entitymap_t<spriteanimator_t>& state,
+							   levelid_t levelID,
+							   const levelobjectmap_t<animid_t>& animations) {
+	auto range = parentRange(animations, levelID);
+	for (auto it = range.first; it != range.second; ++it) {
+		entityid_t entityID(it->first.id.second);
+		spriteanimator_t animator(it->second, 0);
+		state.insert({ entityID, animator });
+	}
+}
+
 void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
 	runColliders(state.colliders, levelID, objects.colliders);
 	runBounceSounds(state.bounceSounds, levelID, objects.bounceSounds);
@@ -106,8 +117,11 @@ void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t
 	runVelocities(state.velocities, levelID, objects.colliders);
 	runTranslations(state.translations, levelID, objects.translations);
 	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
+
 	transferProperty(state.animationsLeft, levelID, objects.animationsLeft);
 	transferProperty(state.animationsRight, levelID, objects.animationsRight);
+	runSpriteAnimators(state.spriteAnimators, levelID, objects.animations);
+
 	runPrizes(state.prizes, levelID, objects.prizes);
 	transferProperty(state.prizeNum, levelID, objects.prizeNum);
 	transferProperty(state.canBounce, levelID, objects.canBounce);
