@@ -1,0 +1,21 @@
+#version 330
+
+layout (location = 0) in ivec2 inTranslation;
+layout (location = 1) in int   inChar;
+
+flat out int  char;
+out      vec2 texOffset;
+
+uniform mat4  projection;
+uniform ivec2 cellSize;
+
+void main() {
+	ivec2 vertexOffset = ivec2( ( gl_VertexID % 2 ) * cellSize.x,
+								( gl_VertexID / 2 ) * cellSize.y );
+
+	ivec2 vertexTranslation = inTranslation + vertexOffset;
+
+	gl_Position = projection * vec4( vertexTranslation, 100.0f, 1.0f );
+	char = inChar;
+	texOffset = vertexOffset;
+}

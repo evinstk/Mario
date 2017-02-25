@@ -1,0 +1,14 @@
+#version 330
+
+flat in int  char;
+in      vec2 texOffset;
+
+out vec4 color;
+
+uniform ivec2 cellSize;
+uniform sampler2D tex;
+
+void main() {
+	ivec2 cellCoords = ivec2( 0, char * cellSize.y );
+	color = vec4( 1.0f, 1.0f, 1.0f, texelFetch( tex, ivec2( texOffset ) + cellCoords, 0 ).r );
+}
