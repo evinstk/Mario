@@ -74,13 +74,15 @@ static void makeEntityLifetimes(entitymap_t<float>& state, const gamestate_t& ga
 	}
 }
 
-static void makeEntitySprites(entitymap_t<tileid_t>& state, const gamestate_t& game) {
+static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const gamestate_t& game) {
 	auto idIt = game.world.newEntityIDs.begin();
 	for (const auto& request : game.world.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
-			const animid_t& animID = game.tileset.animationID.find_as("coin")->second;
-			const animation_t& animation = game.tileset.animation.find(animID)->second;
-			state[*idIt] = animation.frames[0].tileid;
+			animid_t animID = game.tileset.animationID.find_as("coin")->second;
+			spriteanimator_t& animator = state[*idIt];
+
+			animator.animation = animID;
+			animator.elapsed = 0;
 		}
 		++idIt;
 	}
@@ -90,7 +92,7 @@ void makeEntity(entitystate_t& state, const gamestate_t& game) {
 	makeEntityTranslations(state.translations, game);
 	makeEntityBounceAnimations(state.bounceAnimations, game);
 	makeEntityLifetimes(state.lifetimes, game);
-	makeEntitySprites(state.tilesetSprites, game);
+	makeEntityAnimators(state.spriteAnimators, game);
 }
 
 } // namespace te
