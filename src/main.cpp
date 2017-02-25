@@ -1,5 +1,6 @@
 #include "game_state.hpp"
 #include "sprite_renderer.hpp"
+#include "text_renderer.hpp"
 #include "game_values.hpp"
 #include "game_action.hpp"
 #include "util.hpp"
@@ -114,6 +115,7 @@ static int MarioMain() {
 	}
 
 	SpriteRenderer spriteRenderer;
+	TextRenderer textRenderer;
 	
 	constexpr float timePerFrame = 1.0f / 60.0f;
 	float timeSinceLastUpdate = 0.0f;
@@ -148,6 +150,8 @@ static int MarioMain() {
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		spriteRenderer.draw(gameState);
+		std::string scoreStr = std::to_string(gameState.world.score);
+		textRenderer.draw(scoreStr.c_str(), {0, FONT_PIXEL_SIZE}, gameState.world.projection);
 		SDL_GL_SwapWindow(upWindow.get());
 	}
 
