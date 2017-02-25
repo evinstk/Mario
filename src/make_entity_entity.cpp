@@ -8,7 +8,7 @@ namespace te {
 
 static constexpr bounceanim_t coinBounceAnim = {
 	.duration = COIN_BOUNCE_DURATION,
-		.height   = COIN_BOUNCE_HEIGHT,
+	.height   = COIN_BOUNCE_HEIGHT,
 	.elapsed  = 0
 };
 
