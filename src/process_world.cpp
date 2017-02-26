@@ -10,6 +10,10 @@ namespace te {
 void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game) {
 	static constexpr float JUMP_SPEED = -10 * 32;
 
+	if (game.world.mode != worldmode_t::PLAY) {
+		return;
+	}
+
 	if (evt.type == SDL_KEYDOWN) {
 		if (evt.key.keysym.sym == SDLK_SPACE &&
 			evt.key.repeat == 0 &&
