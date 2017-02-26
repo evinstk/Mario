@@ -63,7 +63,8 @@ struct spriteanimator_t {
 };
 
 enum class musiccmd_t {
-	PAUSE
+	PAUSE,
+	PLAY
 };
 
 enum class worldmode_t {

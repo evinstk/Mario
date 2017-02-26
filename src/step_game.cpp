@@ -3,9 +3,10 @@
 
 namespace te {
 
-static void stepMusicCommandQueue(eastl::vector<musiccmd_t>& state, const gamestate_t& game) {
+static void stepMusicCommandQueue(eastl::vector<std::pair<musiccmd_t, musicid_t>>& state,
+								  const gamestate_t& game) {
 	if (game.world.deathTrigger) {
-		state.push_back(musiccmd_t::PAUSE);
+		state.push_back({ musiccmd_t::PAUSE, {} });
 	}
 }
 

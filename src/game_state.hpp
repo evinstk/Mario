@@ -14,7 +14,7 @@ struct gamestate_t {
 	levelstate_t level;
 	worldstate_t world;
 
-	eastl::vector<musiccmd_t> musicCommandQueue;
+	eastl::vector<std::pair<musiccmd_t, musicid_t>> musicCommandQueue;
 };
 
 } // namespace te

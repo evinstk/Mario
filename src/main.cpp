@@ -116,13 +116,6 @@ static int MarioMain() {
 
 	levelid_t levelID = gameState.level.source.find(tmxPathname)->second;
 	runGame(gameState, levelID);
-	{
-		auto musicIt = gameState.level.music.find(levelID);
-		if (musicIt != gameState.level.music.end()) {
-			Mix_Music *pMusic = getMusic(musicIt->second, gameState);
-			Mix_PlayMusic(pMusic, -1);
-		}
-	}
 
 	SpriteRenderer spriteRenderer;
 	TextRenderer textRenderer;
@@ -157,9 +150,14 @@ static int MarioMain() {
 		}
 		flushSoundQueue(gameState);
 
-		for (musiccmd_t musicCmd : gameState.musicCommandQueue) {
-			if (musicCmd == musiccmd_t::PAUSE) {
+		for (auto musicCmd : gameState.musicCommandQueue) {
+			switch (musicCmd.first) {
+			case musiccmd_t::PAUSE:
 				Mix_PauseMusic();
+				break;
+			case musiccmd_t::PLAY:
+				Mix_Music *pMusic = getMusic(musicCmd.second, gameState);
+				Mix_PlayMusic(pMusic, -1);
 			}
 		}
 		flushMusicCommandQueue(gameState);
