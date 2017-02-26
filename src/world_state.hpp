@@ -14,6 +14,9 @@ namespace te {
 struct worldstate_t {
 	worldstate_t();
 
+	worldmode_t mode;
+	float modeElapsed;
+
 	glm::mat4 projection;
 	glm::imat4 view;
 
@@ -28,6 +31,8 @@ struct worldstate_t {
 	int score;
 	int coinCount;
 	int lives;
+
+	bool deathTrigger;
 
 	vector_t<entityrequest_t> newEntityQueue;
 	vector_t<entityid_t> newEntityIDs;

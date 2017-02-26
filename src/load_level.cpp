@@ -126,6 +126,14 @@ static void loadMusic(levelmap_t<musicid_t>& state, const decltype(tmx_t::proper
 	}
 }
 
+static void loadDieMusic(levelmap_t<soundid_t>& state, const decltype(tmx_t::properties)& properties, levelid_t levelID, const gamestate_t& game) {
+	auto musicIt = properties.find("music-die");
+	if (musicIt != properties.end()) {
+		std::string musicPath = "tiled/" + musicIt->second;
+		state.insert({ levelID, getSoundID(musicPath.c_str(), game) });
+	}
+}
+
 void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game) {
 	bool loaded = loadSource(state.source, state.nextLevelID, pathname);
 	if (!loaded) {
@@ -143,6 +151,7 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
 
 	loadMusic(state.music, tmx.properties, levelID, game);
+	loadDieMusic(state.dieMusic, tmx.properties, levelID, game);
 }
 
 } // namespace te

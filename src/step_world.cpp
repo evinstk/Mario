@@ -11,6 +11,19 @@
 
 namespace te {
 
+static void stepMode(worldmode_t& modeState,
+					 float& elapsedState,
+					 float dt,
+					 const gamestate_t& game) {
+
+	elapsedState += dt;
+
+	if (game.world.deathTrigger) {
+		modeState = worldmode_t::DEATH;
+		elapsedState = 0;
+	}
+}
+
 static void stepView(glm::imat4& state,
 					 float dt,
 					 const gamestate_t& game) {
@@ -41,6 +54,16 @@ static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t&
 	if (coinCount >= COIN_COUNT_LIVE_UP) {
 		++lives;
 		coinCount %= COIN_COUNT_LIVE_UP;
+	}
+}
+
+static void stepDeathTrigger(bool& state, const gamestate_t& game) {
+	state = false;
+
+	float yPos = getTranslation(game.world.playerEntity, game).y;
+	const auto& map = getMap(game);
+	if (yPos > map.size.y * map.tileSize.y && game.world.mode == worldmode_t::PLAY) {
+		state = true;
 	}
 }
 
@@ -75,12 +98,21 @@ static void stepSoundQueue(vector_t<soundid_t>& state, const gamestate_t& game) 
 			state.push_back(soundIt->second);
 		}
 	}
+
+	if (game.world.deathTrigger) {
+		auto soundIt = game.level.dieMusic.find(game.world.level);
+		if (soundIt != game.level.dieMusic.end()) {
+			state.push_back(soundIt->second);
+		}
+	}
 }
 
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
+	stepMode(state.mode, state.modeElapsed, dt, gameState);
 	stepEntity(state.entity, dt, gameState);
 	stepScore(state.score, state.coinCount, state.lives, gameState);
 	stepView(state.view, dt, gameState);
+	stepDeathTrigger(state.deathTrigger, gameState);
 	stepNewEntityQueue(state.newEntityQueue, gameState);
 	stepDestroyQueue(state.destroyQueue, gameState);
 	stepSoundQueue(state.soundQueue, gameState);

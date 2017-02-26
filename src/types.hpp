@@ -62,6 +62,15 @@ struct spriteanimator_t {
 		: animation(_animation), elapsed(_elapsed) {}
 };
 
+enum class musiccmd_t {
+	PAUSE
+};
+
+enum class worldmode_t {
+	PLAY,
+	DEATH
+};
+
 enum class entity_t {
 	BLOCK_COIN
 };

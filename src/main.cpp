@@ -84,6 +84,16 @@ static int MarioMain() {
 		loadMusic(gameState, std::move(pMusic), musicStr.c_str());
 	}
 
+	auto musicDieIt = tmx.properties.find("music-die");
+	if (musicDieIt != tmx.properties.end()) {
+		std::string musicStr = "tiled/" + musicDieIt->second;
+		if (gameState.sound.soundID.find_as(musicStr.c_str()) == gameState.sound.soundID.end()) {
+			std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(musicStr.c_str()),
+																		&Mix_FreeChunk);
+			loadSound(gameState, std::move(pChunk), musicStr.c_str());
+		}
+	}
+
 	for (const auto& externalTileset : tmx.externalTilesets) {
 		std::string tilesetPathname = "tiled/" + externalTileset.source;
 		tsxtileset_t tileset(tilesetPathname.c_str());
@@ -146,6 +156,13 @@ static int MarioMain() {
 			Mix_PlayChannel(-1, pChunk, 0);
 		}
 		flushSoundQueue(gameState);
+
+		for (musiccmd_t musicCmd : gameState.musicCommandQueue) {
+			if (musicCmd == musiccmd_t::PAUSE) {
+				Mix_PauseMusic();
+			}
+		}
+		flushMusicCommandQueue(gameState);
 
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
