@@ -4,7 +4,7 @@
 namespace te {
 
 void destroyEntity(gamestate_t& state) {
-	destroyEntity(state.world, state);
+	destroyEntityWorld(state);
 }
 
 } // namespace te

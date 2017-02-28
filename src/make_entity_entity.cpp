@@ -1,5 +1,6 @@
 #include "game_action.hpp"
 #include "entity_state.hpp"
+#include "world_state.hpp"
 #include "game_state.hpp"
 #include "game_values.hpp"
 #include <cassert>
@@ -47,16 +48,16 @@ static constexpr bounceanim_t coinBounceAnim = {
 //	}
 //}
 
-static void makeEntityTranslations(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+static void makeEntityTranslations(entitymap_t<glm::vec3>& state) {
+	auto idIt = gWorld.newEntityIDs.begin();
+	for (const auto& request : gWorld.newEntityQueue) {
 		state[*idIt++] = request.translation;
 	}
 }
 
-static void makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+static void makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state) {
+	auto idIt = gWorld.newEntityIDs.begin();
+	for (const auto& request : gWorld.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
 			state[*idIt] = coinBounceAnim;
 		}
@@ -64,9 +65,9 @@ static void makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state, const g
 	}
 }
 
-static void makeEntityLifetimes(entitymap_t<float>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+static void makeEntityLifetimes(entitymap_t<float>& state) {
+	auto idIt = gWorld.newEntityIDs.begin();
+	for (const auto& request : gWorld.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
 			state[*idIt] = COIN_BOUNCE_DURATION;
 		}
@@ -75,8 +76,8 @@ static void makeEntityLifetimes(entitymap_t<float>& state, const gamestate_t& ga
 }
 
 static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+	auto idIt = gWorld.newEntityIDs.begin();
+	for (const auto& request : gWorld.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
 			animid_t animID = game.tileset.animationID.find_as("coin")->second;
 			spriteanimator_t& animator = state[*idIt];
@@ -89,9 +90,9 @@ static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const game
 }
 
 void makeEntity(entitystate_t& state, const gamestate_t& game) {
-	makeEntityTranslations(state.translations, game);
-	makeEntityBounceAnimations(state.bounceAnimations, game);
-	makeEntityLifetimes(state.lifetimes, game);
+	makeEntityTranslations(state.translations);
+	makeEntityBounceAnimations(state.bounceAnimations);
+	makeEntityLifetimes(state.lifetimes);
 	makeEntityAnimators(state.spriteAnimators, game);
 }
 

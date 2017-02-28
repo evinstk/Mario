@@ -1,5 +1,6 @@
 #include "sprite_renderer.hpp"
 #include "game_state.hpp"
+#include "world_state.hpp"
 #include "util.hpp"
 #include <tegl/types.hpp>
 #include <tegl/util.hpp>
@@ -55,14 +56,14 @@ SpriteRenderer::SpriteRenderer()
 void SpriteRenderer::draw(const gamestate_t& state) {
 	glUseProgram(m_shader);
 
-	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(state.world.projection));
-	glm::mat4 view = state.world.view;
+	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(gWorld.projection));
+	glm::mat4 view = gWorld.view;
 	glUniformMatrix4fv(m_viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray( m_vertexArray );
 
-	auto mapIt = state.level.map.find(state.world.level);
+	auto mapIt = state.level.map.find(gWorld.level);
 	assert(mapIt != state.level.map.end());
 	const auto& map = mapIt->second;
 
@@ -71,7 +72,7 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 	eastl::vector<tileid_t> markedTiles;
 
 	// iterate tilesets in outer loop to minimize texture bindings
-	auto tilesetsIt = state.level.tilesets.find(state.world.level);
+	auto tilesetsIt = state.level.tilesets.find(gWorld.level);
 	assert(tilesetsIt != state.level.tilesets.end());
 	const auto& tilesets = tilesetsIt->second;
 	for (const auto& layerTileset : tilesets) {
@@ -85,7 +86,7 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 		glUniform1i( m_marginLoc, tileset.margin );
 		glUniform1i( m_columnsLoc, tileset.columns );
 
-		for (const auto& layer : state.world.layers) {
+		for (const auto& layer : gWorld.layers) {
 
 			for (int i = 0, layerSize = layer.tiles.size(); i < layerSize; ++i) {
 

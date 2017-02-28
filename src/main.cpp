@@ -4,6 +4,7 @@
 #include "game_values.hpp"
 #include "game_action.hpp"
 #include "util.hpp"
+#include "world_state.hpp"
 #include <tegl/readtmx.hpp>
 #include <GL/glew.h>
 #include <SDL.h>
@@ -144,11 +145,11 @@ static int MarioMain() {
 			makeEntity(gameState);
 		}
 
-		for (soundid_t soundID : gameState.world.soundQueue) {
+		for (soundid_t soundID : gWorld.soundQueue) {
 			Mix_Chunk *pChunk = getChunk(soundID, gameState);
 			Mix_PlayChannel(-1, pChunk, 0);
 		}
-		flushSoundQueue(gameState);
+		flushSoundQueue();
 
 		for (auto musicCmd : gameState.musicCommandQueue) {
 			switch (musicCmd.first) {
@@ -165,8 +166,8 @@ static int MarioMain() {
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		spriteRenderer.draw(gameState);
-		std::string scoreStr = std::to_string(gameState.world.score);
-		textRenderer.draw(scoreStr.c_str(), {0, FONT_PIXEL_SIZE}, gameState.world.projection);
+		std::string scoreStr = std::to_string(gWorld.score);
+		textRenderer.draw(scoreStr.c_str(), {0, FONT_PIXEL_SIZE}, gWorld.projection);
 		SDL_GL_SwapWindow(upWindow.get());
 	}
 

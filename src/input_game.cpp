@@ -4,7 +4,7 @@
 namespace te {
 
 void inputGame(gamestate_t& state, const Uint8 *keyboardState) {
-	inputWorld(state.world, keyboardState, state);
+	inputWorld(keyboardState, state);
 }
 
 } // namespace te

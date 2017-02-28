@@ -16,11 +16,11 @@ struct levelstate_t;
 struct levelobjectstate_t;
 
 void inputGame(gamestate_t& state, const Uint8 *keyboardState);
-void inputWorld(worldstate_t& state, const Uint8 *keyboardState, const gamestate_t& game);
+void inputWorld(const Uint8 *keyboardState, const gamestate_t& game);
 void inputEntity(const Uint8 *keyboardState, const gamestate_t& game);
 
 void stepGame(gamestate_t& state, float dt);
-void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState);
+void stepWorld(float dt, const gamestate_t& gameState);
 void stepEntity(float dt, const gamestate_t& gameState);
 
 void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
@@ -37,22 +37,22 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game);
 
 void runGame(gamestate_t& state, levelid_t levelID);
-void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState);
+void runWorld(levelid_t levelID, const levelstate_t& levelState);
 void runEntity(levelid_t levelID, const levelobjectstate_t& objects);
 
 void processGame(gamestate_t& state, const SDL_Event& evt);
-void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
-void processEntity(const SDL_Event& evt, entityid_t playerEntity, const gamestate_t& game, bool& jump);
+void processWorld(const SDL_Event& evt, const gamestate_t& game);
+void processEntity(const SDL_Event& evt, entityid_t playerEntity, bool& jump);
 
 void makeEntity(gamestate_t& state);
-void makeEntity(worldstate_t& state, const gamestate_t& game);
+void makeEntityWorld(const gamestate_t& game);
 void makeEntity(const gamestate_t& game);
 
 void destroyEntity(gamestate_t& state);
-void destroyEntity(worldstate_t& state, const gamestate_t& game);
-void destroyEntity(const gamestate_t& game);
+void destroyEntityWorld(const gamestate_t& game);
+void destroyEntity();
 
-void flushSoundQueue(gamestate_t& state);
+void flushSoundQueue();
 void flushMusicCommandQueue(gamestate_t& state);
 
 } // namespace te

@@ -40,4 +40,6 @@ struct worldstate_t {
 	vector_t<soundid_t> soundQueue;
 };
 
+extern const worldstate_t& gWorld;
+
 } // namespace te

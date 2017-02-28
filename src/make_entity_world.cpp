@@ -5,8 +5,8 @@
 
 namespace te {
 
-void makeEntity(worldstate_t& state,
-				const gamestate_t& game) {
+void makeEntityWorld(worldstate_t& state,
+					 const gamestate_t& game) {
 	state.newEntityIDs.clear();
 	for (auto it = state.newEntityQueue.begin(), end = state.newEntityQueue.end(); it < end; ++it) {
 		entityid_t newID;

@@ -15,7 +15,7 @@ static void runMusicCommandQueue(eastl::vector<std::pair<musiccmd_t, musicid_t>>
 }
 
 void runGame(gamestate_t& state, levelid_t levelID) {
-	runWorld(state.world, levelID, state.level);
+	runWorld(levelID, state.level);
 	runMusicCommandQueue(state.musicCommandQueue, levelID, state);
 }
 
