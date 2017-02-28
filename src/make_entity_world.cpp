@@ -19,7 +19,7 @@ void makeEntity(worldstate_t& state,
 		}
 		state.newEntityIDs.push_back(newID);
 	}
-	makeEntity(state.entity, game);
+	makeEntity(game);
 	for (const auto& newEntity : state.newEntityQueue) {
 		if (newEntity.type == entity_t::BLOCK_COIN) {
 			state.soundQueue.push_back(getSoundID(COIN_SOUND, game));

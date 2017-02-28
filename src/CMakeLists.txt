@@ -23,8 +23,10 @@ add_executable(mario
   sprite_renderer.cpp
   text_renderer.cpp
   world_state.cpp
+  entity_state.cpp
   process_game.cpp
   process_world.cpp
+  process_entity.cpp
   make_entity_game.cpp
   make_entity_world.cpp
   make_entity_entity.cpp

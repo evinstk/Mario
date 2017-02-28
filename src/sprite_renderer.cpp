@@ -115,16 +115,16 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 			markedTiles.clear();
 		}
 
-		for (const auto& spriteRow : state.world.entity.tilesetSprites) {
+		for (const auto& spriteRow : gEntity.tilesetSprites) {
 			entityid_t entityID = spriteRow.first;
 			tileid_t sprite = spriteRow.second;
 
 			if (sprite.id.first == layerTileset.tileset) {
 
-				glm::vec3 translation = getTranslation(entityID, state);
+				glm::vec3 translation = getTranslation(entityID);
 				glm::vec3 spriteOffset;
-				auto offsetIt = state.world.entity.spriteOffsets.find(entityID);
-				if (offsetIt != state.world.entity.spriteOffsets.end()) {
+				auto offsetIt = gEntity.spriteOffsets.find(entityID);
+				if (offsetIt != gEntity.spriteOffsets.end()) {
 					spriteOffset += offsetIt->second;
 				}
 				translation += spriteOffset;

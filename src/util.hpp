@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 #include "game_state.hpp"
+#include "entity_state.hpp"
 #include <glm/gtx/transform.hpp>
 
 namespace te {
@@ -25,20 +26,20 @@ inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {
 									 0));
 }
 
-inline const glm::vec3& getTranslation(entityid_t entityID, const gamestate_t& game) {
-	return game.world.entity.translations.find(entityID)->second;
+inline const glm::vec3& getTranslation(entityid_t entityID) {
+	return gEntity.translations.find(entityID)->second;
 }
 
 inline const aabb_t& getCollider(entityid_t entityID, const gamestate_t& game) {
-	return game.tileset.collider.find(game.world.entity.colliders.find(entityID)->second)->second;
+	return game.tileset.collider.find(gEntity.colliders.find(entityID)->second)->second;
 }
 
-inline const glm::vec3& getVelocity(entityid_t entityID, const gamestate_t& game) {
-	return game.world.entity.velocities.find(entityID)->second;
+inline const glm::vec3& getVelocity(entityid_t entityID) {
+	return gEntity.velocities.find(entityID)->second;
 }
 
-inline float getWallOffset(entityid_t entityID, const gamestate_t& game) {
-	return game.world.entity.wallOffsets.find(entityID)->second;
+inline float getWallOffset(entityid_t entityID) {
+	return gEntity.wallOffsets.find(entityID)->second;
 }
 
 inline const animation_t& getAnimation(animid_t id, const gamestate_t& game) {
@@ -60,9 +61,9 @@ inline eastl::pair<typename Container::const_iterator, typename Container::const
 	};
 }
 
-inline bool hasPrize(entityid_t blockID, prize_t& prize, const gamestate_t& game) {
-	auto prizeIt = game.world.entity.prizes.find(blockID);
-	if (prizeIt != game.world.entity.prizes.end()) {
+inline bool hasPrize(entityid_t blockID, prize_t& prize) {
+	auto prizeIt = gEntity.prizes.find(blockID);
+	if (prizeIt != gEntity.prizes.end()) {
 		prize = prizeIt->second;
 		return true;
 	}
@@ -85,12 +86,12 @@ inline Mix_Music *getMusic(musicid_t musicID, const gamestate_t& game) {
 	return game.sound.music.find(musicID)->second.get();
 }
 
-inline bool canBounce(entityid_t entityID, const gamestate_t& game) {
-	return game.world.entity.canBounce.find(entityID) != game.world.entity.canBounce.end();
+inline bool canBounce(entityid_t entityID) {
+	return gEntity.canBounce.find(entityID) != gEntity.canBounce.end();
 }
 
-inline int getPrizeNum(entityid_t entityID, const gamestate_t& game) {
-	return game.world.entity.prizeNum.find(entityID)->second;
+inline int getPrizeNum(entityid_t entityID) {
+	return gEntity.prizeNum.find(entityID)->second;
 }
 
 inline tileid_t getTileID(const char *strID, const gamestate_t& game) {

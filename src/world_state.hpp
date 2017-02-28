@@ -20,7 +20,6 @@ struct worldstate_t {
 	glm::mat4 projection;
 	glm::imat4 view;
 
-	entitystate_t entity;
 	int nextEntityID;
 	entityset_t freeIDs;
 

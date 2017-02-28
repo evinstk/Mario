@@ -12,7 +12,7 @@ static void destroyEntityFreeIDs(entityset_t& state, const gamestate_t& game) {
 
 void destroyEntity(worldstate_t& state,
 				   const gamestate_t& game) {
-	destroyEntity(state.entity, game);
+	destroyEntity(game);
 	destroyEntityFreeIDs(state.freeIDs, game);
 	state.destroyQueue.clear();
 }
