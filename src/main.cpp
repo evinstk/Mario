@@ -5,6 +5,7 @@
 #include "game_action.hpp"
 #include "util.hpp"
 #include "world_state.hpp"
+#include "sound_effect_state.hpp"
 #include <tegl/readtmx.hpp>
 #include <GL/glew.h>
 #include <SDL.h>
@@ -151,7 +152,7 @@ static int MarioMain() {
 		}
 		flushSoundQueue();
 
-		for (auto musicCmd : gameState.musicCommandQueue) {
+		for (auto musicCmd : gSoundEffect.musicCommandQueue) {
 			switch (musicCmd.first) {
 			case musiccmd_t::PAUSE:
 				Mix_PauseMusic();
@@ -161,7 +162,7 @@ static int MarioMain() {
 				Mix_PlayMusic(pMusic, -1);
 			}
 		}
-		flushMusicCommandQueue(gameState);
+		flushMusicCommandQueue();
 
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

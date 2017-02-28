@@ -53,6 +53,6 @@ void destroyEntityWorld(const gamestate_t& game);
 void destroyEntity();
 
 void flushSoundQueue();
-void flushMusicCommandQueue(gamestate_t& state);
+void flushMusicCommandQueue();
 
 } // namespace te
