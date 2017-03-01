@@ -24,4 +24,6 @@ struct levelobjectstate_t {
 	levelobjectmap_t<int>          bounceNum;
 };
 
+extern const levelobjectstate_t& gLevelObject;
+
 } // namespace te

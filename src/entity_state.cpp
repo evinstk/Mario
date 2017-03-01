@@ -16,9 +16,9 @@ void stepEntity(float dt, const gamestate_t& game) {
 	stepEntity(gState, dt, game);
 }
 
-void runEntity(entitystate_t& entity, levelid_t levelID, const levelobjectstate_t& objects);
-void runEntity(levelid_t levelID, const levelobjectstate_t& objects) {
-	runEntity(gState, levelID, objects);
+void runEntity(entitystate_t& entity, levelid_t levelID);
+void runEntity(levelid_t levelID) {
+	runEntity(gState, levelID);
 }
 
 void processEntity(entitystate_t& entity, entityid_t playerEntity, const SDL_Event& evt, bool& jump);

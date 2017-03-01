@@ -34,11 +34,11 @@ void loadMusic(musicptr_t&& chunk, const char *pathname);
 
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
 void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const gamestate_t& game);
-void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game);
+void loadLevelObjects(const tmx_t& tmx, levelid_t levelID, const gamestate_t& game);
 
 void runGame(gamestate_t& state, levelid_t levelID);
 void runWorld(levelid_t levelID, const levelstate_t& levelState);
-void runEntity(levelid_t levelID, const levelobjectstate_t& objects);
+void runEntity(levelid_t levelID);
 
 void processGame(gamestate_t& state, const SDL_Event& evt);
 void processWorld(const SDL_Event& evt, const gamestate_t& game);

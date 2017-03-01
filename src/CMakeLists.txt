@@ -24,6 +24,7 @@ add_executable(mario
   text_renderer.cpp
   tileset_state.cpp
   sound_state.cpp
+  level_object_state.cpp
   world_state.cpp
   entity_state.cpp
   sound_effect_state.cpp

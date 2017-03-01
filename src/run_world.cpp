@@ -30,7 +30,7 @@ void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelS
 	assert(layersIt != levelState.layers.end());
 	state.layers = layersIt->second;
 
-	runEntity(levelID, levelState.objects);
+	runEntity(levelID);
 	runNextEntityID(state.nextEntityID, levelID, levelState);
 	runPlayerEntity(state.playerEntity, levelID, levelState.playerObject);
 	runView(state.view, getTranslation(state.playerEntity));

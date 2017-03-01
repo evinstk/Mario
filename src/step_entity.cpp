@@ -4,6 +4,7 @@
 #include "game_state.hpp"
 #include "tileset_state.hpp"
 #include "level_state.hpp"
+#include "level_object_state.hpp"
 #include "util.hpp"
 #include "game_values.hpp"
 #include <glm/glm.hpp>
@@ -348,8 +349,8 @@ static void stepSprites(entitymap_t<tileid_t>& state, const gamestate_t& game) {
 	for (const auto& row : gEntity.prizeNum) {
 		if (row.second <= 0) {
 			entityid_t entityID = row.first;
-			auto emptyTileIt = game.level.objects.emptyTiles.find(levelobjectid_t({ gWorld.level, entityID.id }));
-			if (emptyTileIt != game.level.objects.emptyTiles.end()) {
+			auto emptyTileIt = gLevelObject.emptyTiles.find(levelobjectid_t({ gWorld.level, entityID.id }));
+			if (emptyTileIt != gLevelObject.emptyTiles.end()) {
 				state[entityID] = emptyTileIt->second;
 			}
 		}
