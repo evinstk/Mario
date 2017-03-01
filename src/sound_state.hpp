@@ -14,7 +14,7 @@ struct soundstate_t {
 
 	int nextSoundID;
 	stringmap_t<soundid_t> soundID;
-	soundmap_t<std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>> chunk;
+	soundmap_t<chunkptr_t> chunk;
 
 	int nextMusicID;
 	stringmap_t<musicid_t> musicID;

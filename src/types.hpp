@@ -6,6 +6,7 @@
 #include <EASTL/hash_map.h>
 #include <EASTL/string.h>
 #include <EASTL/vector_set.h>
+#include <EASTL/unique_ptr.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <SDL.h>
@@ -112,7 +113,21 @@ using soundmap_t = eastl::vector_map<soundid_t, T>;
 template <typename T>
 using musicmap_t = eastl::vector_map<musicid_t, T>;
 
-using musicptr_t = std::unique_ptr<Mix_Music, decltype(&Mix_FreeMusic)>;
+struct chunkdeleter_t {
+	void operator()(Mix_Chunk *p) const {
+		Mix_FreeChunk(p);
+	}
+};
+
+using chunkptr_t = eastl::unique_ptr<Mix_Chunk, chunkdeleter_t>;
+
+struct musicdeleter_t {
+	void operator()(Mix_Music *p) const {
+		Mix_FreeMusic(p);
+	}
+};
+
+using musicptr_t = eastl::unique_ptr<Mix_Music, musicdeleter_t>;
 
 template <typename T>
 using levelmap_t = eastl::vector_map<levelid_t, T>;

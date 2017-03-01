@@ -66,13 +66,11 @@ static int MarioMain() {
 	gamestate_t gameState;
 
 	{
-		std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pCoinChunk(Mix_LoadWAV(COIN_SOUND),
-																		&Mix_FreeChunk);
-		loadSound(gameState, std::move(pCoinChunk), COIN_SOUND);
+		chunkptr_t pCoinChunk(Mix_LoadWAV(COIN_SOUND), chunkdeleter_t());
+		loadSound(gameState, eastl::move(pCoinChunk), COIN_SOUND);
 
-		std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pJumpChunk(Mix_LoadWAV(JUMP_SOUND),
-																		&Mix_FreeChunk);
-		loadSound(gameState, std::move(pJumpChunk), JUMP_SOUND);
+		chunkptr_t pJumpChunk(Mix_LoadWAV(JUMP_SOUND), chunkdeleter_t());
+		loadSound(gameState, eastl::move(pJumpChunk), JUMP_SOUND);
 	}
 
 	const char *tmxPathname = "tiled/1-1.tmx";
@@ -82,17 +80,16 @@ static int MarioMain() {
 	auto musicIt = tmx.properties.find("music");
 	if (musicIt != tmx.properties.end()) {
 		std::string musicStr = "tiled/" + musicIt->second;
-		musicptr_t pMusic(Mix_LoadMUS(musicStr.c_str()), Mix_FreeMusic);
-		loadMusic(gameState, std::move(pMusic), musicStr.c_str());
+		musicptr_t pMusic(Mix_LoadMUS(musicStr.c_str()), musicdeleter_t());
+		loadMusic(gameState, eastl::move(pMusic), musicStr.c_str());
 	}
 
 	auto musicDieIt = tmx.properties.find("music-die");
 	if (musicDieIt != tmx.properties.end()) {
 		std::string musicStr = "tiled/" + musicDieIt->second;
 		if (gSound.soundID.find_as(musicStr.c_str()) == gSound.soundID.end()) {
-			std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(musicStr.c_str()),
-																		&Mix_FreeChunk);
-			loadSound(gameState, std::move(pChunk), musicStr.c_str());
+			chunkptr_t pChunk(Mix_LoadWAV(musicStr.c_str()), chunkdeleter_t());
+			loadSound(gameState, eastl::move(pChunk), musicStr.c_str());
 		}
 	}
 
@@ -107,9 +104,8 @@ static int MarioMain() {
 			if (soundProp != object.properties.end()) {
 				std::string wavPathname = "tiled/" + soundProp->second;
 				if (gSound.soundID.find_as(wavPathname.c_str()) == gSound.soundID.end()) {
-					std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(wavPathname.c_str()),
-																				&Mix_FreeChunk);
-					loadSound(gameState, std::move(pChunk), wavPathname.c_str());
+					chunkptr_t pChunk(Mix_LoadWAV(wavPathname.c_str()), chunkdeleter_t());
+					loadSound(gameState, eastl::move(pChunk), wavPathname.c_str());
 				}
 			}
 		}
