@@ -69,7 +69,7 @@ static void loadColliders(levelobjectmap_t<colliderid_t>& state,
 						  const tmx_t& tmx,
 						  levelid_t levelID,
 						  const gamestate_t& game) {
-	load(state, tmx, levelID, "collider", game.tileset.colliderID);
+	load(state, tmx, levelID, "collider", gTileset.colliderID);
 }
 
 static void loadGravities(levelobjectset_t& state,
@@ -182,16 +182,16 @@ static inline void loadEmptyTiles(levelobjectmap_t<tileid_t>& state,
 								  const tmx_t& tmx,
 								  levelid_t levelID,
 								  const gamestate_t& game) {
-	load(state, tmx, levelID, "empty-tile", game.tileset.tileID);
+	load(state, tmx, levelID, "empty-tile", gTileset.tileID);
 }
 
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
 	loadTranslations(state.translations, tmx, levelID);
 	loadTiles(state.tiles, tmx, levelID, game);
 
-	load(state.animations, tmx, levelID, "animation", game.tileset.animationID);
-	load(state.animationsLeft, tmx, levelID, "anim-left", game.tileset.animationID);
-	load(state.animationsRight, tmx, levelID, "anim-right", game.tileset.animationID);
+	load(state.animations, tmx, levelID, "animation", gTileset.animationID);
+	load(state.animationsLeft, tmx, levelID, "anim-left", gTileset.animationID);
+	load(state.animationsRight, tmx, levelID, "anim-right", gTileset.animationID);
 
 	loadColliders(state.colliders, tmx, levelID, game);
 	loadGravities(state.gravities, tmx, levelID);

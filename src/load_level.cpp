@@ -134,7 +134,7 @@ static void loadDieMusic(levelmap_t<soundid_t>& state, const decltype(tmx_t::pro
 	}
 }
 
-void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game) {
+void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const gamestate_t& game) {
 	bool loaded = loadSource(state.source, state.nextLevelID, pathname);
 	if (!loaded) {
 		return;
@@ -142,8 +142,8 @@ void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, cons
 
 	levelid_t levelID = state.source.find_as(pathname)->second;
 	loadMap(state.map, tmx, levelID);
-	loadTilesets(state.tilesets, tmx.externalTilesets, levelID, tilesetState.source);
-	loadLayers(state.layers, state.tilesets.find(levelID)->second, tilesetState.tileset, tmx.layers, tmx.externalTilesets, levelID);
+	loadTilesets(state.tilesets, tmx.externalTilesets, levelID, gTileset.source);
+	loadLayers(state.layers, state.tilesets.find(levelID)->second, gTileset.tileset, tmx.layers, tmx.externalTilesets, levelID);
 	loadPlatformIndex(state.platformIndex, tmx.layers, levelID);
 
 	loadLevelObjects(state.objects, tmx, levelID, game);

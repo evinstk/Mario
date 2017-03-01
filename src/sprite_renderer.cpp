@@ -76,8 +76,8 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 	assert(tilesetsIt != state.level.tilesets.end());
 	const auto& tilesets = tilesetsIt->second;
 	for (const auto& layerTileset : tilesets) {
-		auto tilesetIt = state.tileset.tileset.find(layerTileset.tileset);
-		assert(tilesetIt != state.tileset.tileset.end());
+		auto tilesetIt = gTileset.tileset.find(layerTileset.tileset);
+		assert(tilesetIt != gTileset.tileset.end());
 		const auto& tileset = tilesetIt->second;
 		glBindTexture(GL_TEXTURE_2D, tileset.texture);
 

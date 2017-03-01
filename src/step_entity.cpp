@@ -47,7 +47,7 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 	for (const auto& colliderRow : gEntity.colliders) {
 		entityid_t entityID = colliderRow.first;
 		colliderid_t colliderID = colliderRow.second;
-		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
+		const aabb_t& collider = gTileset.collider.find(colliderID)->second;
 		glm::vec3 velocity = gEntity.velocities.find(entityID)->second;
 		glm::vec3 translation = gEntity.translations.find(entityID)->second + velocity * dt;
 
@@ -56,8 +56,8 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 		glm::vec2 end1  = start - glm::vec2(halfSize.x, 0);
 		glm::vec2 end2  = start + glm::vec2(halfSize.x, 0);
 
-		int xWallPos1 = senseOnWall(start.y, start.x, end1.x, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
-		int xWallPos2 = senseOnWall(start.y, start.x, end2.x, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int xWallPos1 = senseOnWall(start.y, start.x, end1.x, tileSize.x, tileSize.y, platformLayer, gTileset.solid);
+		int xWallPos2 = senseOnWall(start.y, start.x, end2.x, tileSize.x, tileSize.y, platformLayer, gTileset.solid);
 
 		float offset = 0;
 		if (xWallPos1 != -1) {
@@ -131,7 +131,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 		}
 
 		colliderid_t colliderID = gEntity.colliders.find(entityID)->second;
-		const aabb_t& collider = game.tileset.collider.find(colliderID)->second;
+		const aabb_t& collider = gTileset.collider.find(colliderID)->second;
 		glm::vec3 translation = getTranslation(entityID) + velocity * dt;
 		translation.x += gEntity.wallOffsets.find(entityID)->second;
 
@@ -141,8 +141,8 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 		int x1     = translation.x + collider.pos.x + 1;
 		int x2     = translation.x + collider.pos.x + collider.size.x - 1;
 
-		int solidTile1 = senseGround(x1, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
-		int solidTile2 = senseGround(x2, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int solidTile1 = senseGround(x1, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, gTileset.solid);
+		int solidTile2 = senseGround(x2, yStart, yEnd, tileSize.x, tileSize.y, platformLayer, gTileset.solid);
 
 		if (solidTile1 >= 0) {
 			groundOffsets.insert({ entityID, solidTile1 - translation.y - collider.pos.y - collider.size.y });
@@ -197,8 +197,8 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 		glm::vec2 start2 = translation + collider.pos + glm::vec2(collider.size.x - 3.0f, halfColliderSizeY);
 		glm::vec2 end2   = translation + collider.pos + glm::vec2(collider.size.x - 3.0f, 0.0f);
 
-		int solidTile1 = senseGround(start1.x, start1.y, end1.y, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
-		int solidTile2 = senseGround(start2.x, start2.y, end2.y, tileSize.x, tileSize.y, platformLayer, game.tileset.solid);
+		int solidTile1 = senseGround(start1.x, start1.y, end1.y, tileSize.x, tileSize.y, platformLayer, gTileset.solid);
+		int solidTile2 = senseGround(start2.x, start2.y, end2.y, tileSize.x, tileSize.y, platformLayer, gTileset.solid);
 
 		if (solidTile1 >= 0) {
 			ceilingOffsets.insert({ entityID, solidTile1 + tileSize.y - translation.y - collider.pos.y });

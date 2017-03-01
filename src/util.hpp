@@ -1,5 +1,6 @@
 #pragma once
 #include "types.hpp"
+#include "tileset_state.hpp"
 #include "game_state.hpp"
 #include "world_state.hpp"
 #include "entity_state.hpp"
@@ -32,7 +33,7 @@ inline const glm::vec3& getTranslation(entityid_t entityID) {
 }
 
 inline const aabb_t& getCollider(entityid_t entityID, const gamestate_t& game) {
-	return game.tileset.collider.find(gEntity.colliders.find(entityID)->second)->second;
+	return gTileset.collider.find(gEntity.colliders.find(entityID)->second)->second;
 }
 
 inline const glm::vec3& getVelocity(entityid_t entityID) {
@@ -44,7 +45,7 @@ inline float getWallOffset(entityid_t entityID) {
 }
 
 inline const animation_t& getAnimation(animid_t id, const gamestate_t& game) {
-	return game.tileset.animation.find(id)->second;
+	return gTileset.animation.find(id)->second;
 }
 
 inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
@@ -96,7 +97,7 @@ inline int getPrizeNum(entityid_t entityID) {
 }
 
 inline tileid_t getTileID(const char *strID, const gamestate_t& game) {
-	return game.tileset.tileID.find_as(strID)->second;
+	return gTileset.tileID.find_as(strID)->second;
 }
 
 } // namespace te

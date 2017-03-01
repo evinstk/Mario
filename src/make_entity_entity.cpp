@@ -3,6 +3,7 @@
 #include "world_state.hpp"
 #include "game_state.hpp"
 #include "game_values.hpp"
+#include "tileset_state.hpp"
 #include <cassert>
 
 namespace te {
@@ -28,8 +29,8 @@ static constexpr bounceanim_t coinBounceAnim = {
 //	state.bounceAnimations[entityID] = coinBounceAnim;
 //	state.lifetimes[entityID] = COIN_BOUNCE_DURATION;
 //	// TODO: replace
-//	const animid_t& animID = game.tileset.animationID.find_as("coin")->second;
-//	const animation_t& animation = game.tileset.animation.find(animID)->second;
+//	const animid_t& animID = gTileset.animationID.find_as("coin")->second;
+//	const animation_t& animation = gTileset.animation.find(animID)->second;
 //	state.tilesetSprites[entityID] = tileid_t({ animID.id.first, animation.frames[0].tileid });
 //}
 //
@@ -79,7 +80,7 @@ static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const game
 	auto idIt = gWorld.newEntityIDs.begin();
 	for (const auto& request : gWorld.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
-			animid_t animID = game.tileset.animationID.find_as("coin")->second;
+			animid_t animID = gTileset.animationID.find_as("coin")->second;
 			spriteanimator_t& animator = state[*idIt];
 
 			animator.animation = animID;

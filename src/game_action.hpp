@@ -24,7 +24,7 @@ void stepWorld(float dt, const gamestate_t& gameState);
 void stepEntity(float dt, const gamestate_t& gameState);
 
 void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
-void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
+void loadTileset(const tsxtileset_t& tileset, const char *pathname);
 
 void loadSound(gamestate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char* pathname);
 void loadSound(soundstate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char *pathname);
@@ -33,7 +33,7 @@ void loadMusic(gamestate_t& state, musicptr_t&& chunk, const char* pathname);
 void loadMusic(soundstate_t& state, musicptr_t&& chunk, const char *pathname);
 
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
-void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game);
+void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const gamestate_t& game);
 void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game);
 
 void runGame(gamestate_t& state, levelid_t levelID);
