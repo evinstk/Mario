@@ -27,10 +27,10 @@ void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathn
 void loadTileset(const tsxtileset_t& tileset, const char *pathname);
 
 void loadSound(gamestate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char* pathname);
-void loadSound(soundstate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char *pathname);
+void loadSound(std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char *pathname);
 
 void loadMusic(gamestate_t& state, musicptr_t&& chunk, const char* pathname);
-void loadMusic(soundstate_t& state, musicptr_t&& chunk, const char *pathname);
+void loadMusic(musicptr_t&& chunk, const char *pathname);
 
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
 void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const gamestate_t& game);

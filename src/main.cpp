@@ -89,7 +89,7 @@ static int MarioMain() {
 	auto musicDieIt = tmx.properties.find("music-die");
 	if (musicDieIt != tmx.properties.end()) {
 		std::string musicStr = "tiled/" + musicDieIt->second;
-		if (gameState.sound.soundID.find_as(musicStr.c_str()) == gameState.sound.soundID.end()) {
+		if (gSound.soundID.find_as(musicStr.c_str()) == gSound.soundID.end()) {
 			std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(musicStr.c_str()),
 																		&Mix_FreeChunk);
 			loadSound(gameState, std::move(pChunk), musicStr.c_str());
@@ -106,7 +106,7 @@ static int MarioMain() {
 			auto soundProp = object.properties.find("bounce-sound");
 			if (soundProp != object.properties.end()) {
 				std::string wavPathname = "tiled/" + soundProp->second;
-				if (gameState.sound.soundID.find_as(wavPathname.c_str()) == gameState.sound.soundID.end()) {
+				if (gSound.soundID.find_as(wavPathname.c_str()) == gSound.soundID.end()) {
 					std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)> pChunk(Mix_LoadWAV(wavPathname.c_str()),
 																				&Mix_FreeChunk);
 					loadSound(gameState, std::move(pChunk), wavPathname.c_str());

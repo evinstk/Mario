@@ -12,11 +12,11 @@ void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname) {
 }
 
 void loadSound(gamestate_t& state, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>&& chunk, const char *pathname) {
-	loadSound(state.sound, std::move(chunk), pathname);
+	loadSound(std::move(chunk), pathname);
 }
 
 void loadMusic(gamestate_t& state, musicptr_t&& chunk, const char *pathname) {
-	loadMusic(state.sound, std::move(chunk), pathname);
+	loadMusic(std::move(chunk), pathname);
 }
 
 } // namespace te
