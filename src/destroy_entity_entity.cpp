@@ -1,7 +1,6 @@
 #include "game_action.hpp"
 #include "entity_state.hpp"
 #include "world_state.hpp"
-#include "game_state.hpp"
 #include <EASTL/algorithm.h>
 #include <limits>
 

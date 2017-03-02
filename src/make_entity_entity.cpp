@@ -1,7 +1,6 @@
 #include "game_action.hpp"
 #include "entity_state.hpp"
 #include "world_state.hpp"
-#include "game_state.hpp"
 #include "game_values.hpp"
 #include "tileset_state.hpp"
 #include <cassert>
@@ -13,41 +12,6 @@ static constexpr bounceanim_t coinBounceAnim = {
 	.height   = COIN_BOUNCE_HEIGHT,
 	.elapsed  = 0
 };
-
-//static void makeBlockCoin(entitystate_t& state,
-//						  entityid_t entityID,
-//						  const glm::vec3& translation,
-//						  const gamestate_t& game) {
-//
-//	static constexpr bounceanim_t coinBounceAnim = {
-//		.duration = COIN_BOUNCE_DURATION,
-//		.height   = COIN_BOUNCE_HEIGHT,
-//		.elapsed  = 0
-//	};
-//
-//	state.translations[entityID] = translation;
-//	state.bounceAnimations[entityID] = coinBounceAnim;
-//	state.lifetimes[entityID] = COIN_BOUNCE_DURATION;
-//	// TODO: replace
-//	const animid_t& animID = gTileset.animationID.find_as("coin")->second;
-//	const animation_t& animation = gTileset.animation.find(animID)->second;
-//	state.tilesetSprites[entityID] = tileid_t({ animID.id.first, animation.frames[0].tileid });
-//}
-//
-//void makeEntity(entitystate_t& state,
-//				entityid_t entityID,
-//				entity_t entity,
-//				const glm::vec3& translation,
-//				const gamestate_t& game) {
-//
-//	switch (entity) {
-//	case entity_t::BLOCK_COIN:
-//		makeBlockCoin(state, entityID, translation, game);
-//		break;
-//	default:
-//		assert(false);
-//	}
-//}
 
 static void makeEntityTranslations(entitymap_t<glm::vec3>& state) {
 	auto idIt = gWorld.newEntityIDs.begin();
@@ -76,7 +40,7 @@ static void makeEntityLifetimes(entitymap_t<float>& state) {
 	}
 }
 
-static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const gamestate_t& game) {
+static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state) {
 	auto idIt = gWorld.newEntityIDs.begin();
 	for (const auto& request : gWorld.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
@@ -90,11 +54,11 @@ static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const game
 	}
 }
 
-void makeEntity(entitystate_t& state, const gamestate_t& game) {
+void makeEntity(entitystate_t& state) {
 	makeEntityTranslations(state.translations);
 	makeEntityBounceAnimations(state.bounceAnimations);
 	makeEntityLifetimes(state.lifetimes);
-	makeEntityAnimators(state.spriteAnimators, game);
+	makeEntityAnimators(state.spriteAnimators);
 }
 
 } // namespace te

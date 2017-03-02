@@ -2,7 +2,6 @@
 #include "types.hpp"
 #include "tileset_state.hpp"
 #include "sound_state.hpp"
-#include "game_state.hpp"
 #include "level_state.hpp"
 #include "world_state.hpp"
 #include "entity_state.hpp"
@@ -14,13 +13,13 @@ inline bool isValid(tileid_t tile) {
 	return tile.id.first.id > 0;
 }
 
-inline const layer_t& getPlatformLayer(const gamestate_t& game) {
+inline const layer_t& getPlatformLayer() {
 	int platformIndex = gLevel.platformIndex.find(gWorld.level)->second;
 	const layer_t& platformLayer = gWorld.layers[platformIndex];
 	return platformLayer;
 }
 
-inline const map_t& getMap(const gamestate_t& game) {
+inline const map_t& getMap() {
 	return gLevel.map.find(gWorld.level)->second;
 }
 
@@ -34,7 +33,7 @@ inline const glm::vec3& getTranslation(entityid_t entityID) {
 	return gEntity.translations.find(entityID)->second;
 }
 
-inline const aabb_t& getCollider(entityid_t entityID, const gamestate_t& game) {
+inline const aabb_t& getCollider(entityid_t entityID) {
 	return gTileset.collider.find(gEntity.colliders.find(entityID)->second)->second;
 }
 
@@ -46,7 +45,7 @@ inline float getWallOffset(entityid_t entityID) {
 	return gEntity.wallOffsets.find(entityID)->second;
 }
 
-inline const animation_t& getAnimation(animid_t id, const gamestate_t& game) {
+inline const animation_t& getAnimation(animid_t id) {
 	return gTileset.animation.find(id)->second;
 }
 
@@ -74,19 +73,19 @@ inline bool hasPrize(entityid_t blockID, prize_t& prize) {
 	return false;
 }
 
-inline soundid_t getSoundID(const char *pathname, const gamestate_t& game) {
+inline soundid_t getSoundID(const char *pathname) {
 	return gSound->soundID.find_as(pathname)->second;
 }
 
-inline Mix_Chunk *getChunk(soundid_t soundID, const gamestate_t& game) {
+inline Mix_Chunk *getChunk(soundid_t soundID) {
 	return gSound->chunk.find(soundID)->second.get();
 }
 
-inline musicid_t getMusicID(const char *pathname, const gamestate_t& game) {
+inline musicid_t getMusicID(const char *pathname) {
 	return gSound->musicID.find_as(pathname)->second;
 }
 
-inline Mix_Music *getMusic(musicid_t musicID, const gamestate_t& game) {
+inline Mix_Music *getMusic(musicid_t musicID) {
 	return gSound->music.find(musicID)->second.get();
 }
 
@@ -98,7 +97,7 @@ inline int getPrizeNum(entityid_t entityID) {
 	return gEntity.prizeNum.find(entityID)->second;
 }
 
-inline tileid_t getTileID(const char *strID, const gamestate_t& game) {
+inline tileid_t getTileID(const char *strID) {
 	return gTileset.tileID.find_as(strID)->second;
 }
 

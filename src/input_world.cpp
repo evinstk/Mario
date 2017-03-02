@@ -3,8 +3,8 @@
 
 namespace te {
 
-void inputWorld(worldstate_t& state, const Uint8 *keyboardState, const gamestate_t& game) {
-	inputEntity(keyboardState, game);
+void inputWorld(worldstate_t& state, const Uint8 *keyboardState) {
+	inputEntity(keyboardState);
 }
 
 } // namespace te

@@ -2,15 +2,14 @@
 
 namespace te {
 
-struct gamestate_t;
 struct tmx_t;
 
 static levelstate_t gState;
 const levelstate_t& gLevel = gState;
 
-void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const gamestate_t& game);
-void loadLevel(const tmx_t& tmx, const char *pathname, const gamestate_t& game) {
-	loadLevel(gState, tmx, pathname, game);
+void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname);
+void loadLevel(const tmx_t& tmx, const char *pathname) {
+	loadLevel(gState, tmx, pathname);
 }
 
 } // namespace te

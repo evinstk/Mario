@@ -5,8 +5,7 @@
 
 namespace te {
 
-void makeEntityWorld(worldstate_t& state,
-					 const gamestate_t& game) {
+void makeEntityWorld(worldstate_t& state) {
 	state.newEntityIDs.clear();
 	for (auto it = state.newEntityQueue.begin(), end = state.newEntityQueue.end(); it < end; ++it) {
 		entityid_t newID;
@@ -19,10 +18,10 @@ void makeEntityWorld(worldstate_t& state,
 		}
 		state.newEntityIDs.push_back(newID);
 	}
-	makeEntity(game);
+	makeEntityEntity();
 	for (const auto& newEntity : state.newEntityQueue) {
 		if (newEntity.type == entity_t::BLOCK_COIN) {
-			state.soundQueue.push_back(getSoundID(COIN_SOUND, game));
+			state.soundQueue.push_back(getSoundID(COIN_SOUND));
 		}
 	}
 	state.newEntityQueue.clear();

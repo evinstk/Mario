@@ -1,5 +1,4 @@
 #include "entity_state.hpp"
-#include "game_state.hpp"
 #include "world_state.hpp"
 
 namespace te {

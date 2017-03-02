@@ -1,5 +1,4 @@
 #include "sprite_renderer.hpp"
-#include "game_state.hpp"
 #include "world_state.hpp"
 #include "util.hpp"
 #include <tegl/types.hpp>
@@ -53,7 +52,7 @@ SpriteRenderer::SpriteRenderer()
 	assert( glGetError() == GL_NO_ERROR );
 }
 
-void SpriteRenderer::draw(const gamestate_t& state) {
+void SpriteRenderer::draw() {
 	glUseProgram(m_shader);
 
 	glUniformMatrix4fv(m_projectionLoc, 1, GL_FALSE, glm::value_ptr(gWorld.projection));

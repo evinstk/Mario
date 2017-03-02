@@ -1,14 +1,13 @@
 #include "game_action.hpp"
-#include "game_state.hpp"
 #include "util.hpp"
 
 namespace te {
 
-void runMusicCommandQueue(levelid_t levelID, const gamestate_t& game);
+void runMusicCommandQueue(levelid_t levelID);
 
-void runGame(gamestate_t& state, levelid_t levelID) {
+void runGame(levelid_t levelID) {
 	runWorld(levelID);
-	runMusicCommandQueue(levelID, state);
+	runMusicCommandQueue(levelID);
 }
 
 } // namespace te

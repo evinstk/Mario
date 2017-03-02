@@ -56,21 +56,21 @@ static void stepScore(int& score, int& coinCount, int& lives) {
 	}
 }
 
-static void stepDeathTrigger(bool& state, const gamestate_t& game) {
+static void stepDeathTrigger(bool& state) {
 	state = false;
 
 	float yPos = getTranslation(gWorld.playerEntity).y;
-	const auto& map = getMap(game);
+	const auto& map = getMap();
 	if (yPos > map.size.y * map.tileSize.y && gWorld.mode == worldmode_t::PLAY) {
 		state = true;
 	}
 }
 
-static void stepNewEntityQueue(vector_t<entityrequest_t>& state, const gamestate_t& game) {
+static void stepNewEntityQueue(vector_t<entityrequest_t>& state) {
 	for (entityid_t blockID : gEntity.hitGround) {
 		prize_t prize;
 		if (hasPrize(blockID, prize) && prize == prize_t::COIN) {
-			float yTileSize = getMap(game).tileSize.y;
+			float yTileSize = getMap().tileSize.y;
 			entityrequest_t newEntity = {
 				.type = entity_t::BLOCK_COIN,
 				.translation = getTranslation(blockID) + glm::vec3(0, -yTileSize, 0)
@@ -90,7 +90,7 @@ static void stepDestroyQueue(entityset_t& state) {
 	}
 }
 
-static void stepSoundQueue(vector_t<soundid_t>& state, const gamestate_t& game) {
+static void stepSoundQueue(vector_t<soundid_t>& state) {
 	for (entityid_t entityID : gEntity.hitGround) {
 		auto soundIt = gEntity.bounceSounds.find(entityID);
 		if (soundIt != gEntity.bounceSounds.end() && canBounce(entityID)) {
@@ -106,15 +106,15 @@ static void stepSoundQueue(vector_t<soundid_t>& state, const gamestate_t& game) 
 	}
 }
 
-void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
+void stepWorld(worldstate_t& state, float dt) {
 	stepMode(state.mode, state.modeElapsed, dt);
-	stepEntity(dt, gameState);
+	stepEntity(dt);
 	stepScore(state.score, state.coinCount, state.lives);
 	stepView(state.view, dt);
-	stepDeathTrigger(state.deathTrigger, gameState);
-	stepNewEntityQueue(state.newEntityQueue, gameState);
+	stepDeathTrigger(state.deathTrigger);
+	stepNewEntityQueue(state.newEntityQueue);
 	stepDestroyQueue(state.destroyQueue);
-	stepSoundQueue(state.soundQueue, gameState);
+	stepSoundQueue(state.soundQueue);
 }
 
 } // namespace te

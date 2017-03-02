@@ -1,19 +1,18 @@
 #include "entity_state.hpp"
-#include "game_state.hpp"
 
 namespace te {
 
 static entitystate_t gState;
 const entitystate_t& gEntity = gState;
 
-void inputEntity(entitystate_t& entity, const Uint8 *keyboardState, const gamestate_t& game);
-void inputEntity(const Uint8 *keyboardState, const gamestate_t& game) {
-	inputEntity(gState, keyboardState, game);
+void inputEntity(entitystate_t& entity, const Uint8 *keyboardState);
+void inputEntity(const Uint8 *keyboardState) {
+	inputEntity(gState, keyboardState);
 }
 
-void stepEntity(entitystate_t& entity, float dt, const gamestate_t& game);
-void stepEntity(float dt, const gamestate_t& game) {
-	stepEntity(gState, dt, game);
+void stepEntity(entitystate_t& entity, float dt);
+void stepEntity(float dt) {
+	stepEntity(gState, dt);
 }
 
 void runEntity(entitystate_t& entity, levelid_t levelID);
@@ -26,13 +25,13 @@ void processEntity(const SDL_Event& evt, entityid_t playerEntity, bool& jump) {
 	processEntity(gState, playerEntity, evt, jump);
 }
 
-void makeEntity(entitystate_t& entity, const gamestate_t& game);
-void makeEntity(const gamestate_t& game) {
-	makeEntity(gState, game);
+void makeEntity(entitystate_t& entity);
+void makeEntityEntity() {
+	makeEntity(gState);
 }
 
 void destroyEntity(entitystate_t& entity);
-void destroyEntity() {
+void destroyEntityEntity() {
 	destroyEntity(gState);
 }
 

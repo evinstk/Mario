@@ -1,4 +1,3 @@
-#include "game_state.hpp"
 #include "sprite_renderer.hpp"
 #include "text_renderer.hpp"
 #include "game_values.hpp"
@@ -69,14 +68,12 @@ static int MarioMain() {
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	gamestate_t gameState{};
-
 	{
 		chunkptr_t pCoinChunk(Mix_LoadWAV(COIN_SOUND), chunkdeleter_t());
-		loadSound(gameState, eastl::move(pCoinChunk), COIN_SOUND);
+		loadSound(eastl::move(pCoinChunk), COIN_SOUND);
 
 		chunkptr_t pJumpChunk(Mix_LoadWAV(JUMP_SOUND), chunkdeleter_t());
-		loadSound(gameState, eastl::move(pJumpChunk), JUMP_SOUND);
+		loadSound(eastl::move(pJumpChunk), JUMP_SOUND);
 	}
 
 	const char *tmxPathname = "tiled/1-1.tmx";
@@ -87,7 +84,7 @@ static int MarioMain() {
 	if (musicIt != tmx.properties.end()) {
 		std::string musicStr = "tiled/" + musicIt->second;
 		musicptr_t pMusic(Mix_LoadMUS(musicStr.c_str()), musicdeleter_t());
-		loadMusic(gameState, eastl::move(pMusic), musicStr.c_str());
+		loadMusic(eastl::move(pMusic), musicStr.c_str());
 	}
 
 	auto musicDieIt = tmx.properties.find("music-die");
@@ -95,14 +92,14 @@ static int MarioMain() {
 		std::string musicStr = "tiled/" + musicDieIt->second;
 		if (gSound->soundID.find_as(musicStr.c_str()) == gSound->soundID.end()) {
 			chunkptr_t pChunk(Mix_LoadWAV(musicStr.c_str()), chunkdeleter_t());
-			loadSound(gameState, eastl::move(pChunk), musicStr.c_str());
+			loadSound(eastl::move(pChunk), musicStr.c_str());
 		}
 	}
 
 	for (const auto& externalTileset : tmx.externalTilesets) {
 		std::string tilesetPathname = "tiled/" + externalTileset.source;
 		tsxtileset_t tileset(tilesetPathname.c_str());
-		loadGame(gameState, tileset, tilesetPathname.c_str());
+		loadGame(tileset, tilesetPathname.c_str());
 	}
 	for (const auto& group : tmx.objectgroups) {
 		for (const auto& object : group.objects) {
@@ -111,15 +108,15 @@ static int MarioMain() {
 				std::string wavPathname = "tiled/" + soundProp->second;
 				if (gSound->soundID.find_as(wavPathname.c_str()) == gSound->soundID.end()) {
 					chunkptr_t pChunk(Mix_LoadWAV(wavPathname.c_str()), chunkdeleter_t());
-					loadSound(gameState, eastl::move(pChunk), wavPathname.c_str());
+					loadSound(eastl::move(pChunk), wavPathname.c_str());
 				}
 			}
 		}
 	}
-	loadGame(gameState, tmx, tmxPathname);
+	loadGame(tmx, tmxPathname);
 
 	levelid_t levelID = gLevel.source.find(tmxPathname)->second;
-	runGame(gameState, levelID);
+	runGame(levelID);
 
 	SpriteRenderer spriteRenderer;
 	TextRenderer textRenderer;
@@ -140,16 +137,16 @@ static int MarioMain() {
 				if (evt.type == SDL_QUIT) {
 					running = false;
 				}
-				processGame(gameState, evt);
+				processGame(evt);
 			}
-			inputGame(gameState, SDL_GetKeyboardState(NULL));
-			stepGame(gameState, timePerFrame);
-			destroyEntity(gameState);
-			makeEntity(gameState);
+			inputGame(SDL_GetKeyboardState(NULL));
+			stepGame(timePerFrame);
+			destroyEntity();
+			makeEntity();
 		}
 
 		for (soundid_t soundID : gWorld.soundQueue) {
-			Mix_Chunk *pChunk = getChunk(soundID, gameState);
+			Mix_Chunk *pChunk = getChunk(soundID);
 			Mix_PlayChannel(-1, pChunk, 0);
 		}
 		flushSoundQueue();
@@ -160,7 +157,7 @@ static int MarioMain() {
 				Mix_PauseMusic();
 				break;
 			case musiccmd_t::PLAY:
-				Mix_Music *pMusic = getMusic(musicCmd.second, gameState);
+				Mix_Music *pMusic = getMusic(musicCmd.second);
 				Mix_PlayMusic(pMusic, -1);
 			}
 		}
@@ -168,7 +165,7 @@ static int MarioMain() {
 
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		spriteRenderer.draw(gameState);
+		spriteRenderer.draw();
 		std::string scoreStr = std::to_string(gWorld.score);
 		textRenderer.draw(scoreStr.c_str(), {0, FONT_PIXEL_SIZE}, gWorld.projection);
 		SDL_GL_SwapWindow(upWindow.get());

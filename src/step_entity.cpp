@@ -1,7 +1,6 @@
 #include "game_action.hpp"
 #include "entity_state.hpp"
 #include "world_state.hpp"
-#include "game_state.hpp"
 #include "tileset_state.hpp"
 #include "level_state.hpp"
 #include "level_object_state.hpp"
@@ -39,11 +38,11 @@ static int senseOnWall(int y,
 	return -1;
 }
 
-static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate_t& game) {
+static void stepWallOffsets(entitymap_t<float>& state, float dt) {
 	state.clear();
 
-	const layer_t& platformLayer = getPlatformLayer(game);
-	glm::vec2 tileSize = getMap(game).tileSize;
+	const layer_t& platformLayer = getPlatformLayer();
+	glm::vec2 tileSize = getMap().tileSize;
 
 	for (const auto& colliderRow : gEntity.colliders) {
 		entityid_t entityID = colliderRow.first;
@@ -71,7 +70,7 @@ static void stepWallOffsets(entitymap_t<float>& state, float dt, const gamestate
 			entityCollider.pos.y += entityCollider.size.y / 2;
 			entityCollider.size.y = 1;
 			for (entityid_t groundID : gEntity.isGround) {
-				aabb_t groundCollider = getCollider(groundID, game);
+				aabb_t groundCollider = getCollider(groundID);
 				groundCollider.pos += glm::vec2(getTranslation(groundID));
 				if (groundID != entityID && isColliding(entityCollider, groundCollider)) {
 					//offset = groundCollider.pos.x - translation.x - collider.pos.x - collider.size.x;
@@ -117,12 +116,11 @@ static int senseGround(int x,
 }
 
 static void stepColliders(entitymap_t<float>& groundOffsets,
-						  float dt,
-						  const gamestate_t& game) {
+						  float dt) {
 	groundOffsets.clear();
 
-	glm::ivec2 tileSize = getMap(game).tileSize;
-	const layer_t& platformLayer = getPlatformLayer(game);
+	glm::ivec2 tileSize = getMap().tileSize;
+	const layer_t& platformLayer = getPlatformLayer();
 
 	for (entityid_t entityID : gEntity.underGravity) {
 
@@ -158,7 +156,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 			entityCollider.pos.y += collider.size.y / 2;
 			entityCollider.size.y = (collider.size.y / 2) + 1;
 			for (entityid_t groundID : gEntity.isGround) {
-				aabb_t groundCollider = getCollider(groundID, game);
+				aabb_t groundCollider = getCollider(groundID);
 				groundCollider.pos += glm::vec2(getTranslation(groundID));
 				if (isColliding(entityCollider, groundCollider)) {
 					offset = groundCollider.pos.y - translation.y - collider.pos.y - collider.size.y;
@@ -175,8 +173,7 @@ static void stepColliders(entitymap_t<float>& groundOffsets,
 
 static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 							   entityset_t& hitGround,
-							   float dt,
-							   const gamestate_t& game) {
+							   float dt) {
 	ceilingOffsets.clear();
 	hitGround.clear();
 
@@ -186,12 +183,12 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 			continue;
 		}
 
-		aabb_t collider = getCollider(entityID, game);
+		aabb_t collider = getCollider(entityID);
 		float halfColliderSizeY = collider.size.y * 0.5f;
 		glm::vec2 translation = glm::vec2(getTranslation(entityID)) + velocity * dt;
 		translation.x += getWallOffset(entityID);
-		glm::vec2 tileSize = getMap(game).tileSize;
-		const layer_t& platformLayer = getPlatformLayer(game);
+		glm::vec2 tileSize = getMap().tileSize;
+		const layer_t& platformLayer = getPlatformLayer();
 
 		glm::vec2 start1 = translation + collider.pos + glm::vec2(2.0f, halfColliderSizeY);
 		glm::vec2 end1   = translation + collider.pos + glm::vec2(2.0f, 0.0f);
@@ -211,7 +208,7 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 			entityCollider.size.y /= 2;
 			for (entityid_t groundID : gEntity.isGround) {
 				glm::vec2 groundTranslation = getTranslation(groundID);
-				aabb_t groundCollider = getCollider(groundID, game);
+				aabb_t groundCollider = getCollider(groundID);
 				groundCollider.pos += groundTranslation;
 				if (isColliding(entityCollider, groundCollider)) {
 					ceilingOffsets[entityID] = collider.pos.y + groundCollider.pos.y + groundCollider.size.y - translation.y;
@@ -222,7 +219,7 @@ static void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets,
 	}
 }
 
-static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, const gamestate_t& game) {
+static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt) {
 	for (auto& row : state) {
 		bounceanim_t& anim = row.second;
 		if (anim.elapsed < anim.duration) {
@@ -242,7 +239,7 @@ static void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt, con
 	}
 }
 
-static void stepSpriteOffsets(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
+static void stepSpriteOffsets(entitymap_t<glm::vec3>& state) {
 	for (const auto& bounceRow : gEntity.bounceAnimations) {
 		entityid_t id = bounceRow.first;
 		const bounceanim_t& anim = bounceRow.second;
@@ -293,8 +290,7 @@ static void stepTranslations(entitymap_t<glm::vec3>& state, float dt) {
 }
 
 static void stepSpriteAnimators(entitymap_t<spriteanimator_t>& state,
-								float dt,
-								const gamestate_t& game) {
+								float dt) {
 	for (auto& row : state) {
 		row.second.elapsed += dt;
 	}
@@ -328,11 +324,11 @@ static void stepSpriteAnimators(entitymap_t<spriteanimator_t>& state,
 	}
 }
 
-static void stepSprites(entitymap_t<tileid_t>& state, const gamestate_t& game) {
+static void stepSprites(entitymap_t<tileid_t>& state) {
 	for (const auto& animatorRow : gEntity.spriteAnimators) {
 		const auto& animator = animatorRow.second;
 		animid_t animationID = animator.animation;
-		const auto& animation = getAnimation(animationID, game);
+		const auto& animation = getAnimation(animationID);
 		int elapsedMS = animator.elapsed * 1000;
 		int clampedElapsed = elapsedMS % animation.totalDuration;
 		int acc = 0;
@@ -363,7 +359,7 @@ static void stepLifetimes(entitymap_t<float>& state, float dt) {
 	}
 }
 
-static void stepBounceNum(entitymap_t<int>& state, const gamestate_t& game) {
+static void stepBounceNum(entitymap_t<int>& state) {
 	for (entityid_t groundID : gEntity.hitGround) {
 		auto bounceNumIt = state.find(groundID);
 		if (bounceNumIt != state.end()) {
@@ -372,7 +368,7 @@ static void stepBounceNum(entitymap_t<int>& state, const gamestate_t& game) {
 	}
 }
 
-static void stepCanBounce(entityset_t& state, const gamestate_t& game) {
+static void stepCanBounce(entityset_t& state) {
 	auto it = state.begin();
 	while (it != state.end()) {
 		auto bounceNumIt = gEntity.bounceNum.find(*it);
@@ -384,7 +380,7 @@ static void stepCanBounce(entityset_t& state, const gamestate_t& game) {
 	}
 }
 
-static void stepPrizeNum(entitymap_t<int>& state, const gamestate_t& game) {
+static void stepPrizeNum(entitymap_t<int>& state) {
 	for (entityid_t entityID : gEntity.hitGround) {
 		auto prizeIt = state.find(entityID);
 		if (prizeIt != state.end()) {
@@ -393,7 +389,7 @@ static void stepPrizeNum(entitymap_t<int>& state, const gamestate_t& game) {
 	}
 }
 
-static void stepPrizes(entitymap_t<prize_t>& state, const gamestate_t& game) {
+static void stepPrizes(entitymap_t<prize_t>& state) {
 	auto it = state.begin();
 	while (it != state.end()) {
 		entityid_t entityID = it->first;
@@ -406,26 +402,26 @@ static void stepPrizes(entitymap_t<prize_t>& state, const gamestate_t& game) {
 	}
 }
 
-void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
-	stepWallOffsets(state.wallOffsets, dt, game);
-	stepColliders(state.groundOffsets, dt, game);
-	stepCeilingOffsets(state.ceilingOffsets, state.hitGround, dt, game);
+void stepEntity(entitystate_t& state, float dt) {
+	stepWallOffsets(state.wallOffsets, dt);
+	stepColliders(state.groundOffsets, dt);
+	stepCeilingOffsets(state.ceilingOffsets, state.hitGround, dt);
 
-	stepBounceAnimations(state.bounceAnimations, dt, game);
-	stepSpriteOffsets(state.spriteOffsets, game);
+	stepBounceAnimations(state.bounceAnimations, dt);
+	stepSpriteOffsets(state.spriteOffsets);
 
 	stepTranslations(state.translations, dt);
 	stepVelocities(state.velocities);
-	stepSpriteAnimators(state.spriteAnimators, dt, game);
+	stepSpriteAnimators(state.spriteAnimators, dt);
 	auto levelTilesetsIt = gLevel.tilesets.find(gWorld.level);
 	assert(levelTilesetsIt != gLevel.tilesets.end());
-	stepSprites(state.tilesetSprites, game);
+	stepSprites(state.tilesetSprites);
 
-	stepCanBounce(state.canBounce, game);
-	stepBounceNum(state.bounceNum, game);
+	stepCanBounce(state.canBounce);
+	stepBounceNum(state.bounceNum);
 
-	stepPrizes(state.prizes, game);
-	stepPrizeNum(state.prizeNum, game);
+	stepPrizes(state.prizes);
+	stepPrizeNum(state.prizeNum);
 
 	stepLifetimes(state.lifetimes, dt);
 }

@@ -1,11 +1,10 @@
 #include "game_action.hpp"
 #include "entity_state.hpp"
-#include "game_state.hpp"
 #include "world_state.hpp"
 
 namespace te {
 
-void inputEntity(entitystate_t& state, const Uint8 *keyboard, const gamestate_t& game) {
+void inputEntity(entitystate_t& state, const Uint8 *keyboard) {
 	static constexpr float SPEED = 3 * 32.0f;
 
 	if (gWorld.mode != worldmode_t::PLAY) {

@@ -4,13 +4,11 @@
 
 namespace te {
 
-struct gamestate_t;
-
 class SpriteRenderer {
 public:
 	SpriteRenderer();
 
-	void draw(const gamestate_t& state);
+	void draw();
 private:
 	ShaderProgram m_shader;
 

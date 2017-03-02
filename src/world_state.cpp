@@ -1,7 +1,6 @@
 #include "world_state.hpp"
 #include "camera.hpp"
 #include "game_values.hpp"
-#include "game_state.hpp"
 #include <glm/gtx/transform.hpp>
 
 namespace te {
@@ -26,29 +25,29 @@ void runWorld(levelid_t levelID) {
 	runWorld(gState, levelID);
 }
 
-void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
-void processWorld(const SDL_Event& evt, const gamestate_t& game) {
-	processWorld(gState, evt, game);
+void processWorld(worldstate_t& state, const SDL_Event& evt);
+void processWorld(const SDL_Event& evt) {
+	processWorld(gState, evt);
 }
 
-void inputWorld(worldstate_t& state, const Uint8 *keyboardState, const gamestate_t& game);
-void inputWorld(const Uint8 *keyboardState, const gamestate_t& game) {
-	inputWorld(gState, keyboardState, game);
+void inputWorld(worldstate_t& state, const Uint8 *keyboardState);
+void inputWorld(const Uint8 *keyboardState) {
+	inputWorld(gState, keyboardState);
 }
 
-void stepWorld(worldstate_t& state, float dt, const gamestate_t& game);
-void stepWorld(float dt, const gamestate_t& game) {
-	stepWorld(gState, dt, game);
+void stepWorld(worldstate_t& state, float dt);
+void stepWorld(float dt) {
+	stepWorld(gState, dt);
 }
 
-void makeEntityWorld(worldstate_t& state, const gamestate_t& game);
-void makeEntityWorld(const gamestate_t& game) {
-	makeEntityWorld(gState, game);
+void makeEntityWorld(worldstate_t& state);
+void makeEntityWorld() {
+	makeEntityWorld(gState);
 }
 
-void destroyEntityWorld(worldstate_t& state, const gamestate_t& game);
-void destroyEntityWorld(const gamestate_t& game) {
-	destroyEntityWorld(gState, game);
+void destroyEntityWorld(worldstate_t& state);
+void destroyEntityWorld() {
+	destroyEntityWorld(gState);
 }
 
 void flushSoundQueue(worldstate_t& state);
