@@ -19,6 +19,9 @@
 
 namespace te {
 
+void initGame();
+void quitGame();
+
 struct Libs {
 	Libs() {
 		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -32,8 +35,11 @@ struct Libs {
 		iluInit();
 		ilClearColour(255, 255, 255, 0);
 		assert(ilGetError() == IL_NO_ERROR);
+
+		initGame();
 	}
 	~Libs() {
+		quitGame();
 		Mix_Quit();
 		SDL_Quit();
 	}
@@ -87,7 +93,7 @@ static int MarioMain() {
 	auto musicDieIt = tmx.properties.find("music-die");
 	if (musicDieIt != tmx.properties.end()) {
 		std::string musicStr = "tiled/" + musicDieIt->second;
-		if (gSound.soundID.find_as(musicStr.c_str()) == gSound.soundID.end()) {
+		if (gSound->soundID.find_as(musicStr.c_str()) == gSound->soundID.end()) {
 			chunkptr_t pChunk(Mix_LoadWAV(musicStr.c_str()), chunkdeleter_t());
 			loadSound(gameState, eastl::move(pChunk), musicStr.c_str());
 		}
@@ -103,7 +109,7 @@ static int MarioMain() {
 			auto soundProp = object.properties.find("bounce-sound");
 			if (soundProp != object.properties.end()) {
 				std::string wavPathname = "tiled/" + soundProp->second;
-				if (gSound.soundID.find_as(wavPathname.c_str()) == gSound.soundID.end()) {
+				if (gSound->soundID.find_as(wavPathname.c_str()) == gSound->soundID.end()) {
 					chunkptr_t pChunk(Mix_LoadWAV(wavPathname.c_str()), chunkdeleter_t());
 					loadSound(gameState, eastl::move(pChunk), wavPathname.c_str());
 				}

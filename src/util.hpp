@@ -74,19 +74,19 @@ inline bool hasPrize(entityid_t blockID, prize_t& prize) {
 }
 
 inline soundid_t getSoundID(const char *pathname, const gamestate_t& game) {
-	return gSound.soundID.find_as(pathname)->second;
+	return gSound->soundID.find_as(pathname)->second;
 }
 
 inline Mix_Chunk *getChunk(soundid_t soundID, const gamestate_t& game) {
-	return gSound.chunk.find(soundID)->second.get();
+	return gSound->chunk.find(soundID)->second.get();
 }
 
 inline musicid_t getMusicID(const char *pathname, const gamestate_t& game) {
-	return gSound.musicID.find_as(pathname)->second;
+	return gSound->musicID.find_as(pathname)->second;
 }
 
 inline Mix_Music *getMusic(musicid_t musicID, const gamestate_t& game) {
-	return gSound.music.find(musicID)->second.get();
+	return gSound->music.find(musicID)->second.get();
 }
 
 inline bool canBounce(entityid_t entityID) {
