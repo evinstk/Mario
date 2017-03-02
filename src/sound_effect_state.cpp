@@ -10,8 +10,8 @@ const soundeffectstate_t& gSoundEffect = gState;
 
 void runMusicCommandQueue(levelid_t levelID,
 								 const gamestate_t& game) {
-	auto musicIt = game.level.music.find(levelID);
-	if (musicIt != game.level.music.end()) {
+	auto musicIt = gLevel.music.find(levelID);
+	if (musicIt != gLevel.music.end()) {
 		gState.musicCommandQueue.push_back({ musiccmd_t::PLAY, musicIt->second });
 	}
 }

@@ -3,6 +3,7 @@
 #include "tileset_state.hpp"
 #include "sound_state.hpp"
 #include "game_state.hpp"
+#include "level_state.hpp"
 #include "world_state.hpp"
 #include "entity_state.hpp"
 #include <glm/gtx/transform.hpp>
@@ -14,13 +15,13 @@ inline bool isValid(tileid_t tile) {
 }
 
 inline const layer_t& getPlatformLayer(const gamestate_t& game) {
-	int platformIndex = game.level.platformIndex.find(gWorld.level)->second;
+	int platformIndex = gLevel.platformIndex.find(gWorld.level)->second;
 	const layer_t& platformLayer = gWorld.layers[platformIndex];
 	return platformLayer;
 }
 
 inline const map_t& getMap(const gamestate_t& game) {
-	return game.level.map.find(gWorld.level)->second;
+	return gLevel.map.find(gWorld.level)->second;
 }
 
 inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {

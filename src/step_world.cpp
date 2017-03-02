@@ -99,8 +99,8 @@ static void stepSoundQueue(vector_t<soundid_t>& state, const gamestate_t& game) 
 	}
 
 	if (gWorld.deathTrigger) {
-		auto soundIt = game.level.dieMusic.find(gWorld.level);
-		if (soundIt != game.level.dieMusic.end()) {
+		auto soundIt = gLevel.dieMusic.find(gWorld.level);
+		if (soundIt != gLevel.dieMusic.end()) {
 			state.push_back(soundIt->second);
 		}
 	}

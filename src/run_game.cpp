@@ -7,7 +7,7 @@ namespace te {
 void runMusicCommandQueue(levelid_t levelID, const gamestate_t& game);
 
 void runGame(gamestate_t& state, levelid_t levelID) {
-	runWorld(levelID, state.level);
+	runWorld(levelID);
 	runMusicCommandQueue(levelID, state);
 }
 

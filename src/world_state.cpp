@@ -14,15 +14,16 @@ worldstate_t::worldstate_t()
 	, score(0)
 	, coinCount(0)
 	, lives(LIVE_COUNT_START)
+	, deathTrigger(false)
 {
 }
 
 static worldstate_t gState;
 const worldstate_t& gWorld = gState;
 
-void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& level);
-void runWorld(levelid_t levelID, const levelstate_t& level) {
-	runWorld(gState, levelID, level);
+void runWorld(worldstate_t& state, levelid_t levelID);
+void runWorld(levelid_t levelID) {
+	runWorld(gState, levelID);
 }
 
 void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);

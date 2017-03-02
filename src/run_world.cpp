@@ -6,8 +6,8 @@
 
 namespace te {
 
-static void runNextEntityID(int& state, levelid_t levelID, const levelstate_t& level) {
-	state = level.nextObjectID.find(levelID)->second;
+static void runNextEntityID(int& state, levelid_t levelID) {
+	state = gLevel.nextObjectID.find(levelID)->second;
 }
 
 static void runPlayerEntity(entityid_t& playerEntity, levelid_t levelID, const levelmap_t<int>& playerObjectState) {
@@ -21,18 +21,18 @@ static void runView(glm::imat4& view,
 	setView(view, playerTranslation);
 }
 
-void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState) {
+void runWorld(worldstate_t& state, levelid_t levelID) {
 	// clear world state on run
 	state = worldstate_t();
 
 	state.level = levelID;
-	auto layersIt = levelState.layers.find(levelID);
-	assert(layersIt != levelState.layers.end());
+	auto layersIt = gLevel.layers.find(levelID);
+	assert(layersIt != gLevel.layers.end());
 	state.layers = layersIt->second;
 
 	runEntity(levelID);
-	runNextEntityID(state.nextEntityID, levelID, levelState);
-	runPlayerEntity(state.playerEntity, levelID, levelState.playerObject);
+	runNextEntityID(state.nextEntityID, levelID);
+	runPlayerEntity(state.playerEntity, levelID, gLevel.playerObject);
 	runView(state.view, getTranslation(state.playerEntity));
 }
 

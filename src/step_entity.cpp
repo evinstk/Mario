@@ -417,8 +417,8 @@ void stepEntity(entitystate_t& state, float dt, const gamestate_t& game) {
 	stepTranslations(state.translations, dt);
 	stepVelocities(state.velocities);
 	stepSpriteAnimators(state.spriteAnimators, dt, game);
-	auto levelTilesetsIt = game.level.tilesets.find(gWorld.level);
-	assert(levelTilesetsIt != game.level.tilesets.end());
+	auto levelTilesetsIt = gLevel.tilesets.find(gWorld.level);
+	assert(levelTilesetsIt != gLevel.tilesets.end());
 	stepSprites(state.tilesetSprites, game);
 
 	stepCanBounce(state.canBounce, game);

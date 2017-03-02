@@ -24,7 +24,7 @@ static void loadTiles(levelobjectmap_t<tileid_t>& state,
 					  const gamestate_t& game) {
 
 	const auto& tmxTilesets = tmx.externalTilesets;
-	const auto& tilesets = game.level.tilesets.find(levelID)->second;
+	const auto& tilesets = gLevel.tilesets.find(levelID)->second;
 	assert(tmxTilesets.size() == tilesets.size());
 
 	for (const auto& group : tmx.objectgroups) {

@@ -63,8 +63,8 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray( m_vertexArray );
 
-	auto mapIt = state.level.map.find(gWorld.level);
-	assert(mapIt != state.level.map.end());
+	auto mapIt = gLevel.map.find(gWorld.level);
+	assert(mapIt != gLevel.map.end());
 	const auto& map = mapIt->second;
 
 	eastl::vector<glm::ivec3> translations;
@@ -72,8 +72,8 @@ void SpriteRenderer::draw(const gamestate_t& state) {
 	eastl::vector<tileid_t> markedTiles;
 
 	// iterate tilesets in outer loop to minimize texture bindings
-	auto tilesetsIt = state.level.tilesets.find(gWorld.level);
-	assert(tilesetsIt != state.level.tilesets.end());
+	auto tilesetsIt = gLevel.tilesets.find(gWorld.level);
+	assert(tilesetsIt != gLevel.tilesets.end());
 	const auto& tilesets = tilesetsIt->second;
 	for (const auto& layerTileset : tilesets) {
 		auto tilesetIt = gTileset.tileset.find(layerTileset.tileset);

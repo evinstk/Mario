@@ -21,4 +21,6 @@ struct levelstate_t {
 	levelmap_t<soundid_t> dieMusic;
 };
 
+extern const levelstate_t& gLevel;
+
 } // namespace te

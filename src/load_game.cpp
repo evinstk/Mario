@@ -8,7 +8,7 @@ void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathn
 }
 
 void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname) {
-	loadLevel(state.level, tmx, pathname, state);
+	loadLevel(tmx, pathname, state);
 }
 
 void loadSound(gamestate_t& state, chunkptr_t&& chunk, const char *pathname) {

@@ -25,6 +25,7 @@ add_executable(mario
   text_renderer.cpp
   tileset_state.cpp
   sound_state.cpp
+  level_state.cpp
   level_object_state.cpp
   world_state.cpp
   entity_state.cpp
@@ -40,7 +41,7 @@ add_executable(mario
   destroy_entity_entity.cpp
   flush_sound_queue.cpp)
 
-set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_ASSERT_ENABLED -DEASTL_MOVE_SEMANTICS_ENABLED -DGLM_PRECISION_HIGHP_INT")
+set_target_properties(mario PROPERTIES COMPILE_FLAGS "-Wall -std=c++14 -DEASTL_DLL -DEASTL_EXCEPTIONS_ENABLED -DEASTL_ASSERT_ENABLED -DEASTL_MOVE_SEMANTICS_ENABLED -DGLM_PRECISION_HIGHP_INT")
 
 target_include_directories(mario PRIVATE ${SDL2_INCLUDE_DIRS} /usr/local/include ~/usr/local/include /usr/include/freetype2)
 target_link_libraries(mario SDL2 SDL2main SDL2_mixer GL EASTL tegl GLEW IL ILU freetype)

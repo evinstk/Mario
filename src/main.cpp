@@ -69,7 +69,7 @@ static int MarioMain() {
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	gamestate_t gameState;
+	gamestate_t gameState{};
 
 	{
 		chunkptr_t pCoinChunk(Mix_LoadWAV(COIN_SOUND), chunkdeleter_t());
@@ -118,7 +118,7 @@ static int MarioMain() {
 	}
 	loadGame(gameState, tmx, tmxPathname);
 
-	levelid_t levelID = gameState.level.source.find(tmxPathname)->second;
+	levelid_t levelID = gLevel.source.find(tmxPathname)->second;
 	runGame(gameState, levelID);
 
 	SpriteRenderer spriteRenderer;
