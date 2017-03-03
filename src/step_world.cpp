@@ -90,11 +90,11 @@ static void stepDestroyQueue(entityset_t& state) {
 	}
 }
 
-static void stepSoundQueue(vector_t<soundid_t>& state) {
+static void stepSoundQueue(eastl::vector_set<soundid_t>& state) {
 	for (entityid_t entityID : gEntity.hitGround) {
 		auto soundIt = gEntity.bounceSounds.find(entityID);
 		if (soundIt != gEntity.bounceSounds.end() && canBounce(entityID)) {
-			state.push_back(soundIt->second);
+			state.insert(soundIt->second);
 		}
 	}
 

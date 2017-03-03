@@ -5,6 +5,7 @@
 #include <tegl/types.hpp>
 #include <EASTL/vector_map.h>
 #include <EASTL/vector.h>
+#include <EASTL/vector_set.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_integer.hpp>
 #include <GL/glew.h>
@@ -37,7 +38,7 @@ struct worldstate_t {
 	vector_t<entityid_t> newEntityIDs;
 	entityset_t destroyQueue;
 
-	vector_t<soundid_t> soundQueue;
+	eastl::vector_set<soundid_t> soundQueue;
 };
 
 extern const worldstate_t& gWorld;
