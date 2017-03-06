@@ -146,7 +146,7 @@ static int MarioMain() {
 		}
 		flushSoundQueue(gameState);
 
-		for (auto musicCmd : gameState.musicCommandQueue) {
+		for (auto musicCmd : gameState.soundEffect.musicCommandQueue) {
 			switch (musicCmd.first) {
 			case musiccmd_t::PAUSE:
 				Mix_PauseMusic();
@@ -156,7 +156,7 @@ static int MarioMain() {
 				Mix_PlayMusic(pMusic, -1);
 			}
 		}
-		flushMusicCommandQueue(gameState);
+		gameState.soundEffect.flush();
 
 		glClearColor(0, 0, 0, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

@@ -3,8 +3,7 @@
 #include "sound_state.hpp"
 #include "level_state.hpp"
 #include "world_state.hpp"
-#include "types.hpp"
-#include <EASTL/vector.h>
+#include "sound_effect_state.hpp"
 
 namespace te {
 
@@ -14,7 +13,11 @@ struct gamestate_t {
 	levelstate_t level;
 	worldstate_t world;
 
-	eastl::vector<std::pair<musiccmd_t, musicid_t>> musicCommandQueue;
+	soundeffectstate_t soundEffect;
+
+	gamestate_t()
+		: soundEffect(*this)
+	{}
 };
 
 } // namespace te
