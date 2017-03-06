@@ -1,10 +1,10 @@
 #include "game_action.hpp"
-#include "world_state.hpp"
+#include "game_state.hpp"
 
 namespace te {
 
-void flushSoundQueue(worldstate_t& state) {
-	state.soundQueue.clear();
+void flushSoundQueue(gamestate_t& state) {
+	state.world.soundQueue.clear();
 }
 
 } // namespace te

@@ -1,4 +1,5 @@
 #pragma once
+#include "level_object_state.hpp"
 #include "types.hpp"
 
 namespace te {
@@ -14,13 +15,13 @@ struct levelstate_t {
 	levelmap_t<vector_t<layer_t>> layers;
 	levelmap_t<int> platformIndex;
 
+	levelobjectstate_t objects;
+
 	levelmap_t<int> nextObjectID;
 	levelmap_t<int> playerObject;
 
 	levelmap_t<musicid_t> music;
 	levelmap_t<soundid_t> dieMusic;
 };
-
-extern const levelstate_t& gLevel;
 
 } // namespace te

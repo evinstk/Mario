@@ -21,6 +21,7 @@ struct worldstate_t {
 	glm::mat4 projection;
 	glm::imat4 view;
 
+	entitystate_t entity;
 	int nextEntityID;
 	entityset_t freeIDs;
 
@@ -40,7 +41,5 @@ struct worldstate_t {
 
 	eastl::vector_set<soundid_t> soundQueue;
 };
-
-extern const worldstate_t& gWorld;
 
 } // namespace te

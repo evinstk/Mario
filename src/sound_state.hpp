@@ -21,6 +21,4 @@ struct soundstate_t {
 	musicmap_t<musicptr_t> music;
 };
 
-extern const soundstate_t *gSound;
-
 } // namespace te

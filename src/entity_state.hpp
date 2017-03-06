@@ -37,6 +37,4 @@ struct entitystate_t {
 	entitymap_t<float> lifetimes;
 };
 
-extern const entitystate_t& gEntity;
-
 } // namespace te

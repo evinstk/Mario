@@ -1,10 +1,6 @@
 #pragma once
 #include "types.hpp"
-#include "tileset_state.hpp"
-#include "sound_state.hpp"
-#include "level_state.hpp"
-#include "world_state.hpp"
-#include "entity_state.hpp"
+#include "game_state.hpp"
 #include <glm/gtx/transform.hpp>
 
 namespace te {
@@ -13,14 +9,14 @@ inline bool isValid(tileid_t tile) {
 	return tile.id.first.id > 0;
 }
 
-inline const layer_t& getPlatformLayer() {
-	int platformIndex = gLevel.platformIndex.find(gWorld.level)->second;
-	const layer_t& platformLayer = gWorld.layers[platformIndex];
+inline const layer_t& getPlatformLayer(const gamestate_t& game) {
+	int platformIndex = game.level.platformIndex.find(game.world.level)->second;
+	const layer_t& platformLayer = game.world.layers[platformIndex];
 	return platformLayer;
 }
 
-inline const map_t& getMap() {
-	return gLevel.map.find(gWorld.level)->second;
+inline const map_t& getMap(const gamestate_t& game) {
+	return game.level.map.find(game.world.level)->second;
 }
 
 inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {
@@ -29,24 +25,24 @@ inline void setView(glm::imat4& view, const glm::vec3& playerTranslation) {
 									 0));
 }
 
-inline const glm::vec3& getTranslation(entityid_t entityID) {
-	return gEntity.translations.find(entityID)->second;
+inline const glm::vec3& getTranslation(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.translations.find(entityID)->second;
 }
 
-inline const aabb_t& getCollider(entityid_t entityID) {
-	return gTileset.collider.find(gEntity.colliders.find(entityID)->second)->second;
+inline const aabb_t& getCollider(entityid_t entityID, const gamestate_t& game) {
+	return game.tileset.collider.find(game.world.entity.colliders.find(entityID)->second)->second;
 }
 
-inline const glm::vec3& getVelocity(entityid_t entityID) {
-	return gEntity.velocities.find(entityID)->second;
+inline const glm::vec3& getVelocity(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.velocities.find(entityID)->second;
 }
 
-inline float getWallOffset(entityid_t entityID) {
-	return gEntity.wallOffsets.find(entityID)->second;
+inline float getWallOffset(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.wallOffsets.find(entityID)->second;
 }
 
-inline const animation_t& getAnimation(animid_t id) {
-	return gTileset.animation.find(id)->second;
+inline const animation_t& getAnimation(animid_t id, const gamestate_t& game) {
+	return game.tileset.animation.find(id)->second;
 }
 
 inline bool isColliding(const aabb_t& aabb1, const aabb_t& aabb2) {
@@ -64,41 +60,41 @@ inline eastl::pair<typename Container::const_iterator, typename Container::const
 	};
 }
 
-inline bool hasPrize(entityid_t blockID, prize_t& prize) {
-	auto prizeIt = gEntity.prizes.find(blockID);
-	if (prizeIt != gEntity.prizes.end()) {
+inline bool hasPrize(entityid_t blockID, prize_t& prize, const gamestate_t& game) {
+	auto prizeIt = game.world.entity.prizes.find(blockID);
+	if (prizeIt != game.world.entity.prizes.end()) {
 		prize = prizeIt->second;
 		return true;
 	}
 	return false;
 }
 
-inline soundid_t getSoundID(const char *pathname) {
-	return gSound->soundID.find_as(pathname)->second;
+inline soundid_t getSoundID(const char *pathname, const gamestate_t& game) {
+	return game.sound.soundID.find_as(pathname)->second;
 }
 
-inline Mix_Chunk *getChunk(soundid_t soundID) {
-	return gSound->chunk.find(soundID)->second.get();
+inline Mix_Chunk *getChunk(soundid_t soundID, const gamestate_t& game) {
+	return game.sound.chunk.find(soundID)->second.get();
 }
 
-inline musicid_t getMusicID(const char *pathname) {
-	return gSound->musicID.find_as(pathname)->second;
+inline musicid_t getMusicID(const char *pathname, const gamestate_t& game) {
+	return game.sound.musicID.find_as(pathname)->second;
 }
 
-inline Mix_Music *getMusic(musicid_t musicID) {
-	return gSound->music.find(musicID)->second.get();
+inline Mix_Music *getMusic(musicid_t musicID, const gamestate_t& game) {
+	return game.sound.music.find(musicID)->second.get();
 }
 
-inline bool canBounce(entityid_t entityID) {
-	return gEntity.canBounce.find(entityID) != gEntity.canBounce.end();
+inline bool canBounce(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.canBounce.find(entityID) != game.world.entity.canBounce.end();
 }
 
-inline int getPrizeNum(entityid_t entityID) {
-	return gEntity.prizeNum.find(entityID)->second;
+inline int getPrizeNum(entityid_t entityID, const gamestate_t& game) {
+	return game.world.entity.prizeNum.find(entityID)->second;
 }
 
-inline tileid_t getTileID(const char *strID) {
-	return gTileset.tileID.find_as(strID)->second;
+inline tileid_t getTileID(const char *strID, const gamestate_t& game) {
+	return game.tileset.tileID.find_as(strID)->second;
 }
 
 } // namespace te

@@ -13,46 +13,7 @@ worldstate_t::worldstate_t()
 	, score(0)
 	, coinCount(0)
 	, lives(LIVE_COUNT_START)
-	, deathTrigger(false)
 {
-}
-
-static worldstate_t gState;
-const worldstate_t& gWorld = gState;
-
-void runWorld(worldstate_t& state, levelid_t levelID);
-void runWorld(levelid_t levelID) {
-	runWorld(gState, levelID);
-}
-
-void processWorld(worldstate_t& state, const SDL_Event& evt);
-void processWorld(const SDL_Event& evt) {
-	processWorld(gState, evt);
-}
-
-void inputWorld(worldstate_t& state, const Uint8 *keyboardState);
-void inputWorld(const Uint8 *keyboardState) {
-	inputWorld(gState, keyboardState);
-}
-
-void stepWorld(worldstate_t& state, float dt);
-void stepWorld(float dt) {
-	stepWorld(gState, dt);
-}
-
-void makeEntityWorld(worldstate_t& state);
-void makeEntityWorld() {
-	makeEntityWorld(gState);
-}
-
-void destroyEntityWorld(worldstate_t& state);
-void destroyEntityWorld() {
-	destroyEntityWorld(gState);
-}
-
-void flushSoundQueue(worldstate_t& state);
-void flushSoundQueue() {
-	flushSoundQueue(gState);
 }
 
 } // namespace te

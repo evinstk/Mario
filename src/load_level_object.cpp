@@ -1,5 +1,6 @@
 #include "game_action.hpp"
 #include "level_object_state.hpp"
+#include "game_state.hpp"
 #include "util.hpp"
 
 namespace te {
@@ -19,10 +20,11 @@ static void loadTranslations(levelobjectmap_t<glm::vec3>& state,
 
 static void loadTiles(levelobjectmap_t<tileid_t>& state,
 					  const tmx_t& tmx,
-					  levelid_t levelID) {
+					  levelid_t levelID,
+					  const gamestate_t& game) {
 
 	const auto& tmxTilesets = tmx.externalTilesets;
-	const auto& tilesets = gLevel.tilesets.find(levelID)->second;
+	const auto& tilesets = game.level.tilesets.find(levelID)->second;
 	assert(tmxTilesets.size() == tilesets.size());
 
 	for (const auto& group : tmx.objectgroups) {
@@ -65,8 +67,9 @@ void load(levelobjectmap_t<ID>& state,
 
 static void loadColliders(levelobjectmap_t<colliderid_t>& state,
 						  const tmx_t& tmx,
-						  levelid_t levelID) {
-	load(state, tmx, levelID, "collider", gTileset.colliderID);
+						  levelid_t levelID,
+						  const gamestate_t& game) {
+	load(state, tmx, levelID, "collider", game.tileset.colliderID);
 }
 
 static void loadGravities(levelobjectset_t& state,
@@ -118,14 +121,15 @@ static void loadPrizes(levelobjectmap_t<prize_t>& state,
 
 static void loadBounceSounds(levelobjectmap_t<soundid_t>& state,
 							 const tmx_t& tmx,
-							 levelid_t levelID) {
+							 levelid_t levelID,
+							 const gamestate_t& game) {
 	for (const auto& group : tmx.objectgroups) {
 		for (const auto& object : group.objects) {
 			auto soundPropIt = object.properties.find("bounce-sound");
 			if (soundPropIt != object.properties.end()) {
 				levelobjectid_t objectID({ levelID, object.id });
 				const std::string& soundPathname = "tiled/" + soundPropIt->second;
-				soundid_t soundID = getSoundID(soundPathname.c_str());
+				soundid_t soundID = getSoundID(soundPathname.c_str(), game);
 				state.insert({ objectID, soundID });
 			}
 		}
@@ -176,27 +180,28 @@ static void loadPrizeNum(levelobjectmap_t<int>& state,
 
 static inline void loadEmptyTiles(levelobjectmap_t<tileid_t>& state,
 								  const tmx_t& tmx,
-								  levelid_t levelID) {
-	load(state, tmx, levelID, "empty-tile", gTileset.tileID);
+								  levelid_t levelID,
+								  const gamestate_t& game) {
+	load(state, tmx, levelID, "empty-tile", game.tileset.tileID);
 }
 
-void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID) {
+void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
 	loadTranslations(state.translations, tmx, levelID);
-	loadTiles(state.tiles, tmx, levelID);
+	loadTiles(state.tiles, tmx, levelID, game);
 
-	load(state.animations, tmx, levelID, "animation", gTileset.animationID);
-	load(state.animationsLeft, tmx, levelID, "anim-left", gTileset.animationID);
-	load(state.animationsRight, tmx, levelID, "anim-right", gTileset.animationID);
+	load(state.animations, tmx, levelID, "animation", game.tileset.animationID);
+	load(state.animationsLeft, tmx, levelID, "anim-left", game.tileset.animationID);
+	load(state.animationsRight, tmx, levelID, "anim-right", game.tileset.animationID);
 
-	loadColliders(state.colliders, tmx, levelID);
+	loadColliders(state.colliders, tmx, levelID, game);
 	loadGravities(state.gravities, tmx, levelID);
 	loadGrounds(state.grounds, tmx, levelID);
 
 	loadPrizes(state.prizes, tmx, levelID);
 	loadPrizeNum(state.prizeNum, tmx, levelID);
-	loadEmptyTiles(state.emptyTiles, tmx, levelID);
+	loadEmptyTiles(state.emptyTiles, tmx, levelID, game);
 
-	loadBounceSounds(state.bounceSounds, tmx, levelID);
+	loadBounceSounds(state.bounceSounds, tmx, levelID, game);
 	loadCanBounce(state.canBounce, tmx, levelID);
 	loadBounceNum(state.bounceNum, tmx, levelID);
 }

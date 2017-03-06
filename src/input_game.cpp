@@ -1,9 +1,10 @@
 #include "game_action.hpp"
+#include "game_state.hpp"
 
 namespace te {
 
-void inputGame(const Uint8 *keyboardState) {
-	inputWorld(keyboardState);
+void inputGame(gamestate_t& state, const Uint8 *keyboardState) {
+	inputWorld(state.world, keyboardState, state);
 }
 
 } // namespace te

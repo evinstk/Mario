@@ -7,6 +7,7 @@
 
 namespace te {
 
+struct gamestate_t;
 struct worldstate_t;
 struct entitystate_t;
 struct tilesetstate_t;
@@ -14,42 +15,43 @@ struct soundstate_t;
 struct levelstate_t;
 struct levelobjectstate_t;
 
-void inputGame(const Uint8 *keyboardState);
-void inputWorld(const Uint8 *keyboardState);
-void inputEntity(const Uint8 *keyboardState);
+void inputGame(gamestate_t& state, const Uint8 *keyboardState);
+void inputWorld(worldstate_t& state, const Uint8 *keyboardState, const gamestate_t& game);
+void inputEntity(entitystate_t& state, const Uint8 *keyboardState, const gamestate_t& game);
 
-void stepGame(float dt);
-void stepWorld(float dt);
-void stepEntity(float dt);
+void stepGame(gamestate_t& state, float dt);
+void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState);
+void stepEntity(entitystate_t& state, float dt, const gamestate_t& gameState);
 
-void loadGame(const tsxtileset_t& tileset, const char *pathname);
-void loadTileset(const tsxtileset_t& tileset, const char *pathname);
+void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
+void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
 
-void loadSound(chunkptr_t&& chunk, const char *pathname);
+void loadSound(gamestate_t& state, chunkptr_t&& chunk, const char* pathname);
+void loadSound(soundstate_t& state, chunkptr_t&& chunk, const char *pathname);
 
-void loadMusic(musicptr_t&& chunk, const char *pathname);
+void loadMusic(gamestate_t& state, musicptr_t&& chunk, const char* pathname);
+void loadMusic(soundstate_t& state, musicptr_t&& chunk, const char *pathname);
 
-void loadGame(const tmx_t& tmx, const char *pathname);
-void loadLevel(const tmx_t& tmx, const char *pathname);
-void loadLevelObjects(const tmx_t& tmx, levelid_t levelID);
+void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname);
+void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game);
+void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game);
 
-void runGame(levelid_t levelID);
-void runWorld(levelid_t levelID);
-void runEntity(levelid_t levelID);
+void runGame(gamestate_t& state, levelid_t levelID);
+void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState);
+void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects);
 
-void processGame(const SDL_Event& evt);
-void processWorld(const SDL_Event& evt);
-void processEntity(const SDL_Event& evt, entityid_t playerEntity, bool& jump);
+void processGame(gamestate_t& state, const SDL_Event& evt);
+void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
 
-void makeEntity();
-void makeEntityWorld();
-void makeEntityEntity();
+void makeEntity(gamestate_t& state);
+void makeEntity(worldstate_t& state, const gamestate_t& game);
+void makeEntity(entitystate_t& state, const gamestate_t& game);
 
-void destroyEntity();
-void destroyEntityWorld();
-void destroyEntityEntity();
+void destroyEntity(gamestate_t& state);
+void destroyEntity(worldstate_t& state, const gamestate_t& game);
+void destroyEntity(entitystate_t& state, const gamestate_t& game);
 
-void flushSoundQueue();
-void flushMusicCommandQueue();
+void flushSoundQueue(gamestate_t& state);
+void flushMusicCommandQueue(gamestate_t& state);
 
 } // namespace te

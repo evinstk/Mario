@@ -1,13 +1,22 @@
 #include "game_action.hpp"
-#include "world_state.hpp"
+#include "game_state.hpp"
 
 namespace te {
 
-void stepMusicCommandQueue();
+static void stepMusicCommandQueue(eastl::vector<std::pair<musiccmd_t, musicid_t>>& state,
+								  const gamestate_t& game) {
+	if (game.world.deathTrigger) {
+		state.push_back({ musiccmd_t::PAUSE, {} });
+	}
+}
 
-void stepGame(float dt) {
-	stepWorld(dt);
-	stepMusicCommandQueue();
+void flushMusicCommandQueue(gamestate_t& state) {
+	state.musicCommandQueue.clear();
+}
+
+void stepGame(gamestate_t& state, float dt) {
+	stepWorld(state.world, dt, state);
+	stepMusicCommandQueue(state.musicCommandQueue, state);
 }
 
 } // namespace te

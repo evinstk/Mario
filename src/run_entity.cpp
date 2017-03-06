@@ -1,7 +1,6 @@
 #include "game_action.hpp"
 #include "entity_state.hpp"
 #include "level_state.hpp"
-#include "level_object_state.hpp"
 #include "util.hpp"
 #include <EASTL/algorithm.h>
 
@@ -110,23 +109,23 @@ static void runSpriteAnimators(entitymap_t<spriteanimator_t>& state,
 	}
 }
 
-void runEntity(entitystate_t& state, levelid_t levelID) {
-	runColliders(state.colliders, levelID, gLevelObject.colliders);
-	runBounceSounds(state.bounceSounds, levelID, gLevelObject.bounceSounds);
-	runUnderGravity(state.underGravity, levelID, gLevelObject.gravities);
-	runIsGround(state.isGround, levelID, gLevelObject.grounds);
-	runVelocities(state.velocities, levelID, gLevelObject.colliders);
-	runTranslations(state.translations, levelID, gLevelObject.translations);
-	runTilesetSprites(state.tilesetSprites, levelID, gLevelObject.tiles);
+void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
+	runColliders(state.colliders, levelID, objects.colliders);
+	runBounceSounds(state.bounceSounds, levelID, objects.bounceSounds);
+	runUnderGravity(state.underGravity, levelID, objects.gravities);
+	runIsGround(state.isGround, levelID, objects.grounds);
+	runVelocities(state.velocities, levelID, objects.colliders);
+	runTranslations(state.translations, levelID, objects.translations);
+	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
 
-	transferProperty(state.animationsLeft, levelID, gLevelObject.animationsLeft);
-	transferProperty(state.animationsRight, levelID, gLevelObject.animationsRight);
-	runSpriteAnimators(state.spriteAnimators, levelID, gLevelObject.animations);
+	transferProperty(state.animationsLeft, levelID, objects.animationsLeft);
+	transferProperty(state.animationsRight, levelID, objects.animationsRight);
+	runSpriteAnimators(state.spriteAnimators, levelID, objects.animations);
 
-	runPrizes(state.prizes, levelID, gLevelObject.prizes);
-	transferProperty(state.prizeNum, levelID, gLevelObject.prizeNum);
-	transferProperty(state.canBounce, levelID, gLevelObject.canBounce);
-	transferProperty(state.bounceNum, levelID, gLevelObject.bounceNum);
+	runPrizes(state.prizes, levelID, objects.prizes);
+	transferProperty(state.prizeNum, levelID, objects.prizeNum);
+	transferProperty(state.canBounce, levelID, objects.canBounce);
+	transferProperty(state.bounceNum, levelID, objects.bounceNum);
 }
 
 } // namespace te

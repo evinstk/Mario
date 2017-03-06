@@ -27,6 +27,4 @@ struct tilesetstate_t {
 	stringmap_t<tileid_t> tileID;
 };
 
-extern const tilesetstate_t& gTileset;
-
 } // namespace te
