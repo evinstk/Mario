@@ -4,20 +4,20 @@
 
 namespace te {
 
-void inputEntity(entitystate_t& state, const Uint8 *keyboard, const gamestate_t& game) {
+void entitystate_t::input(const Uint8 *keyboard) {
 	static constexpr float SPEED = 3 * 32.0f;
 
-	if (game.world.mode != worldmode_t::PLAY) {
+	if (pGame->world.mode != worldmode_t::PLAY) {
 		return;
 	}
 
-	glm::vec3& playerVelocity = state.velocities[game.world.playerEntity];
+	glm::vec3& playerVelocity = velocities[pGame->world.playerEntity];
 	playerVelocity.x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * SPEED;
 	if (!keyboard[SDL_SCANCODE_SPACE] && playerVelocity.y < 0) {
 		playerVelocity.y = 0;
 	}
 
-	if (game.world.deathTrigger) {
+	if (pGame->world.deathTrigger) {
 		playerVelocity.x = 0;
 	}
 }

@@ -18,7 +18,7 @@ void worldstate_t::makeEntity() {
 		}
 		newEntityIDs.push_back(newID);
 	}
-	te::makeEntity(entity, *pGame);
+	entity.makeEntity();
 	newEntityQueue.clear();
 	newEntityIDs.clear();
 }

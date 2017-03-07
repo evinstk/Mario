@@ -11,7 +11,7 @@ void worldstate_t::destroyEntityFreeIDs(entityset_t& state) const {
 }
 
 void worldstate_t::destroyEntity() {
-	te::destroyEntity(entity, *pGame);
+	entity.destroyEntity();
 	destroyEntityFreeIDs(freeIDs);
 	destroyQueue.clear();
 }

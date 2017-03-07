@@ -5,6 +5,8 @@
 
 namespace te {
 
+struct gamestate_t;
+
 struct entitystate_t {
 	entitymap_t<colliderid_t> colliders;
 	entitymap_t<float> wallOffsets;
@@ -35,6 +37,38 @@ struct entitystate_t {
 	entitymap_t<int> bounceNum;
 
 	entitymap_t<float> lifetimes;
+
+	void run(levelid_t levelID);
+	void input(const Uint8 *keyboardState);
+	void step(float dt);
+	void makeEntity();
+	void destroyEntity();
+
+	const gamestate_t *pGame;
+	entitystate_t(const gamestate_t& g) : pGame(&g) {}
+
+private:
+	void stepWallOffsets(entitymap_t<float>& state, float dt) const;
+	void stepColliders(entitymap_t<float>& groundOffsets, float dt) const;
+	void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets, entityset_t& hitGround, float dt) const;
+	void stepBounceAnimations(entitymap_t<bounceanim_t>& state, float dt) const;
+	void stepSpriteOffsets(entitymap_t<glm::vec3>& state) const;
+	void stepVelocities(entitymap_t<glm::vec3>& velocities) const;
+	void stepTranslations(entitymap_t<glm::vec3>& state, float dt) const;
+	void stepSpriteAnimators(entitymap_t<spriteanimator_t>& state, float dt) const;
+	void stepSprites(entitymap_t<tileid_t>& state) const;
+	void stepBounceNum(entitymap_t<int>& state) const;
+	void stepCanBounce(entityset_t& state) const;
+	void stepPrizeNum(entitymap_t<int>& state) const;
+	void stepPrizes(entitymap_t<prize_t>& state) const;
+
+	void makeEntityTranslations(entitymap_t<glm::vec3>& state) const;
+	void makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state) const;
+	void makeEntityLifetimes(entitymap_t<float>& state) const;
+	void makeEntityAnimators(entitymap_t<spriteanimator_t>& state) const;
+
+	void destroyEntityTranslations(entitymap_t<glm::vec3>& state) const;
+	void destroyEntityLifetimes(entitymap_t<float>& state) const;
 };
 
 } // namespace te

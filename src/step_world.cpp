@@ -90,7 +90,7 @@ void worldstate_t::stepDestroyQueue(entityset_t& state) const {
 
 void worldstate_t::step(float dt) {
 	stepMode(mode, modeElapsed, dt);
-	stepEntity(entity, dt, *pGame);
+	entity.step(dt);
 	stepScore(score, coinCount, lives);
 	stepView(view, dt);
 	stepDeathTrigger(deathTrigger);

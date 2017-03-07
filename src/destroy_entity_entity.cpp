@@ -6,17 +6,17 @@
 
 namespace te {
 
-static void destroyEntityTranslations(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
-	for (entityid_t entityID : game.world.destroyQueue) {
+void entitystate_t::destroyEntityTranslations(entitymap_t<glm::vec3>& state) const {
+	for (entityid_t entityID : pGame->world.destroyQueue) {
 		glm::vec3& t = state[entityID];
 		t.x = t.y = std::numeric_limits<float>::min();
 	}
 }
 
-static void destroyEntityLifetimes(entitymap_t<float>& state, const gamestate_t& game) {
+void entitystate_t::destroyEntityLifetimes(entitymap_t<float>& state) const {
 	auto rowIt = state.begin();
 	while (rowIt != state.end()) {
-		if (game.world.destroyQueue.find(rowIt->first) != game.world.destroyQueue.end()) {
+		if (pGame->world.destroyQueue.find(rowIt->first) != pGame->world.destroyQueue.end()) {
 			rowIt = state.erase(rowIt);
 		} else {
 			++rowIt;
@@ -24,9 +24,9 @@ static void destroyEntityLifetimes(entitymap_t<float>& state, const gamestate_t&
 	}
 }
 
-void destroyEntity(entitystate_t& state, const gamestate_t& game) {
-	destroyEntityTranslations(state.translations, game);
-	destroyEntityLifetimes(state.lifetimes, game);
+void entitystate_t::destroyEntity() {
+	destroyEntityTranslations(translations);
+	destroyEntityLifetimes(lifetimes);
 }
 
 } // namespace te

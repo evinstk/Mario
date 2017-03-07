@@ -109,23 +109,24 @@ static void runSpriteAnimators(entitymap_t<spriteanimator_t>& state,
 	}
 }
 
-void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects) {
-	runColliders(state.colliders, levelID, objects.colliders);
-	runBounceSounds(state.bounceSounds, levelID, objects.bounceSounds);
-	runUnderGravity(state.underGravity, levelID, objects.gravities);
-	runIsGround(state.isGround, levelID, objects.grounds);
-	runVelocities(state.velocities, levelID, objects.colliders);
-	runTranslations(state.translations, levelID, objects.translations);
-	runTilesetSprites(state.tilesetSprites, levelID, objects.tiles);
+void entitystate_t::run(levelid_t levelID) {
+	const auto& objects = pGame->level.objects;
+	runColliders(colliders, levelID, objects.colliders);
+	runBounceSounds(bounceSounds, levelID, objects.bounceSounds);
+	runUnderGravity(underGravity, levelID, objects.gravities);
+	runIsGround(isGround, levelID, objects.grounds);
+	runVelocities(velocities, levelID, objects.colliders);
+	runTranslations(translations, levelID, objects.translations);
+	runTilesetSprites(tilesetSprites, levelID, objects.tiles);
 
-	transferProperty(state.animationsLeft, levelID, objects.animationsLeft);
-	transferProperty(state.animationsRight, levelID, objects.animationsRight);
-	runSpriteAnimators(state.spriteAnimators, levelID, objects.animations);
+	transferProperty(animationsLeft, levelID, objects.animationsLeft);
+	transferProperty(animationsRight, levelID, objects.animationsRight);
+	runSpriteAnimators(spriteAnimators, levelID, objects.animations);
 
-	runPrizes(state.prizes, levelID, objects.prizes);
-	transferProperty(state.prizeNum, levelID, objects.prizeNum);
-	transferProperty(state.canBounce, levelID, objects.canBounce);
-	transferProperty(state.bounceNum, levelID, objects.bounceNum);
+	runPrizes(prizes, levelID, objects.prizes);
+	transferProperty(prizeNum, levelID, objects.prizeNum);
+	transferProperty(canBounce, levelID, objects.canBounce);
+	transferProperty(bounceNum, levelID, objects.bounceNum);
 }
 
 } // namespace te

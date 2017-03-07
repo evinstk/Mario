@@ -12,51 +12,16 @@ static constexpr bounceanim_t coinBounceAnim = {
 	.elapsed  = 0
 };
 
-//static void makeBlockCoin(entitystate_t& state,
-//						  entityid_t entityID,
-//						  const glm::vec3& translation,
-//						  const gamestate_t& game) {
-//
-//	static constexpr bounceanim_t coinBounceAnim = {
-//		.duration = COIN_BOUNCE_DURATION,
-//		.height   = COIN_BOUNCE_HEIGHT,
-//		.elapsed  = 0
-//	};
-//
-//	state.translations[entityID] = translation;
-//	state.bounceAnimations[entityID] = coinBounceAnim;
-//	state.lifetimes[entityID] = COIN_BOUNCE_DURATION;
-//	// TODO: replace
-//	const animid_t& animID = game.tileset.animationID.find_as("coin")->second;
-//	const animation_t& animation = game.tileset.animation.find(animID)->second;
-//	state.tilesetSprites[entityID] = tileid_t({ animID.id.first, animation.frames[0].tileid });
-//}
-//
-//void makeEntity(entitystate_t& state,
-//				entityid_t entityID,
-//				entity_t entity,
-//				const glm::vec3& translation,
-//				const gamestate_t& game) {
-//
-//	switch (entity) {
-//	case entity_t::BLOCK_COIN:
-//		makeBlockCoin(state, entityID, translation, game);
-//		break;
-//	default:
-//		assert(false);
-//	}
-//}
-
-static void makeEntityTranslations(entitymap_t<glm::vec3>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+void entitystate_t::makeEntityTranslations(entitymap_t<glm::vec3>& state) const {
+	auto idIt = pGame->world.newEntityIDs.begin();
+	for (const auto& request : pGame->world.newEntityQueue) {
 		state[*idIt++] = request.translation;
 	}
 }
 
-static void makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+void entitystate_t::makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state) const {
+	auto idIt = pGame->world.newEntityIDs.begin();
+	for (const auto& request : pGame->world.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
 			state[*idIt] = coinBounceAnim;
 		}
@@ -64,9 +29,9 @@ static void makeEntityBounceAnimations(entitymap_t<bounceanim_t>& state, const g
 	}
 }
 
-static void makeEntityLifetimes(entitymap_t<float>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+void entitystate_t::makeEntityLifetimes(entitymap_t<float>& state) const {
+	auto idIt = pGame->world.newEntityIDs.begin();
+	for (const auto& request : pGame->world.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
 			state[*idIt] = COIN_BOUNCE_DURATION;
 		}
@@ -74,11 +39,11 @@ static void makeEntityLifetimes(entitymap_t<float>& state, const gamestate_t& ga
 	}
 }
 
-static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const gamestate_t& game) {
-	auto idIt = game.world.newEntityIDs.begin();
-	for (const auto& request : game.world.newEntityQueue) {
+void entitystate_t::makeEntityAnimators(entitymap_t<spriteanimator_t>& state) const {
+	auto idIt = pGame->world.newEntityIDs.begin();
+	for (const auto& request : pGame->world.newEntityQueue) {
 		if (request.type == entity_t::BLOCK_COIN) {
-			animid_t animID = game.tileset.animationID.find_as("coin")->second;
+			animid_t animID = pGame->tileset.animationID.find_as("coin")->second;
 			spriteanimator_t& animator = state[*idIt];
 
 			animator.animation = animID;
@@ -88,11 +53,11 @@ static void makeEntityAnimators(entitymap_t<spriteanimator_t>& state, const game
 	}
 }
 
-void makeEntity(entitystate_t& state, const gamestate_t& game) {
-	makeEntityTranslations(state.translations, game);
-	makeEntityBounceAnimations(state.bounceAnimations, game);
-	makeEntityLifetimes(state.lifetimes, game);
-	makeEntityAnimators(state.spriteAnimators, game);
+void entitystate_t::makeEntity() {
+	makeEntityTranslations(translations);
+	makeEntityBounceAnimations(bounceAnimations);
+	makeEntityLifetimes(lifetimes);
+	makeEntityAnimators(spriteAnimators);
 }
 
 } // namespace te

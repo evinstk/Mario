@@ -30,7 +30,7 @@ void worldstate_t::run(levelid_t levelID) {
 	assert(layersIt != pGame->level.layers.end());
 	layers = layersIt->second;
 
-	runEntity(entity, levelID, pGame->level.objects);
+	entity.run(levelID);
 	runNextEntityID(nextEntityID, levelID);
 	runPlayerEntity(playerEntity, levelID);
 	runView(view, entity.translations[playerEntity]);
