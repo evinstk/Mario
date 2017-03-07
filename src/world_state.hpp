@@ -46,10 +46,11 @@ struct worldstate_t {
 	void makeEntity();
 	void destroyEntity();
 
-	const gamestate_t *pGame;
 	worldstate_t(const gamestate_t& g);
 
 private:
+	const gamestate_t *pGame;
+
 	void runNextEntityID(int& state, levelid_t levelID) const;
 	void runPlayerEntity(entityid_t& playerEntity, levelid_t levelID) const;
 

@@ -16,10 +16,11 @@ struct soundeffectstate_t {
 	void step();
 	void flush();
 
-	const gamestate_t& game;
 	soundeffectstate_t(const gamestate_t& g) : game(g) {}
 
 private:
+	const gamestate_t& game;
+
 	void runMusicCommandQueue(eastl::vector<eastl::pair<musiccmd_t, musicid_t>>& state, levelid_t levelID) const;
 	void stepSoundQueue(eastl::vector_set<soundid_t>& state) const;
 	void stepMusicCommandQueue(eastl::vector<eastl::pair<musiccmd_t, musicid_t>>& state) const;

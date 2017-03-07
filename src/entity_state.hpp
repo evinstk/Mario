@@ -44,10 +44,11 @@ struct entitystate_t {
 	void makeEntity();
 	void destroyEntity();
 
-	const gamestate_t *pGame;
 	entitystate_t(const gamestate_t& g) : pGame(&g) {}
 
 private:
+	const gamestate_t *pGame;
+
 	void stepWallOffsets(entitymap_t<float>& state, float dt) const;
 	void stepColliders(entitymap_t<float>& groundOffsets, float dt) const;
 	void stepCeilingOffsets(entitymap_t<float>& ceilingOffsets, entityset_t& hitGround, float dt) const;

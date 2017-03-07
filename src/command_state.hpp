@@ -14,8 +14,9 @@ struct commandstate_t {
 	void process(const SDL_Event& evt);
 	void flush();
 
-	const gamestate_t& game;
 	commandstate_t(const gamestate_t& g) : game(g) {}
+private:
+	const gamestate_t& game;
 };
 
 }
