@@ -4,7 +4,7 @@
 namespace te {
 
 void makeEntity(gamestate_t& state) {
-	makeEntity(state.world, state);
+	state.world.makeEntity();
 }
 
 } // namespace te

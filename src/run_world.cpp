@@ -6,13 +6,13 @@
 
 namespace te {
 
-static void runNextEntityID(int& state, levelid_t levelID, const levelstate_t& level) {
-	state = level.nextObjectID.find(levelID)->second;
+void worldstate_t::runNextEntityID(int& state, levelid_t levelID) const {
+	state = pGame->level.nextObjectID.find(levelID)->second;
 }
 
-static void runPlayerEntity(entityid_t& playerEntity, levelid_t levelID, const levelmap_t<int>& playerObjectState) {
-	auto playerEntityIt = playerObjectState.find(levelID);
-	assert(playerEntityIt != playerObjectState.end());
+void worldstate_t::runPlayerEntity(entityid_t& playerEntity, levelid_t levelID) const {
+	auto playerEntityIt = pGame->level.playerObject.find(levelID);
+	assert(playerEntityIt != pGame->level.playerObject.end());
 	playerEntity = entityid_t(playerEntityIt->second);
 }
 
@@ -21,19 +21,19 @@ static void runView(glm::imat4& view,
 	setView(view, playerTranslation);
 }
 
-void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelState) {
+void worldstate_t::run(levelid_t levelID) {
 	// clear world state on run
-	state = worldstate_t();
+	*this = worldstate_t(*pGame);
 
-	state.level = levelID;
-	auto layersIt = levelState.layers.find(levelID);
-	assert(layersIt != levelState.layers.end());
-	state.layers = layersIt->second;
+	level = levelID;
+	auto layersIt = pGame->level.layers.find(levelID);
+	assert(layersIt != pGame->level.layers.end());
+	layers = layersIt->second;
 
-	runEntity(state.entity, levelID, levelState.objects);
-	runNextEntityID(state.nextEntityID, levelID, levelState);
-	runPlayerEntity(state.playerEntity, levelID, levelState.playerObject);
-	runView(state.view, state.entity.translations[state.playerEntity]);
+	runEntity(entity, levelID, pGame->level.objects);
+	runNextEntityID(nextEntityID, levelID);
+	runPlayerEntity(playerEntity, levelID);
+	runView(view, entity.translations[playerEntity]);
 }
 
 }

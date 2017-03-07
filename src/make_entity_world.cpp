@@ -5,23 +5,22 @@
 
 namespace te {
 
-void makeEntity(worldstate_t& state,
-				const gamestate_t& game) {
-	state.newEntityIDs.clear();
-	for (auto it = state.newEntityQueue.begin(), end = state.newEntityQueue.end(); it < end; ++it) {
+void worldstate_t::makeEntity() {
+	newEntityIDs.clear();
+	for (auto it = newEntityQueue.begin(), end = newEntityQueue.end(); it < end; ++it) {
 		entityid_t newID;
-		auto freeIDIt = state.freeIDs.rbegin();
-		if (freeIDIt != state.freeIDs.rend()) {
+		auto freeIDIt = freeIDs.rbegin();
+		if (freeIDIt != freeIDs.rend()) {
 			newID = entityid_t(*freeIDIt);
-			state.freeIDs.erase(freeIDIt);
+			freeIDs.erase(freeIDIt);
 		} else {
-			newID = entityid_t(state.nextEntityID++);
+			newID = entityid_t(nextEntityID++);
 		}
-		state.newEntityIDs.push_back(newID);
+		newEntityIDs.push_back(newID);
 	}
-	makeEntity(state.entity, game);
-	state.newEntityQueue.clear();
-	state.newEntityIDs.clear();
+	te::makeEntity(entity, *pGame);
+	newEntityQueue.clear();
+	newEntityIDs.clear();
 }
 
 } // namespace te

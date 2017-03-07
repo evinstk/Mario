@@ -4,12 +4,12 @@
 
 namespace te {
 
-void dispatchWorld(worldstate_t& state, const gamestate_t& game) {
+void worldstate_t::dispatch() {
 	static constexpr float JUMP_SPEED = -10 * 32;
 
-	for (playercmd_t cmd : game.command.commandQueue) {
+	for (playercmd_t cmd : pGame->command.commandQueue) {
 		if (cmd == playercmd_t::JUMP) {
-			state.entity.velocities[state.playerEntity].y = JUMP_SPEED;
+			entity.velocities[playerEntity].y = JUMP_SPEED;
 		}
 	}
 }

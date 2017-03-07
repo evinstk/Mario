@@ -19,6 +19,7 @@ struct gamestate_t {
 
 	gamestate_t()
 		: command(*this)
+		, world(*this)
 		, soundEffect(*this)
 	{}
 };

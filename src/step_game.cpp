@@ -4,7 +4,7 @@
 namespace te {
 
 void stepGame(gamestate_t& state, float dt) {
-	stepWorld(state.world, dt, state);
+	state.world.step(dt);
 	state.soundEffect.step();
 }
 

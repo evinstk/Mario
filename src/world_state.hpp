@@ -12,9 +12,9 @@
 
 namespace te {
 
-struct worldstate_t {
-	worldstate_t();
+struct gamestate_t;
 
+struct worldstate_t {
 	worldmode_t mode;
 	float modeElapsed;
 
@@ -38,6 +38,29 @@ struct worldstate_t {
 	vector_t<entityrequest_t> newEntityQueue;
 	vector_t<entityid_t> newEntityIDs;
 	entityset_t destroyQueue;
+
+	void run(levelid_t levelID);
+	void dispatch();
+	void input(const Uint8 *keyboardState);
+	void step(float dt);
+	void makeEntity();
+	void destroyEntity();
+
+	const gamestate_t *pGame;
+	worldstate_t(const gamestate_t& g);
+
+private:
+	void runNextEntityID(int& state, levelid_t levelID) const;
+	void runPlayerEntity(entityid_t& playerEntity, levelid_t levelID) const;
+
+	void stepMode(worldmode_t& modeState, float& elapsedState, float dt) const;
+	void stepScore(int& score, int& coinCount, int& lives) const;
+	void stepDeathTrigger(bool& state) const;
+	void stepView(glm::imat4& state, float dt) const;
+	void stepNewEntityQueue(vector_t<entityrequest_t>& state) const;
+	void stepDestroyQueue(entityset_t& state) const;
+
+	void destroyEntityFreeIDs(entityset_t& state) const;
 };
 
 } // namespace te

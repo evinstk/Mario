@@ -38,7 +38,7 @@ struct Libs {
 };
 
 void dispatchGame(gamestate_t& game) {
-	dispatchWorld(game.world, game);
+	game.world.dispatch();
 	game.soundEffect.dispatch();
 	game.command.flush();
 }

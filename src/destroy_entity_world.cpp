@@ -4,17 +4,16 @@
 
 namespace te {
 
-static void destroyEntityFreeIDs(entityset_t& state, const gamestate_t& game) {
-	for (entityid_t freeID : game.world.destroyQueue) {
+void worldstate_t::destroyEntityFreeIDs(entityset_t& state) const {
+	for (entityid_t freeID : pGame->world.destroyQueue) {
 		state.insert(freeID);
 	}
 }
 
-void destroyEntity(worldstate_t& state,
-				   const gamestate_t& game) {
-	destroyEntity(state.entity, game);
-	destroyEntityFreeIDs(state.freeIDs, game);
-	state.destroyQueue.clear();
+void worldstate_t::destroyEntity() {
+	te::destroyEntity(entity, *pGame);
+	destroyEntityFreeIDs(freeIDs);
+	destroyQueue.clear();
 }
 
 } // namespace te

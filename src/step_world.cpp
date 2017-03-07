@@ -11,28 +11,25 @@
 
 namespace te {
 
-static void stepMode(worldmode_t& modeState,
-					 float& elapsedState,
-					 float dt,
-					 const gamestate_t& game) {
+void worldstate_t::stepMode(worldmode_t& modeState,
+							float& elapsedState,
+							float dt) const {
 
 	elapsedState += dt;
 
-	if (game.world.deathTrigger) {
+	if (pGame->world.deathTrigger) {
 		modeState = worldmode_t::DEATH;
 		elapsedState = 0;
 	}
 }
 
-static void stepView(glm::imat4& state,
-					 float dt,
-					 const gamestate_t& game) {
+void worldstate_t::stepView(glm::imat4& state, float dt) const {
 	static constexpr int HALF_CAMERA = (CAMERA_WIDTH / 2) - 16;
 	static constexpr int PUSH_THRESHOLD = HALF_CAMERA - 32;
 
-	glm::vec3 playerTranslation = game.world.entity.translations.find(game.world.playerEntity)->second;
+	glm::vec3 playerTranslation = pGame->world.entity.translations.find(pGame->world.playerEntity)->second;
 	glm::vec3 playerView = state * glm::vec4(playerTranslation, 1.0f);
-	float xPlayerVelocity = game.world.entity.velocities.find(game.world.playerEntity)->second.x;
+	float xPlayerVelocity = pGame->world.entity.velocities.find(pGame->world.playerEntity)->second.x;
 
 	if (playerView.x > HALF_CAMERA) {
 		state = glm::translate(state, glm::ivec3(HALF_CAMERA - playerView.x, 0, 0));
@@ -42,10 +39,10 @@ static void stepView(glm::imat4& state,
 	}
 }
 
-static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t& game) {
-	for (entityid_t blockID : game.world.entity.hitGround) {
+void worldstate_t::stepScore(int& score, int& coinCount, int& lives) const {
+	for (entityid_t blockID : pGame->world.entity.hitGround) {
 		prize_t prize;
-		if (hasPrize(blockID, prize, game) && prize == prize_t::COIN) {
+		if (hasPrize(blockID, prize, *pGame) && prize == prize_t::COIN) {
 			score += COIN_SCORE;
 			++coinCount;
 		}
@@ -57,32 +54,32 @@ static void stepScore(int& score, int& coinCount, int& lives, const gamestate_t&
 	}
 }
 
-static void stepDeathTrigger(bool& state, const gamestate_t& game) {
+void worldstate_t::stepDeathTrigger(bool& state) const {
 	state = false;
 
-	float yPos = getTranslation(game.world.playerEntity, game).y;
-	const auto& map = getMap(game);
-	if (yPos > map.size.y * map.tileSize.y && game.world.mode == worldmode_t::PLAY) {
+	float yPos = getTranslation(pGame->world.playerEntity, *pGame).y;
+	const auto& map = getMap(*pGame);
+	if (yPos > map.size.y * map.tileSize.y && pGame->world.mode == worldmode_t::PLAY) {
 		state = true;
 	}
 }
 
-static void stepNewEntityQueue(vector_t<entityrequest_t>& state, const gamestate_t& game) {
-	for (entityid_t blockID : game.world.entity.hitGround) {
+void worldstate_t::stepNewEntityQueue(vector_t<entityrequest_t>& state) const {
+	for (entityid_t blockID : pGame->world.entity.hitGround) {
 		prize_t prize;
-		if (hasPrize(blockID, prize, game) && prize == prize_t::COIN) {
-			float yTileSize = getMap(game).tileSize.y;
+		if (hasPrize(blockID, prize, *pGame) && prize == prize_t::COIN) {
+			float yTileSize = getMap(*pGame).tileSize.y;
 			entityrequest_t newEntity = {
 				.type = entity_t::BLOCK_COIN,
-				.translation = getTranslation(blockID, game) + glm::vec3(0, -yTileSize, 0)
+				.translation = getTranslation(blockID, *pGame) + glm::vec3(0, -yTileSize, 0)
 			};
 			state.push_back(newEntity);
 		}
 	}
 }
 
-static void stepDestroyQueue(entityset_t& state, const gamestate_t& game) {
-	for (const auto& lifetimeRow : game.world.entity.lifetimes) {
+void worldstate_t::stepDestroyQueue(entityset_t& state) const {
+	for (const auto& lifetimeRow : pGame->world.entity.lifetimes) {
 		entityid_t entityID = lifetimeRow.first;
 		float timeLeft = lifetimeRow.second;
 		if (timeLeft <= 0) {
@@ -91,14 +88,14 @@ static void stepDestroyQueue(entityset_t& state, const gamestate_t& game) {
 	}
 }
 
-void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
-	stepMode(state.mode, state.modeElapsed, dt, gameState);
-	stepEntity(state.entity, dt, gameState);
-	stepScore(state.score, state.coinCount, state.lives, gameState);
-	stepView(state.view, dt, gameState);
-	stepDeathTrigger(state.deathTrigger, gameState);
-	stepNewEntityQueue(state.newEntityQueue, gameState);
-	stepDestroyQueue(state.destroyQueue, gameState);
+void worldstate_t::step(float dt) {
+	stepMode(mode, modeElapsed, dt);
+	stepEntity(entity, dt, *pGame);
+	stepScore(score, coinCount, lives);
+	stepView(view, dt);
+	stepDeathTrigger(deathTrigger);
+	stepNewEntityQueue(newEntityQueue);
+	stepDestroyQueue(destroyQueue);
 }
 
 } // namespace te
