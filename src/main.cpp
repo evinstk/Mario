@@ -37,6 +37,12 @@ struct Libs {
 	}
 };
 
+void dispatchGame(gamestate_t& game) {
+	dispatchWorld(game.world, game);
+	game.soundEffect.dispatch();
+	game.command.flush();
+}
+
 static int MarioMain() {
 	Libs libs;
 	std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> upWindow(
@@ -134,17 +140,17 @@ static int MarioMain() {
 				}
 				processGame(gameState, evt);
 			}
+			dispatchGame(gameState);
 			inputGame(gameState, SDL_GetKeyboardState(NULL));
 			stepGame(gameState, timePerFrame);
 			destroyEntity(gameState);
 			makeEntity(gameState);
 		}
 
-		for (soundid_t soundID : gameState.world.soundQueue) {
+		for (soundid_t soundID : gameState.soundEffect.soundQueue) {
 			Mix_Chunk *pChunk = getChunk(soundID, gameState);
 			Mix_PlayChannel(-1, pChunk, 0);
 		}
-		flushSoundQueue(gameState);
 
 		for (auto musicCmd : gameState.soundEffect.musicCommandQueue) {
 			switch (musicCmd.first) {

@@ -91,22 +91,6 @@ static void stepDestroyQueue(entityset_t& state, const gamestate_t& game) {
 	}
 }
 
-static void stepSoundQueue(eastl::vector_set<soundid_t>& state, const gamestate_t& game) {
-	for (entityid_t entityID : game.world.entity.hitGround) {
-		auto soundIt = game.world.entity.bounceSounds.find(entityID);
-		if (soundIt != game.world.entity.bounceSounds.end() && canBounce(entityID, game)) {
-			state.insert(soundIt->second);
-		}
-	}
-
-	if (game.world.deathTrigger) {
-		auto soundIt = game.level.dieMusic.find(game.world.level);
-		if (soundIt != game.level.dieMusic.end()) {
-			state.push_back(soundIt->second);
-		}
-	}
-}
-
 void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepMode(state.mode, state.modeElapsed, dt, gameState);
 	stepEntity(state.entity, dt, gameState);
@@ -115,7 +99,6 @@ void stepWorld(worldstate_t& state, float dt, const gamestate_t& gameState) {
 	stepDeathTrigger(state.deathTrigger, gameState);
 	stepNewEntityQueue(state.newEntityQueue, gameState);
 	stepDestroyQueue(state.destroyQueue, gameState);
-	stepSoundQueue(state.soundQueue, gameState);
 }
 
 } // namespace te

@@ -68,6 +68,10 @@ enum class musiccmd_t {
 	PLAY
 };
 
+enum class playercmd_t {
+	JUMP
+};
+
 enum class worldmode_t {
 	PLAY,
 	DEATH

@@ -4,7 +4,7 @@
 namespace te {
 
 void processGame(gamestate_t& state, const SDL_Event& evt) {
-	processWorld(state.world, evt, state);
+	state.command.process(evt);
 }
 
 } // namespace te

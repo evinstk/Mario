@@ -41,7 +41,9 @@ void runWorld(worldstate_t& state, levelid_t levelID, const levelstate_t& levelS
 void runEntity(entitystate_t& state, levelid_t levelID, const levelobjectstate_t& objects);
 
 void processGame(gamestate_t& state, const SDL_Event& evt);
-void processWorld(worldstate_t& state, const SDL_Event& evt, const gamestate_t& game);
+
+void dispatchGame(gamestate_t& state);
+void dispatchWorld(worldstate_t& state, const gamestate_t& game);
 
 void makeEntity(gamestate_t& state);
 void makeEntity(worldstate_t& state, const gamestate_t& game);
@@ -50,8 +52,5 @@ void makeEntity(entitystate_t& state, const gamestate_t& game);
 void destroyEntity(gamestate_t& state);
 void destroyEntity(worldstate_t& state, const gamestate_t& game);
 void destroyEntity(entitystate_t& state, const gamestate_t& game);
-
-void flushSoundQueue(gamestate_t& state);
-void flushMusicCommandQueue(gamestate_t& state);
 
 } // namespace te

@@ -38,8 +38,6 @@ struct worldstate_t {
 	vector_t<entityrequest_t> newEntityQueue;
 	vector_t<entityid_t> newEntityIDs;
 	entityset_t destroyQueue;
-
-	eastl::vector_set<soundid_t> soundQueue;
 };
 
 } // namespace te
