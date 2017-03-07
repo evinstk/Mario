@@ -185,25 +185,25 @@ static inline void loadEmptyTiles(levelobjectmap_t<tileid_t>& state,
 	load(state, tmx, levelID, "empty-tile", game.tileset.tileID);
 }
 
-void loadLevelObjects(levelobjectstate_t& state, const tmx_t& tmx, levelid_t levelID, const gamestate_t& game) {
-	loadTranslations(state.translations, tmx, levelID);
-	loadTiles(state.tiles, tmx, levelID, game);
+void levelobjectstate_t::load(const tmx_t& tmx, levelid_t levelID) {
+	loadTranslations(translations, tmx, levelID);
+	loadTiles(tiles, tmx, levelID, *pGame);
 
-	load(state.animations, tmx, levelID, "animation", game.tileset.animationID);
-	load(state.animationsLeft, tmx, levelID, "anim-left", game.tileset.animationID);
-	load(state.animationsRight, tmx, levelID, "anim-right", game.tileset.animationID);
+	te::load(animations, tmx, levelID, "animation", pGame->tileset.animationID);
+	te::load(animationsLeft, tmx, levelID, "anim-left", pGame->tileset.animationID);
+	te::load(animationsRight, tmx, levelID, "anim-right", pGame->tileset.animationID);
 
-	loadColliders(state.colliders, tmx, levelID, game);
-	loadGravities(state.gravities, tmx, levelID);
-	loadGrounds(state.grounds, tmx, levelID);
+	loadColliders(colliders, tmx, levelID, *pGame);
+	loadGravities(gravities, tmx, levelID);
+	loadGrounds(grounds, tmx, levelID);
 
-	loadPrizes(state.prizes, tmx, levelID);
-	loadPrizeNum(state.prizeNum, tmx, levelID);
-	loadEmptyTiles(state.emptyTiles, tmx, levelID, game);
+	loadPrizes(prizes, tmx, levelID);
+	loadPrizeNum(prizeNum, tmx, levelID);
+	loadEmptyTiles(emptyTiles, tmx, levelID, *pGame);
 
-	loadBounceSounds(state.bounceSounds, tmx, levelID, game);
-	loadCanBounce(state.canBounce, tmx, levelID);
-	loadBounceNum(state.bounceNum, tmx, levelID);
+	loadBounceSounds(bounceSounds, tmx, levelID, *pGame);
+	loadCanBounce(canBounce, tmx, levelID);
+	loadBounceNum(bounceNum, tmx, levelID);
 }
 
 } // namespace te

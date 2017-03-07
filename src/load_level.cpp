@@ -146,7 +146,7 @@ void levelstate_t::load(const tmx_t& tmx, const char *pathname) {
 	loadLayers(layers, tilesets.find(levelID)->second, pGame->tileset.tileset, tmx.layers, tmx.externalTilesets, levelID);
 	loadPlatformIndex(platformIndex, tmx.layers, levelID);
 
-	loadLevelObjects(objects, tmx, levelID, *pGame);
+	objects.load(tmx, levelID);
 	loadNextObjectID(nextObjectID, tmx, levelID, *pGame);
 	loadPlayerObject(playerObject, tmx.objectgroups, levelID);
 

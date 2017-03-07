@@ -3,6 +3,9 @@
 
 namespace te {
 
+struct gamestate_t;
+struct tmx_t;
+
 struct levelobjectstate_t {
 	levelobjectmap_t<glm::vec3>    translations;
 	levelobjectmap_t<tileid_t>     tiles;
@@ -22,6 +25,13 @@ struct levelobjectstate_t {
 	levelobjectmap_t<soundid_t>    bounceSounds;
 	levelobjectset_t               canBounce;
 	levelobjectmap_t<int>          bounceNum;
+
+	void load(const tmx_t& tmx, levelid_t levelID);
+
+	levelobjectstate_t(const gamestate_t& g) : pGame(&g) {}
+
+private:
+	const gamestate_t *pGame;
 };
 
 } // namespace te

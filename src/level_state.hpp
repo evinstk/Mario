@@ -8,7 +8,7 @@ struct gamestate_t;
 struct tmx_t;
 
 struct levelstate_t {
-	levelstate_t(const gamestate_t& g) : nextLevelID(1), pGame(&g) {}
+	levelstate_t(const gamestate_t& g) : nextLevelID(1), objects(g), pGame(&g) {}
 
 	int nextLevelID;
 	stringmap_t<levelid_t> source;
