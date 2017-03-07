@@ -1,6 +1,7 @@
 #include "game_action.hpp"
 #include "tileset_state.hpp"
 #include "texture_manager.hpp"
+#include <tegl/readtmx.hpp>
 #include <numeric>
 
 namespace te {

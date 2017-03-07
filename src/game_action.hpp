@@ -1,13 +1,13 @@
 #pragma once
 #include "types.hpp"
-#include <tegl/readtmx.hpp>
-#include <SDL.h>
-#include <SDL_mixer.h>
-#include <memory>
+
+union SDL_Event;
 
 namespace te {
 
 struct gamestate_t;
+struct tsxtileset_t;
+struct tmx_t;
 
 void inputGame(gamestate_t& state, const Uint8 *keyboardState);
 

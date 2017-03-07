@@ -2,6 +2,7 @@
 #include "level_object_state.hpp"
 #include "game_state.hpp"
 #include "util.hpp"
+#include <tegl/readtmx.hpp>
 
 namespace te {
 

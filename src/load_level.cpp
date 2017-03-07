@@ -2,6 +2,7 @@
 #include "level_state.hpp"
 #include "tileset_state.hpp"
 #include "util.hpp"
+#include <tegl/readtmx.hpp>
 #include <EASTL/algorithm.h>
 #include <cassert>
 
