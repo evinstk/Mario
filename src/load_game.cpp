@@ -12,11 +12,11 @@ void loadGame(gamestate_t& state, const tmx_t& tmx, const char *pathname) {
 }
 
 void loadSound(gamestate_t& state, chunkptr_t&& chunk, const char *pathname) {
-	loadSound(state.sound, std::move(chunk), pathname);
+	state.sound.loadSound(eastl::move(chunk), pathname);
 }
 
 void loadMusic(gamestate_t& state, musicptr_t&& chunk, const char *pathname) {
-	loadMusic(state.sound, std::move(chunk), pathname);
+	state.sound.loadMusic(eastl::move(chunk), pathname);
 }
 
 } // namespace te

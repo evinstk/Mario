@@ -3,26 +3,26 @@
 
 namespace te {
 
-void loadSound(soundstate_t& state, chunkptr_t&& chunk, const char *pathname) {
-	if (state.soundID.find_as(pathname) != state.soundID.end()) {
+void soundstate_t::loadSound(chunkptr_t&& pChunk, const char *pathname) {
+	if (soundID.find_as(pathname) != soundID.end()) {
 		return;
 	}
 
-	soundid_t soundID(state.nextSoundID++);
-	state.soundID.insert(decltype(soundstate_t::soundID)::value_type{ pathname, soundID });
-	decltype(soundstate_t::chunk)::value_type newRow(soundID, eastl::move(chunk));
-	state.chunk.insert(eastl::move(newRow));
+	soundid_t id(nextSoundID++);
+	soundID.insert(decltype(soundstate_t::soundID)::value_type{ pathname, id });
+	decltype(soundstate_t::chunk)::value_type newRow(id, eastl::move(pChunk));
+	chunk.insert(eastl::move(newRow));
 }
 
-void loadMusic(soundstate_t& state, musicptr_t&& pMusic, const char *pathname) {
-	if (state.musicID.find_as(pathname) != state.musicID.end()) {
+void soundstate_t::loadMusic(musicptr_t&& pMusic, const char *pathname) {
+	if (musicID.find_as(pathname) != musicID.end()) {
 		return;
 	}
 
-	musicid_t musicID(state.nextMusicID++);
-	state.musicID.insert(decltype(state.musicID)::value_type{ pathname, musicID });
-	decltype(soundstate_t::music)::value_type newRow(musicID, eastl::move(pMusic));
-	state.music.insert(eastl::move(newRow));
+	musicid_t id(nextMusicID++);
+	musicID.insert(decltype(musicID)::value_type{ pathname, id });
+	decltype(soundstate_t::music)::value_type newRow(id, eastl::move(pMusic));
+	music.insert(eastl::move(newRow));
 }
 
 } // namespace te

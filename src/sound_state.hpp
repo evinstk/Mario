@@ -19,6 +19,9 @@ struct soundstate_t {
 	int nextMusicID;
 	stringmap_t<musicid_t> musicID;
 	musicmap_t<musicptr_t> music;
+
+	void loadSound(chunkptr_t&& chunk, const char *pathname);
+	void loadMusic(musicptr_t&& pMusic, const char *pathname);
 };
 
 } // namespace te
