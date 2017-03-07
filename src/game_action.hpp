@@ -18,7 +18,6 @@ void inputGame(gamestate_t& state, const Uint8 *keyboardState);
 void stepGame(gamestate_t& state, float dt);
 
 void loadGame(gamestate_t& state, const tsxtileset_t& tileset, const char *pathname);
-void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname);
 
 void loadSound(gamestate_t& state, chunkptr_t&& chunk, const char* pathname);
 

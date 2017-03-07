@@ -106,20 +106,20 @@ static void loadTileID(stringmap_t<tileid_t>& state,
 	}
 }
 
-void loadTileset(tilesetstate_t& state, const tsxtileset_t& tileset, const char *pathname) {
-	bool loaded = loadSource(state.source, state.nextID, pathname);
+void tilesetstate_t::loadTileset(const tsxtileset_t& tileset, const char *pathname) {
+	bool loaded = loadSource(source, nextID, pathname);
 	if (!loaded) {
 		// has been loaded before: no more work here
 		return;
 	}
 
-	tilesetid_t id = state.source.find_as(pathname)->second;
-	loadTileset(state.tileset, tileset, id);
-	loadAnimation(state.animation, tileset, id);
-	loadAnimationID(state.animationID, tileset, id);
-	loadCollider(state.colliderID, state.nextColliderID, state.collider, tileset);
-	loadSolid(state.solid, tileset, id);
-	loadTileID(state.tileID, tileset, id);
+	tilesetid_t id = source.find_as(pathname)->second;
+	te::loadTileset(this->tileset, tileset, id);
+	loadAnimation(animation, tileset, id);
+	loadAnimationID(animationID, tileset, id);
+	loadCollider(colliderID, nextColliderID, collider, tileset);
+	loadSolid(solid, tileset, id);
+	loadTileID(tileID, tileset, id);
 }
 
 } // namespace te

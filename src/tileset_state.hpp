@@ -8,6 +8,8 @@
 
 namespace te {
 
+struct tsxtileset_t;
+
 struct tilesetstate_t {
 	tilesetstate_t() : nextID(1), nextColliderID(1) {}
 
@@ -25,6 +27,8 @@ struct tilesetstate_t {
 	eastl::vector_set<tileid_t> solid;
 
 	stringmap_t<tileid_t> tileID;
+
+	void loadTileset(const tsxtileset_t& tileset, const char *pathname);
 };
 
 } // namespace te
