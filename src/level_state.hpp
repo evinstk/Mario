@@ -4,8 +4,11 @@
 
 namespace te {
 
+struct gamestate_t;
+struct tmx_t;
+
 struct levelstate_t {
-	levelstate_t() : nextLevelID(1) {}
+	levelstate_t(const gamestate_t& g) : nextLevelID(1), pGame(&g) {}
 
 	int nextLevelID;
 	stringmap_t<levelid_t> source;
@@ -22,6 +25,11 @@ struct levelstate_t {
 
 	levelmap_t<musicid_t> music;
 	levelmap_t<soundid_t> dieMusic;
+
+	void load(const tmx_t& tmx, const char *pathname);
+
+private:
+	const gamestate_t *pGame;
 };
 
 } // namespace te

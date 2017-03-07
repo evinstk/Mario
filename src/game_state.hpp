@@ -18,7 +18,8 @@ struct gamestate_t {
 	soundeffectstate_t soundEffect;
 
 	gamestate_t()
-		: command(*this)
+		: level(*this)
+		, command(*this)
 		, world(*this)
 		, soundEffect(*this)
 	{}

@@ -134,24 +134,24 @@ static void loadDieMusic(levelmap_t<soundid_t>& state, const decltype(tmx_t::pro
 	}
 }
 
-void loadLevel(levelstate_t& state, const tmx_t& tmx, const char *pathname, const tilesetstate_t& tilesetState, const gamestate_t& game) {
-	bool loaded = loadSource(state.source, state.nextLevelID, pathname);
+void levelstate_t::load(const tmx_t& tmx, const char *pathname) {
+	bool loaded = loadSource(source, nextLevelID, pathname);
 	if (!loaded) {
 		return;
 	}
 
-	levelid_t levelID = state.source.find_as(pathname)->second;
-	loadMap(state.map, tmx, levelID);
-	loadTilesets(state.tilesets, tmx.externalTilesets, levelID, tilesetState.source);
-	loadLayers(state.layers, state.tilesets.find(levelID)->second, tilesetState.tileset, tmx.layers, tmx.externalTilesets, levelID);
-	loadPlatformIndex(state.platformIndex, tmx.layers, levelID);
+	levelid_t levelID = source.find_as(pathname)->second;
+	loadMap(map, tmx, levelID);
+	loadTilesets(tilesets, tmx.externalTilesets, levelID, pGame->tileset.source);
+	loadLayers(layers, tilesets.find(levelID)->second, pGame->tileset.tileset, tmx.layers, tmx.externalTilesets, levelID);
+	loadPlatformIndex(platformIndex, tmx.layers, levelID);
 
-	loadLevelObjects(state.objects, tmx, levelID, game);
-	loadNextObjectID(state.nextObjectID, tmx, levelID, game);
-	loadPlayerObject(state.playerObject, tmx.objectgroups, levelID);
+	loadLevelObjects(objects, tmx, levelID, *pGame);
+	loadNextObjectID(nextObjectID, tmx, levelID, *pGame);
+	loadPlayerObject(playerObject, tmx.objectgroups, levelID);
 
-	loadMusic(state.music, tmx.properties, levelID, game);
-	loadDieMusic(state.dieMusic, tmx.properties, levelID, game);
+	loadMusic(music, tmx.properties, levelID, *pGame);
+	loadDieMusic(dieMusic, tmx.properties, levelID, *pGame);
 }
 
 } // namespace te
